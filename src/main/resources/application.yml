@@ -4,37 +4,23 @@ server:
         context-path: /helloboot
 
 spring:
-    datasource:
-        name: mysql_test
-        type: com.alibaba.druid.pool.DruidDataSource
-        # druid相关配置
-        druid:
-            driver-class-name: com.mysql.cj.jdbc.Driver
-            # 使用mysql的jdbc驱动最新版（6.0+）时加上 serverTimezone=UTC
-            url: jdbc:mysql://127.0.0.1:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC
-            username: root
-            password: root
+  datasource:
+    master:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC
+      username: root
+      password: root
 
-            # 配置初始化大小/最小/最大
-            initial-size: 1
-            min-idle: 1
-            max-active: 20
-            # 获取连接等待超时时间
-            max-wait: 60000
-            # 间隔多久进行一次检测，检测需要关闭的空闲连接
-            time-between-eviction-runs-millis: 60000
-            # 一个连接在池中最小生存的时间
-            min-evictable-idle-time-millis: 300000
-            validation-query: select 1 from dual
-
-            # 打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
-            pool-prepared-statements: false
-            max-pool-prepared-statement-per-connection-size: 20
+    slaver:
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      url: jdbc:oracle:thin:@192.168.10.242:1521:orcl
+      username: emerp
+      password: e97896
 
 ## 该配置节点为独立的节点，将这个配置放在spring的节点下，导致配置无法被识别
-mybatis:
-    mapper-locations:  classpath*:com/hugmount/*/mapper/*.xml  # 注意：一定要对应mapper映射xml文件的所在路径
-    type-aliases-package: com.hugmount.helloboot.*.pojo # 注意：对应实体类的路径
+#mybatis:
+#    mapper-locations:  classpath*:com/hugmount/*/mapper/*.xml  # 注意：一定要对应mapper映射xml文件的所在路径
+#    type-aliases-package: com.hugmount.helloboot.*.pojo # 注意：对应实体类的路径
 
 ## 配置pageHelper
 pagehelper:
@@ -42,3 +28,21 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
+
+## 多数据源配置
+db_oracle: # 数据源2
+    datasource:
+#        driver-class-name: oracle.jdbc.OracleDriver
+        jdbcUrl: jdbc:oracle:thin:@192.168.10.242:1521:orcl
+        username: emerp
+        password: e97896
+#        type: com.alibaba.druid.pool.DruidDataSource
+#        masterMapperLocations: classpath*:com/hugmount/*/product/mapper/*.xml
+
+db_mysql:
+    datasource:
+#        driver-Class-Name: com.mysql.cj.jdbc.Driver
+        # 使用mysql的jdbc驱动最新版（6.0+）时加上 serverTimezone=UTC
+        jdbcUrl: jdbc:mysql://127.0.0.1:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC
+        username: root
+        password: root
