@@ -7,12 +7,14 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * @Author: Li Huiming
@@ -37,12 +39,14 @@ public class SlaverDataSourceConfiguration {
 
     @Bean(name = "slaverDataSource")
     public DataSource dataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setDriverClassName(this.driverClassName);
-        dataSource.setUrl(this.url);
-        dataSource.setUsername(this.username);
-        dataSource.setPassword(this.password);
-        return dataSource;
+        AtomikosDataSourceBean atomikosDataSourceBean = new AtomikosDataSourceBean();
+        atomikosDataSourceBean.setXaDataSourceClassName(this.driverClassName);
+        Properties properties = new Properties();
+        properties.setProperty("url" ,this.url);
+        properties.setProperty("username" ,this.username);
+        properties.setProperty("password" ,this.password);
+        atomikosDataSourceBean.setXaProperties(properties);
+        return atomikosDataSourceBean;
     }
 
     @Bean(name = "slaverSqlSessionFactory")
@@ -51,11 +55,6 @@ public class SlaverDataSourceConfiguration {
         bean.setDataSource(dataSource);
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:com/hugmount/helloboot/test/mapper/**/*Mapper.xml"));
         return bean.getObject();
-    }
-
-    @Bean(name = "slaverTransactionManager")
-    public DataSourceTransactionManager transactionManager(@Qualifier("slaverDataSource") DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean(name = "slaverSqlSessionTemplate")

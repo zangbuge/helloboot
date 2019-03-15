@@ -112,6 +112,11 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
 
+        <!--进行分布式事务管理-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

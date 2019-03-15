@@ -1,19 +1,19 @@
 package com.hugmount.helloboot.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * @Author: Li Huiming
@@ -38,12 +38,14 @@ public class MasterDataSourceConfiguration {
     @Bean(name = "masterDataSource")
     @Primary
     public DataSource dataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setDriverClassName(this.driverClassName);
-        dataSource.setUrl(this.url);
-        dataSource.setUsername(this.username);
-        dataSource.setPassword(this.password);
-        return dataSource;
+        AtomikosDataSourceBean atomikosDataSourceBean = new AtomikosDataSourceBean();
+        atomikosDataSourceBean.setXaDataSourceClassName(this.driverClassName);
+        Properties properties = new Properties();
+        properties.setProperty("url" ,this.url);
+        properties.setProperty("username" ,this.username);
+        properties.setProperty("password" ,this.password);
+        atomikosDataSourceBean.setXaProperties(properties);
+        return atomikosDataSourceBean;
     }
 
     @Bean(name = "masterSqlSessionFactory")
@@ -53,12 +55,6 @@ public class MasterDataSourceConfiguration {
         bean.setDataSource(dataSource);
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:com/hugmount/helloboot/product/mapper/**/*Mapper.xml"));
         return bean.getObject();
-    }
-
-    @Bean(name = "masterTransactionManager")
-    @Primary
-    public DataSourceTransactionManager transactionManager(@Qualifier("masterDataSource") DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean(name = "masterSqlSessionTemplate")
