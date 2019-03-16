@@ -6,8 +6,8 @@ server:
 spring:
   datasource:
     master:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useSSL=false
       username: root
       password: root
 
@@ -28,21 +28,4 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
-
-## 多数据源配置
-db_oracle: # 数据源2
-    datasource:
-#        driver-class-name: oracle.jdbc.OracleDriver
-        jdbcUrl: jdbc:oracle:thin:@192.168.10.242:1521:orcl
-        username: emerp
-        password: e97896
-#        type: com.alibaba.druid.pool.DruidDataSource
-#        masterMapperLocations: classpath*:com/hugmount/*/product/mapper/*.xml
-
-db_mysql:
-    datasource:
-#        driver-Class-Name: com.mysql.cj.jdbc.Driver
-        # 使用mysql的jdbc驱动最新版（6.0+）时加上 serverTimezone=UTC
-        jdbcUrl: jdbc:mysql://127.0.0.1:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC
-        username: root
-        password: root
+    returnPageInfo: check

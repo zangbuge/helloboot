@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.config;
 
+import com.alibaba.druid.pool.xa.DruidXADataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -13,7 +14,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 /**
  * @Author: Li Huiming
@@ -39,12 +39,16 @@ public class MasterDataSourceConfiguration {
     @Primary
     public DataSource dataSource() {
         AtomikosDataSourceBean atomikosDataSourceBean = new AtomikosDataSourceBean();
-        atomikosDataSourceBean.setXaDataSourceClassName(this.driverClassName);
-        Properties properties = new Properties();
-        properties.setProperty("url" ,this.url);
-        properties.setProperty("username" ,this.username);
-        properties.setProperty("password" ,this.password);
-        atomikosDataSourceBean.setXaProperties(properties);
+        DruidXADataSource dataSource = new DruidXADataSource ();
+        dataSource.setDriverClassName(this.driverClassName);
+        dataSource.setUrl(this.url);
+        dataSource.setUsername(this.username);
+        dataSource.setPassword(this.password);
+        atomikosDataSourceBean.setMinPoolSize(1);
+        atomikosDataSourceBean.setMaxPoolSize(30);
+        atomikosDataSourceBean.setReapTimeout(6000);
+        atomikosDataSourceBean.setXaDataSource(dataSource);
+
         return atomikosDataSourceBean;
     }
 
