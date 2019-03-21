@@ -1,6 +1,7 @@
 package com.hugmount.helloboot.product.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.hugmount.helloboot.core.Result;
 import com.hugmount.helloboot.product.pojo.ProductInfo;
 import com.hugmount.helloboot.product.service.ProductService;
 import io.swagger.annotations.Api;
@@ -32,15 +33,15 @@ public class ProductController {
     ProductService productService;
 
     @ApiOperation(value = "产品列表")
-    @ApiImplicitParams({@ApiImplicitParam(value = "id", name = "id", paramType = "query", dataType = "String", required = false)
-        ,@ApiImplicitParam(value = "productName" ,name = "productName" ,paramType = "query" ,dataType = "String" ,required = false)
+    @ApiImplicitParams({@ApiImplicitParam(name = "id", value = "产品id" ,paramType = "query", dataType = "String", required = true)
+        ,@ApiImplicitParam(name = "productName" ,value = "产品名称" ,paramType = "query" ,dataType = "String" ,required = true)
     })
     @PostMapping("/getProductList")
-    public String getProductList(ProductInfo productInfo){
+    public Result<List<ProductInfo>> getProductList(ProductInfo productInfo){
         List<ProductInfo> productList = productService.getProductList(productInfo);
         String listStr = JSON.toJSONString(productList);
         log.info(listStr);
-        return listStr;
+        return Result.createBySuccess("成功" ,productList);
     }
 
 }
