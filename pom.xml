@@ -145,6 +145,21 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <!-- 过滤后缀为p8、crt的证书文件 maven打包项目的时候pom.xml
+                    配置文件里可以配置对项目进行统一编码，但是部分文件 可能不需要进行重新编码，
+                    例如： 证书文件；重新编码后可能导致证书不可用-->
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>p8</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>crt</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
         </plugins>
 
         <resources>
