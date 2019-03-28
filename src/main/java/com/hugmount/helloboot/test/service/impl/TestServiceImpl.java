@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.test.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.hugmount.helloboot.test.mapper.TestMapper;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
@@ -21,6 +22,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public List<Test> getTestList(Test test) {
+        PageHelper.startPage(2,3);
         return testMapper.getTestList(test);
     }
 }

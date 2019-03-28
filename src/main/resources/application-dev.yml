@@ -22,10 +22,10 @@ spring:
 #    mapper-locations:  classpath*:com/hugmount/*/mapper/*.xml  # 注意：一定要对应mapper映射xml文件的所在路径
 #    type-aliases-package: com.hugmount.helloboot.*.pojo # 注意：对应实体类的路径
 
-## 配置pageHelper
-pagehelper:
-    helperDialect: mysql
-    reasonable: true
-    supportMethodsArguments: true
-    params: count=countSql
-    returnPageInfo: check
+## 配置pageHelper, 只可选择有一处配置
+#pagehelper:
+#    helperDialect: mysql
+#    reasonable: true
+#    supportMethodsArguments: true
+#    params: count=countSql
+#    returnPageInfo: check

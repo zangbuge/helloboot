@@ -3,6 +3,8 @@ package com.hugmount.helloboot.config;
 import com.alibaba.druid.pool.xa.DruidXADataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.github.pagehelper.PageInterceptor;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -19,6 +21,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * @Author: Li Huiming
@@ -55,9 +58,20 @@ public class MasterDataSourceConfiguration {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        atomikosDataSourceBean.setMinPoolSize(1);
-        atomikosDataSourceBean.setMaxPoolSize(30);
-        atomikosDataSourceBean.setReapTimeout(6000);
+        //最优配置
+        dataSource.setInitialSize(3);
+        dataSource.setMinIdle(3);
+        dataSource.setMaxActive(15);
+        //获取连接超时时间（单位：ms）
+        dataSource.setMaxWait(5000);
+        //连接有效性检测时间(单位:ms)
+        dataSource.setTimeBetweenEvictionRunsMillis(9000);
+        //获取连接检测,默认为关闭
+        dataSource.setTestOnBorrow(false);
+        //归还连接检测,默认为关闭
+        dataSource.setTestOnReturn(false);
+        //最大空闲时间(单位ms)默认为30分钟
+        dataSource.setMinEvictableIdleTimeMillis(1800000);
         atomikosDataSourceBean.setXaDataSource(dataSource);
 
         return atomikosDataSourceBean;
@@ -69,6 +83,20 @@ public class MasterDataSourceConfiguration {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:com/hugmount/helloboot/product/mapper/**/*Mapper.xml"));
+        //设置分页
+        Interceptor interceptor = new PageInterceptor();
+        Properties properties = new Properties();
+        //数据库方言
+        properties.setProperty("helperDialect", "mysql");
+        //是否将参数offset作为PageNum使用
+        properties.setProperty("offsetAsPageNum", "true");
+        //是否进行count查询
+        properties.setProperty("rowBoundsWithCount", "true");
+        //是否分页合理化
+        properties.setProperty("reasonable", "false");
+        interceptor.setProperties(properties);
+        bean.setPlugins(new Interceptor[] {interceptor});
+
         return bean.getObject();
     }
 
