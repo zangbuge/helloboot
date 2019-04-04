@@ -1,10 +1,31 @@
-#在Spring Boot中多环境配置文件名需要满足application-{profile}.properties的格式，
-#其中{profile}对应你的环境标识，比如：
-#application-dev.properties：开发环境
-#application-test.properties：测试环境
-#application-prod.properties：生产环境
+server:
+    port: 8086
+    servlet:
+        context-path: /helloboot
 
-# 切换配置文件, pro 为错误配置,应该无法启动
 spring:
-  profiles:
-    active: dev
+  datasource:
+    master:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useSSL=false
+      username: root
+      password: root
+
+    slaver:
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      url: jdbc:oracle:thin:@192.168.10.242:1521:orcl
+      username: emerp
+      password: e97896
+
+## 该配置节点为独立的节点，将这个配置放在spring的节点下，导致配置无法被识别
+#mybatis:
+#    mapper-locations:  classpath*:com/hugmount/*/mapper/*.xml  # 注意：一定要对应mapper映射xml文件的所在路径
+#    type-aliases-package: com.hugmount.helloboot.*.pojo # 注意：对应实体类的路径
+
+## 配置pageHelper
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+    returnPageInfo: check

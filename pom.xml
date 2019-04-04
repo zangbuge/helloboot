@@ -18,6 +18,25 @@
         <java.version>1.8</java.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <prop.name>test</prop.name>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>product</id>
+            <properties>
+                <prop.name>product</prop.name>
+            </properties>
+        </profile>
+
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -143,7 +162,6 @@
             <version>1.11</version>
         </dependency>
 
-
     </dependencies>
 
     <build>
@@ -167,17 +185,25 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <!-- 任务单元,一个phase可以绑定很多个goal,至少为一个，
-                        没有goal的phase是没有意义的-->
+                        <!-- maven的生命周期:
+                        validate，验证工程是否正确，所有需要的资源是否可用。
+                        compile，编译项目的源代码。
+                        test-compile，编译项目测试代码。
+                        test，使用已编译的测试代码，测试已编译的源代码。
+                        package，已发布的格式，如jar，将已编译的源代码打包。
+                        integration-test，在集成测试可以运行的环境中处理和发布包。
+                        verify，运行任何检查，验证包是否有效且达到质量标准。
+                        install，把包安装在本地的repository中，可以被其他工程作为依赖来使用
+                        deploy，在整合或者发布环境下执行，将最终版本的包拷贝到远程的repository
+                        -->
                         <phase>package</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <tasks>
-                                <!-- 支持${} ,取profiles标签的配置-->
-                                <copy overwrite="true" file="src/main/resources/doc/SQL.md"
-                                      tofile="src/main/resources/SQL.md"/>
+                                <copy overwrite="true" tofile="src/main/resources/application.yml"
+                                      file="src/main/resources/${prop.name}/application.yml"/>
                             </tasks>
                         </configuration>
                     </execution>
