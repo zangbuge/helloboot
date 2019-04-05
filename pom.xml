@@ -179,50 +179,44 @@
                 </configuration>
             </plugin>
 
-            <!-- copy文件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <!-- maven的生命周期:
-                        validate，验证工程是否正确，所有需要的资源是否可用。
-                        compile，编译项目的源代码。
-                        test-compile，编译项目测试代码。
-                        test，使用已编译的测试代码，测试已编译的源代码。
-                        package，已发布的格式，如jar，将已编译的源代码打包。
-                        integration-test，在集成测试可以运行的环境中处理和发布包。
-                        verify，运行任何检查，验证包是否有效且达到质量标准。
-                        install，把包安装在本地的repository中，可以被其他工程作为依赖来使用
-                        deploy，在整合或者发布环境下执行，将最终版本的包拷贝到远程的repository
-                        -->
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <copy overwrite="true" tofile="src/main/resources/application.yml"
-                                      file="src/main/resources/${prop.name}/application.yml"/>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <!-- 过滤后缀为p8、crt的证书文件 maven打包项目的时候pom.xml
-                    配置文件里可以配置对项目进行统一编码，但是部分文件 可能不需要进行重新编码，
-                    例如： 证书文件；重新编码后可能导致证书不可用-->
-                    <nonFilteredFileExtensions>
-                        <nonFilteredFileExtension>p8</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>crt</nonFilteredFileExtension>
-                    </nonFilteredFileExtensions>
-                </configuration>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <!-- 过滤后缀为p8、crt的证书文件 maven打包项目的时候pom.xml
+                            配置文件里可以配置对项目进行统一编码，但是部分文件 可能不需要进行重新编码，
+                            例如： 证书文件；重新编码后可能导致证书不可用-->
+                            <nonFilteredFileExtensions>
+                                <nonFilteredFileExtension>p8</nonFilteredFileExtension>
+                                <nonFilteredFileExtension>crt</nonFilteredFileExtension>
+                            </nonFilteredFileExtensions>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <overwrite>true</overwrite>
+                            <outputDirectory>src/main/resources/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/${prop.name}</directory>
+                                    <includes>
+                                        <include>**/*</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
