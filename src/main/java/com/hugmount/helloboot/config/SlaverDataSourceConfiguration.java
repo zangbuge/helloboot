@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
@@ -21,6 +22,7 @@ import java.util.Properties;
  * @Author: Li Huiming
  * @Date: 2019/3/13
  */
+@Profile("db_oracle")
 @Configuration
 @MapperScan(basePackages = "com.hugmount.helloboot.test.mapper", sqlSessionTemplateRef  = "slaverSqlSessionTemplate")
 public class SlaverDataSourceConfiguration {
