@@ -18,6 +18,25 @@
         <java.version>1.8</java.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <prop.name>test</prop.name>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>product</id>
+            <properties>
+                <prop.name>product</prop.name>
+            </properties>
+        </profile>
+
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -143,7 +162,6 @@
             <version>1.11</version>
         </dependency>
 
-
     </dependencies>
 
     <build>
@@ -164,16 +182,41 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <!-- 过滤后缀为p8、crt的证书文件 maven打包项目的时候pom.xml
-                    配置文件里可以配置对项目进行统一编码，但是部分文件 可能不需要进行重新编码，
-                    例如： 证书文件；重新编码后可能导致证书不可用-->
-                    <nonFilteredFileExtensions>
-                        <nonFilteredFileExtension>p8</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>crt</nonFilteredFileExtension>
-                    </nonFilteredFileExtensions>
-                </configuration>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <!-- 过滤后缀为p8、crt的证书文件 maven打包项目的时候pom.xml
+                            配置文件里可以配置对项目进行统一编码，但是部分文件 可能不需要进行重新编码，
+                            例如： 证书文件；重新编码后可能导致证书不可用-->
+                            <nonFilteredFileExtensions>
+                                <nonFilteredFileExtension>p8</nonFilteredFileExtension>
+                                <nonFilteredFileExtension>crt</nonFilteredFileExtension>
+                            </nonFilteredFileExtensions>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <overwrite>true</overwrite>
+                            <outputDirectory>src/main/resources/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/${prop.name}</directory>
+                                    <includes>
+                                        <include>**/*</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
