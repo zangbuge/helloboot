@@ -1,5 +1,6 @@
 package com.hugmount.helloboot;
 
+import com.alibaba.dubbo.config.spring.context.annotation.EnableDubbo;
 import com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 		, PageHelperAutoConfiguration.class //使用多数据源配置分页时排除
 })
 @MapperScan("com.hugmount.helloboot.*.mapper")
+@EnableDubbo
 public class HellobootApplication {
 
 	public static void main(String[] args) {
