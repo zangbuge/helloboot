@@ -9,7 +9,7 @@ import com.hugmount.helloboot.util.ThreadUtil;
 public class TestThread {
     public static void main(String[] args) {
         for (int i = 0; i < 1000; i++) {
-            String index = "" + 1;
+            final String index = "" + i;
             //lambda参数必须为final修饰
             ThreadUtil.execute(() -> {
                 System.out.println("线程A" + index);
