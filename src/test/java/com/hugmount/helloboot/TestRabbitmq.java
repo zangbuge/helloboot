@@ -1,6 +1,7 @@
 package com.hugmount.helloboot;
 
 import com.hugmount.helloboot.util.RabbitmqUtil;
+import com.rabbitmq.client.Connection;
 
 /**
  * @Author: Li Huiming
@@ -8,15 +9,18 @@ import com.hugmount.helloboot.util.RabbitmqUtil;
  */
 public class TestRabbitmq {
     public static void main(String[] args) {
-        RabbitmqUtil rabbitmqUtil = new RabbitmqUtil(
-                "192.168.10.180",
-                "installment",
-                "installment",
-                5672,
-                "hello",
-                "amq.direct");
-        rabbitmqUtil.send("hello world");
-        rabbitmqUtil.receive();
+        String ip = "192.168.10.180";
+        int port = 5672;
+        String username = "installment";
+        String password = "installment";
+        String vhost = "/installment";
+        String queueName = "abdc";
+        Connection connection = RabbitmqUtil.createConnection(ip, port, username, password, vhost);
+        RabbitmqUtil.sendMsg(connection, "" ,queueName ,"我就试试");
+        ConsumerDemo consumerDemo = new ConsumerDemo();
+        RabbitmqUtil.receive(queueName ,consumerDemo);
+
+        RabbitmqUtil.sendMsg("" ,queueName ,"我就试试222");
 
     }
 }
