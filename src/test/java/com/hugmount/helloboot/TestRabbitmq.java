@@ -1,7 +1,6 @@
 package com.hugmount.helloboot;
 
 import com.hugmount.helloboot.util.RabbitmqUtil;
-import com.rabbitmq.client.Connection;
 
 /**
  * @Author: Li Huiming
@@ -14,13 +13,18 @@ public class TestRabbitmq {
         String username = "installment";
         String password = "installment";
         String vhost = "/installment";
+
+        String exchangeName = "hello";
         String queueName = "abdc";
-        Connection connection = RabbitmqUtil.createConnection(ip, port, username, password, vhost);
-        RabbitmqUtil.sendMsg(connection, "" ,queueName ,"我就试试");
+        String router = "lhm";
+
+        RabbitmqUtil.createConnection(ip, port, username, password, vhost);
+        RabbitmqUtil.sendMsg(exchangeName, queueName ,router ,"我就试试");
         ConsumerDemo consumerDemo = new ConsumerDemo();
-        RabbitmqUtil.receive(queueName ,consumerDemo);
+        RabbitmqUtil.receive(exchangeName, queueName, router,consumerDemo);
 
-        RabbitmqUtil.sendMsg("" ,queueName ,"我就试试222");
+        RabbitmqUtil.sendMsg(exchangeName, queueName ,router ,"我就试试222");
 
+        RabbitmqUtil.sendMsg(exchangeName, queueName ,"good" ,"换个路由, 我就试试33");
     }
 }

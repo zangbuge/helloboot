@@ -7,7 +7,7 @@ import com.hugmount.helloboot.util.RabbitmqUtil;
  * @Date: 2019/5/16
  */
 public class ConsumerDemo extends RabbitmqUtil.ConsumerService {
-    public void consume(String queueName, String receiveMsg, String... args) {
+    public void consume(String receiveMsg, String... args) {
         System.out.println("我已经消费了哦, 信息: " + receiveMsg);
     }
 }
