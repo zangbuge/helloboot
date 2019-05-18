@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <p>websocket wellcome</p>
+    <input type="test" id="msg">
+    <button onclick="sendMsg()">发送信息</button>
+    <div id="receiveMsg"></div>
+</body>
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    var url = 'ws://' + window.location.host + '/helloboot/websocket/marco';
+    var websocket = new WebSocket(url);
+    //打开websocket连接事件
+    websocket.onopen = function () {
+        console.info('websocket connection success !')
+    }
+    //处理信息
+    websocket.onmessage = function (res) {
+        console.info('websocket 接收到信息: ' ,res.data)
+        $('#receiveMsg').append(res.data).append('<br>');
+    }
+    //关闭连接事件
+    websocket.onclose = function () {
+        console.info('websocket connection close !')
+    }
+
+    //websocket发送信息
+    function sendMsg() {
+        var msg = $('#msg').val();
+        console.info('发送信息: ' + msg)
+        websocket.send(msg);
+    }
+
+</script>
+</html>
