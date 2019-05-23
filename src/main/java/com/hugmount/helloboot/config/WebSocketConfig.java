@@ -53,7 +53,7 @@ public class WebSocketConfig implements WebSocketConfigurer{
         @Override
         protected void handleTextMessage (WebSocketSession socketSession , TextMessage textMessage){
             try {
-                log.info("hello webSocket how are you ok");
+                log.info("hello webSocket send success");
 //                Thread.sleep(1000); //延迟1秒
                 //发送socket信息
                 socketSession.sendMessage(textMessage);
@@ -70,14 +70,14 @@ public class WebSocketConfig implements WebSocketConfigurer{
         @Override
         public void afterConnectionEstablished(WebSocketSession session) throws Exception {
             userSessionSet.add(session);
-            log.info("用户上线, 当前连接websocket用户数量: " + userSessionSet.size());
+            log.info("用户上线, 在线用户数量: " + userSessionSet.size());
             //也可在此实现自己的业务
         }
 
         @Override
         public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
             userSessionSet.remove(session);
-            log.info("用户下线, 剩余在线用户数量: " + userSessionSet.size());
+            log.info("用户下线, 在线用户数量: " + userSessionSet.size());
         }
 
 
@@ -89,16 +89,20 @@ public class WebSocketConfig implements WebSocketConfigurer{
                         for (String user : userNameSet) {
                             if (targetUser.equals(user)) {
                                 socketSession.sendMessage(textMessage);
+                                log.info("websocket推送给用户成功,目标用户: " + targetUser);
+                            }
+                            else {
+                                log.info("websocket推送失败, 核对目标用户: " + user + " ,session中目标用户: " + targetUser);
                             }
                             break;
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    log.info("websocket推送给用户失败");
+                    log.info("websocket推送给用户失败, 系统异常");
                     return;
                 }
-                log.debug("websocket推送给用户成功");
+
             }
 
         }

@@ -12,7 +12,7 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
-/**
+/** websocket拦截器
  * @Author: Li Huiming
  * @Date: 2019/5/17
  */
@@ -31,10 +31,14 @@ public class WebsocketInterceptHandler extends HttpSessionHandshakeInterceptor{
             HttpSession httpSession = serverHttpRequest.getServletRequest().getSession();
             if (null != httpSession) {
                 String userName = (String) httpSession.getAttribute(WebSocketConfig.WEBSOCKET_USERNAME);
-                if (null != userName)
+                if (null != userName){
                     attributes.put(WebSocketConfig.WEBSOCKET_USERNAME ,userName);
+                    log.info("websocketSession中添加用户成功");
+                }
+                else {
+                    log.info("websocketSession中添加用户失败");
+                }
             }
-            log.info("websocketSession中添加用户成功");
         }
 
         return super.beforeHandshake(request, response, wsHandler, attributes);

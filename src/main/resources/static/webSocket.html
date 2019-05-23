@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>websocket</title>
 </head>
 <body>
     <p>websocket wellcome</p>
-    <input type="test" id="msg">
-    <button onclick="sendMsg()">发送信息</button>
-    <div id="receiveMsg"></div>
+    user: <input type="text" id="userName"><br><br>
+
+    msg : <input type="text" id="msg"> 发送给 <input type="text" id="targetName"><br><br>
+    <button onclick="sendMsg()">发送信息到本页面</button>
+    <button onclick="sendToUser()">发送到用户</button><br><br>
+    <div id="receiveMsg"></div><br><br>
 </body>
 <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 <script>
@@ -21,7 +24,7 @@
     //处理信息
     websocket.onmessage = function (res) {
         console.info('websocket 接收到信息: ' ,res.data)
-        $('#receiveMsg').append(res.data).append('<br>');
+        $('#receiveMsg').append(res.data).append('<br><br>');
     }
     //关闭连接事件
     websocket.onclose = function () {
@@ -34,6 +37,44 @@
         console.info('发送信息: ' + msg)
         websocket.send(msg);
     }
+
+    //登录
+    function userLogin () {
+        console.info('正在登录')
+        var url = '/helloboot/websocket/login'
+        var userName = $('#userName').val();
+        $.ajax({
+            url : url
+            ,type : 'get'
+            ,data : {userName : userName}
+            ,dataType : 'json'
+            ,async: false
+            ,success : function (res) {
+                console.info(res)
+                alert('登录成功');
+            }
+        });
+
+    }
+
+    // 发送信息给指定用户
+    function sendToUser () {
+        console.info('正在发送');
+        var url = '/helloboot/websocket/send';
+        var targetName = $('#targetName').val();
+        var msg = $('#msg').val();
+        $.ajax({
+            url : url
+            ,type : 'POST'
+            ,data : {targetUser : targetName, msg : msg}
+            ,dataType : 'json'
+            ,success : function (res) {
+                console.info(res);
+            }
+        });
+    }
+
+
 
 </script>
 </html>

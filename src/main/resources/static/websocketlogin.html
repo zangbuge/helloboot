@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket</title>
+</head>
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+
+<body>
+user: <input type="text" id="userName">
+<button onclick="userLogin()">先登录</button><br><br>
+</body>
+
+<script>
+    //登录
+    function userLogin () {
+        console.info('正在登录')
+        var url = '/helloboot/websocket/login'
+        var userName = $('#userName').val();
+        $.ajax({
+            url : url
+            ,type : 'get'
+            ,data : {userName : userName}
+            ,dataType : 'json'
+            ,async: false
+            ,success : function (res) {
+                console.info(res)
+                alert('登录成功');
+                window.location.href = 'webSocket.html';
+            }
+        });
+
+    }
+
+</script>
+
+</html>

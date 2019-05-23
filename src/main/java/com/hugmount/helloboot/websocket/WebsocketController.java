@@ -1,10 +1,12 @@
 package com.hugmount.helloboot.websocket;
 
 import com.hugmount.helloboot.config.WebSocketConfig;
+import com.hugmount.helloboot.core.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.socket.TextMessage;
@@ -28,20 +30,22 @@ public class WebsocketController {
     WebSocketConfig webSocketConfig;
 
     @GetMapping("/login")
-    public void login (String userName ,HttpServletRequest request) {
+    public Result<String> login (String userName , HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute(WebSocketConfig.WEBSOCKET_USERNAME, userName);
         log.info("websocket登录成功");
+        return Result.createBySuccess("success");
     }
 
-    @GetMapping("/send")
-    public void send (String targetUser ,String msg) {
+    @PostMapping("/send")
+    public Result<String> send (String targetUser ,String msg) {
         WebSocketConfig.MarcoHandler marcoHandler = webSocketConfig.marcoHandler();
         HashSet<String> uers = new HashSet<>();
         uers.add(targetUser);
         TextMessage textMessage = new TextMessage(msg);
         marcoHandler.sendMsgToUser(uers ,textMessage);
         log.info("websoket发送信息完成");
+        return Result.createBySuccess("success");
     }
 
 }
