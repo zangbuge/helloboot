@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>websocket</title>
 </head>
-<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
-
+<script src="webjars/jquery/3.1.1/jquery.js"></script>
+<script src="webjars/jquery.cookie/1.4.1/jquery.cookie.js" ></script>
 <body>
+
 user: <input type="text" id="userName">
 <button onclick="userLogin()">先登录</button><br><br>
 </body>
@@ -29,7 +30,7 @@ user: <input type="text" id="userName">
                 window.location.href = 'webSocket.html';
             }
         });
-
+        $.cookie('userName',userName);
     }
 
 </script>
