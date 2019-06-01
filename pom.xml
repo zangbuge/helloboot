@@ -186,6 +186,11 @@
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>0.36</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
             <artifactId>sockjs-client</artifactId>
             <version>1.0.2</version>
         </dependency>
@@ -202,8 +207,14 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>jquery.cookie</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+
         <!--websocket end-->
 
     </dependencies>

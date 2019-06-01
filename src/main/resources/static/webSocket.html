@@ -13,7 +13,9 @@
     <button onclick="sendToUser()">发送到用户</button><br><br>
     <div id="receiveMsg"></div><br><br>
 </body>
+
 <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/jquery.cookie/1.4.1/jquery.cookie.js" ></script>
 <script>
     var url = 'ws://' + window.location.host + '/helloboot/websocket/marco';
     var websocket = new WebSocket(url);
@@ -38,24 +40,6 @@
         websocket.send(msg);
     }
 
-    //登录
-    function userLogin () {
-        console.info('正在登录')
-        var url = '/helloboot/websocket/login'
-        var userName = $('#userName').val();
-        $.ajax({
-            url : url
-            ,type : 'get'
-            ,data : {userName : userName}
-            ,dataType : 'json'
-            ,async: false
-            ,success : function (res) {
-                console.info(res)
-                alert('登录成功');
-            }
-        });
-
-    }
 
     // 发送信息给指定用户
     function sendToUser () {
@@ -74,7 +58,10 @@
         });
     }
 
-
+    var user = $.cookie("userName");
+    console.info(user);
+    $('#userName').val(user);
+    $('#userName').attr('disabled','true');
 
 </script>
 </html>
