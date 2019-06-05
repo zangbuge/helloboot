@@ -3,24 +3,24 @@ package com.hugmount.helloboot.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
+/** 直接继承WebMvcConfigurationSupport会使springboot默认配置失效
  * @Author: Li Huiming
  * @Date: 2019/6/3
  */
 
 @Configuration
-public class WebMvcConfig extends WebMvcConfigurationSupport {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 配置静态资源访问: http://localhost:8086/helloboot/store/123.png
      * @param registry
      */
     @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/store/**").addResourceLocations("classpath:/store/");
-        super.addResourceHandlers(registry);
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/store/**")
+                .addResourceLocations("classpath:/store/");
     }
 
     /**
@@ -28,7 +28,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
      * @param registry
      */
     @Override
-    protected void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SecurityInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/static/**");
