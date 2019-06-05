@@ -1,6 +1,7 @@
 package com.hugmount.helloboot.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -20,6 +21,17 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/store/**").addResourceLocations("classpath:/store/");
         super.addResourceHandlers(registry);
+    }
+
+    /**
+     * 添加拦截器
+     * @param registry
+     */
+    @Override
+    protected void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new SecurityInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/static/**");
     }
 
 }
