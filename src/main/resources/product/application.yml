@@ -13,9 +13,9 @@ spring:
 
     slaver:
       driver-class-name: oracle.jdbc.driver.OracleDriver
-      url: jdbc:oracle:thin:@192.168.10.242:1521:orcl
-      username: emerp
-      password: e97896
+      url: xxx
+      username: xxx
+      password: xxx
 
 ## 该配置节点为独立的节点，将这个配置放在spring的节点下，导致配置无法被识别
 #mybatis:

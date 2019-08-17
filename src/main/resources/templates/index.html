@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>home</title>
+</head>
+
+<body>
+    <h3>wellcome</h3>
+    <div onclick="hello(this)" data-msg="hugmount">hello</div>
+</body>
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    function hello(that) {
+        //使用自定义属性传值, 避免在事件 hello('hugmount') 中传值,数值太长变成科学计数法的问题
+        var msg = $(that).attr("data-msg");
+        console.log(msg)
+    }
+</script>
+</html>
