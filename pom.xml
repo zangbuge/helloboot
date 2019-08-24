@@ -60,11 +60,16 @@
             <version>2.0.0</version>
         </dependency>
 
+        <!-- 热启动必要配置: IDEA自动编译开启,
+            勾选 File -> Settings -> Compiler-Build -> Project automatically,
+            ctrl + shift + alt + / ,选择Registry, 勾上 Compiler autoMake allow when app running
+         -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>

@@ -9,6 +9,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -16,6 +17,11 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.apache.shiro.mgt.SecurityManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author Li Huiming
@@ -49,6 +55,32 @@ public class ShiroConfig {
     }
 
 
+    // 设置对应的过滤条件和跳转条件
+    @Bean
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+
+        Map<String, String> map = new HashMap<>();
+        // 表示可以匿名访问
+        map.put("/index", "anon");
+        map.put("/login", "anon");
+        map.put("/logout", "logout");
+        // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
+        map.put("/**", "authc");
+
+        // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+        shiroFilterFactoryBean.setLoginUrl("/index");
+        // 登录成功以后
+        shiroFilterFactoryBean.setSuccessUrl("/index");
+        // 错误页面，认证不通过跳转
+        shiroFilterFactoryBean.setUnauthorizedUrl("/error");
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
+        return shiroFilterFactoryBean;
+    }
+
+
+
     /**
      * 设置对应的过滤条件和跳转条件
      * @return
@@ -57,15 +89,16 @@ public class ShiroConfig {
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chain = new DefaultShiroFilterChainDefinition();
 
-        // 访问控制 ,注意过滤器配置顺序 不能颠倒
-        chain.addPathDefinition("/download_error", "anon");// 可以匿名访问
-        chain.addPathDefinition("/404", "anon");//404页面
-        chain.addPathDefinition("/login", "anon");//登录不能拦截
-        chain.addPathDefinition("/css/**", "anon");//静态资源文件
-        chain.addPathDefinition("/js/**", "anon");
-        // 其它路径均需要登录
-        chain.addPathDefinition("/**", "authc");//其他使用注解判断
+//        // 访问控制 ,注意过滤器配置顺序 不能颠倒
+//        chain.addPathDefinition("/index", "anon");// 可以匿名访问
+//        chain.addPathDefinition("/404", "anon");//404页面
+//        chain.addPathDefinition("/login", "anon");//登录不能拦截
+//        chain.addPathDefinition("/css/**", "anon");//静态资源文件
+//        chain.addPathDefinition("/js/**", "anon");
+//        // 其它路径均需要登录
+//        chain.addPathDefinition("/**", "authc");//其他使用注解判断
 
+        //不需要在此处配置权限页面,因为上面的ShiroFilterFactoryBean已经配置过,但是此处必须存在,
         return chain;
     }
 

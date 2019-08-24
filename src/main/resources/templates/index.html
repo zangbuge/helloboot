@@ -8,6 +8,8 @@
 <body>
     <h3>wellcome</h3>
     <div onclick="hello(this)" data-msg="hugmount">hello</div>
+    <button onclick="login();">login</button>
+    <img id="pic" src="">
 </body>
 <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 <script>
@@ -16,5 +18,41 @@
         var msg = $(that).attr("data-msg");
         console.log(msg)
     }
+
+    function login() {
+        var url = "/helloboot/login";
+        var  data = {username : "hugmount" ,password : "password"}
+        $.ajax({
+            url : url
+            ,type : 'post'
+            ,data : JSON.stringify(data)
+            ,dataType : 'json'
+            ,contentType : 'application/json'
+            ,success : function (res) {
+                alert(res.username);
+            }
+        })
+    }
+
+    // curWwwPath = http://localhost:8086/helloboot/index;JSESSIONID=1981a429-23af-4781-940d-8068445b1646
+    var curWwwPath = window.document.location.href;
+    var pathName =  window.document.location.pathname;
+    var index = curWwwPath.indexOf(pathName);
+    var baseUrl = curWwwPath.substr(0, index);
+    console.log('baseUrl: ' + baseUrl);
+    console.log(curWwwPath)
+    console.log(pathName)
+    $("#pic").attr("src" ,baseUrl + "/helloboot/store/123.png");
+
+    // js中session操作
+    // 保存数据到sessionStorage
+    sessionStorage.setItem('key', 'value');
+    // 从sessionStorage获取数据
+    var data = sessionStorage.getItem('key');
+    // 从sessionStorage删除保存的数据
+    sessionStorage.removeItem('key');
+    // 从sessionStorage删除所有保存的数据
+    sessionStorage.clear();
+
 </script>
 </html>

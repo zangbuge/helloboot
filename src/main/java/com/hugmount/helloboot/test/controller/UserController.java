@@ -5,20 +5,19 @@ import com.hugmount.helloboot.test.pojo.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author Li Huiming
  * @Date 2019/8/17
  */
 
-@RestController
+@Controller
 public class UserController {
 
 
+    @ResponseBody
     @PostMapping("/login")
     public String login(@RequestBody User user) {
         System.out.println(JSON.toJSONString(user));
@@ -44,6 +43,8 @@ public class UserController {
 
     }
 
+
+    @ResponseBody
     @GetMapping("/logout")
     public String logOut() {
         Subject subject = SecurityUtils.getSubject();
@@ -55,11 +56,22 @@ public class UserController {
 
 //    @RequiresRoles("xxxx") 这里配置的是哪些角色可以使用
 //    @RequiresPermissions("xxxxxxx")这里配置的是哪些权限可以使用
+    @ResponseBody
     @GetMapping("/testHello")
     public String testHello() {
         System.out.println("测试权限");
 
         return "testHello";
+    }
+
+
+    /**
+     *  主页
+     * @return
+     */
+    @GetMapping("/index")
+    public String index() {
+        return "index";
     }
 
 }
