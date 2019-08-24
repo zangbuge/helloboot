@@ -8,8 +8,10 @@
 <body>
     <h3>wellcome</h3>
     <div onclick="hello(this)" data-msg="hugmount">hello</div>
-    <button onclick="login();">login</button>
-    <img id="pic" src="">
+    <button onclick="login();" style="float:left;">login</button>
+    <div>
+        <img id="pic" src="" onclick="setImg();">
+    </div>
 </body>
 <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 <script>
@@ -30,9 +32,34 @@
             ,contentType : 'application/json'
             ,success : function (res) {
                 alert(res.username);
+                window.location.reload();
             }
         })
     }
+    
+    
+    function setImg() {
+        var img = document.getElementById("pic");
+        var base64Str = getBase64Image(img);
+        console.log('base64: ' + base64Str);
+        $("#pic").attr("src","");
+//        $("#pic").attr("src",base64Str);
+    }
+
+
+    function getBase64Image(img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+        var dataURL = canvas.toDataURL("image/png");
+        return dataURL
+        // return dataURL.replace("data:image/png;base64,", "");
+    }
+
 
     // curWwwPath = http://localhost:8086/helloboot/index;JSESSIONID=1981a429-23af-4781-940d-8068445b1646
     var curWwwPath = window.document.location.href;
@@ -46,9 +73,10 @@
 
     // js中session操作
     // 保存数据到sessionStorage
-    sessionStorage.setItem('key', 'value');
+    sessionStorage.setItem('hello', '你好, session');
     // 从sessionStorage获取数据
-    var data = sessionStorage.getItem('key');
+    var data = sessionStorage.getItem('hello');
+    console.info(data);
     // 从sessionStorage删除保存的数据
     sessionStorage.removeItem('key');
     // 从sessionStorage删除所有保存的数据
