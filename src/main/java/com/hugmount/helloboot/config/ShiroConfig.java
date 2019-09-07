@@ -65,6 +65,8 @@ public class ShiroConfig {
         // 表示可以匿名访问
         map.put("/index", "anon");
         map.put("/login", "anon");
+        map.put("/js", "anon");
+        map.put("/css", "anon");
         map.put("/logout", "logout");
         // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
         map.put("/**", "authc");

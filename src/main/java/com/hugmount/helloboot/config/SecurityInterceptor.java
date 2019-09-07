@@ -20,6 +20,18 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
         // 跳转登录
 //        String url = "/login";
 //        response.sendRedirect(url);
+
+        //转发页面请求
+//        String requestServletPath = request.getServletPath();
+//        log.info("requestServletPath: " + requestServletPath);
+//        int indexOf = requestServletPath.indexOf(".html");
+//        if (indexOf > 0) {
+//            String newUrl = requestServletPath.substring(0, indexOf);
+//            log.info("newUrl: " + newUrl);
+//            request.getRequestDispatcher(newUrl).forward(request, response);
+//            return false;
+//        }
+
         return true;
     }
 }

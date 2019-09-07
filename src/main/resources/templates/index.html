@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>home</title>
-</head>
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="component/common::commonHeader('主页')">
 <body>
+    <div th:include="component/common::commonNav"></div>
     <h3>wellcome</h3>
     <div onclick="hello(this)" data-msg="hugmount">hello</div>
     <button onclick="login();" style="float:left;">login</button>
     <div>
         <img id="pic" src="" onclick="setImg();">
     </div>
+    <button id="opener" onclick="testDialog()">打开对话框</button>
+    <div th:include="component/common::commonFooter"></div>
 </body>
-<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 <script>
     function hello(that) {
         //使用自定义属性传值, 避免在事件 hello('hugmount') 中传值,数值太长变成科学计数法的问题
@@ -67,8 +65,8 @@
     var index = curWwwPath.indexOf(pathName);
     var baseUrl = curWwwPath.substr(0, index);
     console.log('baseUrl: ' + baseUrl);
-    console.log(curWwwPath)
-    console.log(pathName)
+    console.log('curWwwPath: ' + curWwwPath)
+    console.log('pathName: ' + pathName)
     $("#pic").attr("src" ,baseUrl + "/helloboot/store/123.png");
 
     // js中session操作
@@ -81,6 +79,12 @@
     sessionStorage.removeItem('key');
     // 从sessionStorage删除所有保存的数据
     sessionStorage.clear();
+
+    function testDialog() {
+        dialog("确认删除吗" ,function () {
+            alert("已删除")
+        })
+    }
 
 </script>
 </html>
