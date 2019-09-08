@@ -274,7 +274,7 @@
                             <outputDirectory>src/main/resources/</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/resources/${prop.name}</directory>
+                                    <directory>src/main/resources/conf/${prop.name}</directory>
                                     <includes>
                                         <include>**/*</include>
                                     </includes>
