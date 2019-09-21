@@ -2,6 +2,7 @@ package com.hugmount.helloboot.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
+import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
@@ -11,12 +12,18 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -68,6 +75,46 @@ public class HttpClientUtil {
         return httpClient;
     }
 
+
+
+    public static String uploadFile(String url, File file, String name, Map<String, Object> param
+            , CloseableHttpClient httpClient) {
+
+        CloseableHttpResponse response;
+        try {
+            if (null == httpClient) {
+                httpClient = getClient();
+            }
+
+            HttpPost httpPost = new HttpPost(url);
+            // 相当于<input type="file" name="file"/>
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setCharset(Charset.forName("utf-8"));
+            //以浏览器兼容模式运行，防止文件名乱码。必须
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            builder.addBinaryBody(name, new FileInputStream(file), ContentType.DEFAULT_BINARY, file.getName());
+            for (Map.Entry<String, Object> entry : param.entrySet()) {
+                String key = entry.getKey();
+                String obj = entry.getValue().toString();
+
+                // 相当于<input type="text" name="userName" value=userName>
+                StringBody value = new StringBody(obj, ContentType.create("text/plain", Consts.UTF_8));
+                builder.addPart(key, value);
+            }
+            HttpEntity reqEntity = builder.build();
+            httpPost.setEntity(reqEntity);
+            // 发起请求 并返回请求的响应
+            response = httpClient.execute(httpPost);
+            // 获取响应对象
+            HttpEntity resEntity = response.getEntity();
+            if (resEntity != null) {
+                return EntityUtils.toString(resEntity, Consts.UTF_8);
+            }
+        }catch (Exception e) {
+            log.error("上传文件失败", e);
+        }
+        return null;
+    }
 
 
     public static String sendRequestKeepAlive(CloseableHttpClient httpClient, String url, Map<String, Object> param
