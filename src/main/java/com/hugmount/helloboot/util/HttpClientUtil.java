@@ -13,6 +13,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import java.net.URI;
@@ -107,7 +108,7 @@ public class HttpClientUtil {
             }
 
             HttpEntity entity = httpResponse.getEntity();
-            String res = EntityUtils.toString(entity);
+            String res = EntityUtils.toString(entity, HTTP.UTF_8);
             return res;
         } catch (Exception e) {
             log.error("请求失败,url: {}", url, e);
