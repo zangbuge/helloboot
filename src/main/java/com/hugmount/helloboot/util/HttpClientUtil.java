@@ -4,21 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
 import java.util.Map;
 
 /**
@@ -28,6 +25,9 @@ import java.util.Map;
 
 @Slf4j
 public class HttpClientUtil {
+
+    private static final String TYPE_GET = "get";
+    private static final String TYPE_POST = "post";
 
     public static String doPostJson(String url, String json, CloseableHttpClient httpClient) {
         if (null == httpClient) {
@@ -53,6 +53,13 @@ public class HttpClientUtil {
         return resultStr;
     }
 
+    public static String doPost(String url, Map<String, Object> param, CloseableHttpClient httpClient) {
+        return  sendRequestKeepAlive(httpClient, url, param, TYPE_POST, null);
+    }
+
+    public static String doGet(String url, Map<String, Object> param, CloseableHttpClient httpClient) {
+        return  sendRequestKeepAlive(httpClient, url, param, TYPE_GET, null);
+    }
 
 
     public static CloseableHttpClient getClient() {
@@ -61,39 +68,44 @@ public class HttpClientUtil {
     }
 
 
-    /**
-     * 不可用
-     * @return
-     */
-    public static String sendPostKeepAlive(CloseableHttpClient httpClient, String url, Map<String, Object> param
-            ,Map<String, Object> header) {
+
+    public static String sendRequestKeepAlive(CloseableHttpClient httpClient, String url, Map<String, Object> param
+            ,String type ,Map<String, Object> header) {
 
         try {
             if (httpClient == null) {
                 httpClient = getClient();
             }
-            HttpPost httpPost = new HttpPost(url);
-            RequestConfig config = createConfig();
-            httpPost.setConfig(config);
-            // 设置请求头信息
-            if (MapUtils.isNotEmpty(header)) {
-                for (Map.Entry<String, Object> map : header.entrySet()) {
-                    httpPost.addHeader(map.getKey(), map.getValue().toString());
+
+            // 创建uri
+            URIBuilder builder = new URIBuilder(url);
+            if (param != null) {
+                for (String key : param.keySet()) {
+                    builder.addParameter(key, param.get(key).toString());
                 }
             }
-            // 设置请求参数
-            if (MapUtils.isNotEmpty(param)) {
-                List<NameValuePair> formParams = new ArrayList<>();
-                for (Map.Entry<String, Object> entry : param.entrySet()) {
-                    //给参数赋值
-                    BasicNameValuePair basicNameValuePair = new BasicNameValuePair(entry.getKey(), entry.getValue().toString());
-                    formParams.add(basicNameValuePair);
-                }
-                UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(formParams, HTTP.UTF_8);
-                httpPost.setEntity(urlEncodedFormEntity);
+
+            HttpResponse httpResponse;
+            // 创建http GET 或 Post 请求
+            URI uri = builder.build();
+            if (TYPE_GET.equals(type)) {
+                HttpGet httpGet = new HttpGet(uri);
+                httpResponse = httpClient.execute(httpGet);
             }
-            // 执行请求
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+            else {
+                HttpPost httpPost = new HttpPost(uri);
+                RequestConfig config = createConfig();
+                httpPost.setConfig(config);
+                // 设置请求头信息
+                if (MapUtils.isNotEmpty(header)) {
+                    for (Map.Entry<String, Object> map : header.entrySet()) {
+                        httpPost.addHeader(map.getKey(), map.getValue().toString());
+                    }
+                }
+                // 执行请求
+                httpResponse = httpClient.execute(httpPost);
+            }
+
             HttpEntity entity = httpResponse.getEntity();
             String res = EntityUtils.toString(entity);
             return res;
