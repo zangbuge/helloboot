@@ -43,7 +43,7 @@ public class HttpUtil {
 			httpURLConnection.setReadTimeout(30000);    //30秒读取超时
 			//传入参数
 			out = httpURLConnection.getOutputStream();
-			out.write(jsonParam.getBytes());
+			out.write(jsonParam.getBytes("utf-8"));
 			out.flush(); //清空缓冲区,发送数据
 			out.close();
 			responseCode = httpURLConnection.getResponseCode();
@@ -53,11 +53,11 @@ public class HttpUtil {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		System.out.println("远程主机响应的HTTP状态码: " + responseCode);
+
 		return result;
 
 	}
+
 
 	/**使用URLConnection发送post
 	 * @param url 请求链接
