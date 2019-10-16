@@ -7,7 +7,7 @@ import com.hugmount.helloboot.dubbo.customer.NormalBillServiceDubbo;
  * @Author: Li Huiming
  * @Date: 2019/4/18
  */
-@Service
+//@Service
 public class NormalBillServiceDubboImpl implements NormalBillServiceDubbo {
 
     /**

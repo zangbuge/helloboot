@@ -43,6 +43,8 @@ public class ShiroConfig {
         defaultWebSessionManager.setGlobalSessionTimeout(1000 * 60 * 30);// 会话过期时间,单位：毫秒(在无操作时开始计时)
         defaultWebSessionManager.setSessionValidationSchedulerEnabled(true);
         defaultWebSessionManager.setSessionIdCookieEnabled(true);
+        // shiro默认设置会重写url, 给加上jsessionid. 设为false, 则不会在url上拼jsessionid
+        defaultWebSessionManager.setSessionIdUrlRewritingEnabled(false);
         return defaultWebSessionManager;
     }
 
