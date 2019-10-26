@@ -252,6 +252,14 @@
         </dependency>
         <!-- httpclient end -->
 
+        <!-- 三方加密解密工具 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.6.2</version>
+        </dependency>
+
+
 
     </dependencies>
 
