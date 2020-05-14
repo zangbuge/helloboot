@@ -22,7 +22,7 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public List<Test> getTestList(Test test) {
-        PageHelper.startPage(2,3);
+        PageHelper.startPage(1,3);
         return testMapper.getTestList(test);
     }
 }

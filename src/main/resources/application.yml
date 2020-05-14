@@ -54,3 +54,7 @@ dubbo:
         timeout: 30000
         check: false
         retries: 0
+
+thrift:
+  port: 9899
+  host: localhost
