@@ -26,37 +26,26 @@ public class ThriftServer implements ApplicationContextAware {
     @Value("${thrift.port}")
     private int port;
 
-    private TBinaryProtocol.Factory protocolFactory;
-
-    private TTransportFactory transportFactory;
-
     private static ApplicationContext context;
-
-    public void init() {
-        if (null == protocolFactory)
-            protocolFactory = new TBinaryProtocol.Factory();
-
-        if (null == transportFactory)
-        transportFactory = new TTransportFactory();
-    }
 
     public void start() {
         new Thread(){
             @Override
             public void run(){
                 TProcessor processor = new HelloService.Processor<HelloService.Iface>(new HelloServiceImpl());
-                init();
                 try{
                     TServerSocket serverSocket = new TServerSocket(port);
                     TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverSocket);
+                    TBinaryProtocol.Factory protocolFactory = new TBinaryProtocol.Factory();
+                    TTransportFactory transportFactory = new TTransportFactory();
                     args.protocolFactory(protocolFactory);
-                    args.processor(processor);
                     args.transportFactory(transportFactory);
+                    args.processor(processor);
                     TServer server = new TThreadPoolServer(args);
-                    log.info("thrift server start success, port={}",port);
+                    log.info("thrift server start success, port = {}", port);
                     server.serve();
                 }catch (TTransportException e){
-                    log.error("thrift server start fail",e);
+                    log.error("thrift server start fail", e);
                 }
             }
         }.start();
