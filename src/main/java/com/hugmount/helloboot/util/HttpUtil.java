@@ -1,5 +1,7 @@
 package com.hugmount.helloboot.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -18,6 +22,7 @@ import java.util.Map.Entry;
  *
  * @date 2018年10月18日
  */
+@Slf4j
 public class HttpUtil {
 
 
@@ -65,7 +70,7 @@ public class HttpUtil {
 	 * @param charset 编码值为null: default UTF-8
 	 * @return 请求响应结果
 	 */
-	public static String sendPost(String url, Map<String, Object> params, String charset) {
+	public static String sendPost(String url, Map<String, Object> params, Map<String, Object> headerMap) {
 		StringBuffer resultBuffer = null;
 		// 构建请求参数
 		StringBuffer sbParams = new StringBuffer();
@@ -89,12 +94,16 @@ public class HttpUtil {
 			con.setRequestProperty("connection", "Keep-Alive");
 			con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			con.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+			Iterator<Entry<String, Object>> iterator = headerMap.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Entry<String, Object> next = iterator.next();
+				con.setRequestProperty(next.getKey().toString(), next.getValue().toString());
+			}
 			// 发送POST请求必须设置如下两行
 			con.setDoOutput(true);
 			con.setDoInput(true);
 			//默认编码格式
-			if(null == charset || "" == charset)
-				charset = "UTF-8";
+			String charset = "UTF-8";
 			// 获取URLConnection对象对应的输出流
 			osw = new OutputStreamWriter(con.getOutputStream(), charset);
 			if (sbParams != null && sbParams.length() > 0) {
@@ -211,6 +220,66 @@ public class HttpUtil {
 	}
 
 
-
+	/**
+	 * 处理josn格式的post请求
+	 * @param urlSource
+	 * @param json
+	 * @return
+	 */
+	public static Map<String,String> doJosnPost(String urlSource,String json, Map<String, Object> headerMap)throws Exception{
+		log.error("======doJosnPost=====："+urlSource);
+		Map<String,String> map=new HashMap<String,String>();
+		OutputStream out=null;
+		InputStream in=null;
+		try {
+			log.error("请求地址："+urlSource);
+			log.error("请求参数："+json);
+			URL requestUrl=new URL(urlSource);
+			HttpURLConnection urlConnect=(HttpURLConnection)requestUrl.openConnection();
+			urlConnect.setRequestMethod("POST");//设定请求的方法为"POST"，默认是GET
+			urlConnect.setDoOutput(true);
+			urlConnect.setDoInput(true);//设置是否向httpUrlConnection输入
+			urlConnect.setUseCaches(false);//Post 请求不能使用缓存
+			urlConnect.setRequestProperty("Content-type", "application/json;charset=utf-8");
+			Iterator<Entry<String, Object>> iterator = headerMap.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Entry<String, Object> next = iterator.next();
+				urlConnect.setRequestProperty(next.getKey().toString(), next.getValue().toString());
+			}
+			out=urlConnect.getOutputStream();
+			out.write(json.getBytes("UTF-8"));
+			out.flush();
+			urlConnect.connect();
+			if(urlConnect.getResponseCode()==200){
+				in=urlConnect.getInputStream();
+				BufferedReader reader=new BufferedReader(new InputStreamReader(in,"UTF-8"));
+				StringBuffer stringBuffer=new StringBuffer();
+				String s=null;
+				while((s=reader.readLine())!=null){
+					stringBuffer.append(s);
+				}
+				map.put("resultCode", "200");
+				map.put("message",urlConnect.getResponseMessage());
+				map.put("responseXml",stringBuffer.toString());
+			}else{
+				map.put("resultCode",urlConnect.getResponseCode()+"");
+				map.put("message",urlConnect.getResponseMessage());
+			}
+		}catch (Exception e){
+			log.error("httpUtils.doJosnPost 异常{}, {}:", e.getMessage(), e);
+		}finally {
+			try {
+				if(out!=null){
+					out.close();
+				}
+				if(in!=null){
+					in.close();
+				}
+			} catch (IOException oe) {
+				log.error("流关闭异常");
+			}
+		}
+		return map;
+	}
 
 }
