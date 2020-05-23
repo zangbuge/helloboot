@@ -34,6 +34,9 @@ public class TestHttpUtil {
         String s = HttpClientUtil.sendRequestKeepAlive(null, testPost, map, "post", header);
         System.out.println(s);
 
+        String ss = HttpClientUtil.doPostJson(testJson, JSON.toJSONString(map), header);
+        System.out.println(ss);
+
         String url = "http://localhost:8086/helloboot/product/getProductList";
         header.put("accept", "*/*");
         header.put("connection", "Keep-Alive");
