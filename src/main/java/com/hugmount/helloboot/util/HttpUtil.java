@@ -2,17 +2,10 @@ package com.hugmount.helloboot.util;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -134,8 +127,7 @@ public class HttpUtil {
 
 
     /**
-     * 使用HttpURLConnection下载文件
-     *
+     * 使用 HttpURLConnection 下载文件
      * @param urlParam
      * @param params
      * @param fileSavePath 设置保存文件的路径
@@ -152,124 +144,27 @@ public class HttpUtil {
             }
         }
 
-        HttpURLConnection con = null;
-        BufferedReader br = null;
-        FileOutputStream os = null;
         try {
-            URL url = null;
             if (ParamsStr != null && ParamsStr.length() > 0) {
                 urlParam = urlParam + "?" + ParamsStr.substring(0, ParamsStr.length() - 1);
             }
-            url = new URL(urlParam);
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            con.connect();
+            URL url = new URL(urlParam);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.connect();
 
-            InputStream is = con.getInputStream();
-            os = new FileOutputStream(fileSavePath);
+            InputStream inputStream = conn.getInputStream();
+            FileOutputStream outputStream = new FileOutputStream(fileSavePath);
             byte buf[] = new byte[1024];
             int count = 0;
-            while ((count = is.read(buf)) != -1) {
-                os.write(buf, 0, count);
+            while ((count = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, count);
             }
-            os.flush();
+            outputStream.flush();
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    os = null;
-                    throw new RuntimeException(e);
-                } finally {
-                    if (con != null) {
-                        con.disconnect();
-                        con = null;
-                    }
-                }
-            }
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    br = null;
-                    throw new RuntimeException(e);
-                } finally {
-                    if (con != null) {
-                        con.disconnect();
-                        con = null;
-                    }
-                }
-            }
         }
-
-    }
-
-
-    /**
-     * 处理josn格式的post请求
-     *
-     * @param urlSource
-     * @param json
-     * @return
-     */
-    public static Map<String, String> doJosnPost(String urlSource, String json, Map<String, Object> headerMap) throws Exception {
-        log.error("======doJosnPost=====：" + urlSource);
-        Map<String, String> map = new HashMap<String, String>();
-        OutputStream out = null;
-        InputStream in = null;
-        try {
-            log.error("请求地址：" + urlSource);
-            log.error("请求参数：" + json);
-            URL requestUrl = new URL(urlSource);
-            HttpURLConnection urlConnect = (HttpURLConnection) requestUrl.openConnection();
-            urlConnect.setRequestMethod("POST");//设定请求的方法为"POST"，默认是GET
-            urlConnect.setDoOutput(true);
-            urlConnect.setDoInput(true);//设置是否向httpUrlConnection输入
-            urlConnect.setUseCaches(false);//Post 请求不能使用缓存
-            urlConnect.setRequestProperty("Content-type", "application/json;charset=utf-8");
-            Iterator<Entry<String, Object>> iterator = headerMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Entry<String, Object> next = iterator.next();
-                urlConnect.setRequestProperty(next.getKey().toString(), next.getValue().toString());
-            }
-            out = urlConnect.getOutputStream();
-            out.write(json.getBytes("UTF-8"));
-            out.flush();
-            urlConnect.connect();
-            if (urlConnect.getResponseCode() == 200) {
-                in = urlConnect.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-                StringBuffer stringBuffer = new StringBuffer();
-                String s = null;
-                while ((s = reader.readLine()) != null) {
-                    stringBuffer.append(s);
-                }
-                map.put("resultCode", "200");
-                map.put("message", urlConnect.getResponseMessage());
-                map.put("responseXml", stringBuffer.toString());
-            } else {
-                map.put("resultCode", urlConnect.getResponseCode() + "");
-                map.put("message", urlConnect.getResponseMessage());
-            }
-        } catch (Exception e) {
-            log.error("httpUtils.doJosnPost 异常{}, {}:", e.getMessage(), e);
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException oe) {
-                log.error("流关闭异常");
-            }
-        }
-        return map;
     }
 
 }
