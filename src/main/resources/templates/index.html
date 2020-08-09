@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL 加上该行代码, ${} 取值不会报红波浪线 -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="component/common::commonHeader('主页')">
 <body>
@@ -6,10 +7,16 @@
     <h3>wellcome</h3>
     <div onclick="hello(this)" data-msg="hugmount">hello</div>
     <button onclick="login();" style="float:left;">login</button>
-    <div>
-        <img id="pic" src="" onclick="setImg();">
-    </div>
+
     <button id="opener" onclick="testDialog()">打开对话框</button>
+    <span th:text="${res.name} + '欢迎您'">请跟我来</span>
+    今天是: <span th:text="${#dates.format(res.today,'yyyy-MM-dd HH:mm:ss')}"></span>
+    <p th:each="it : ${res.city}">
+        <span th:text="${it}"></span>
+    </p>
+    <div>
+        <img id="pic" src="" onclick="setImg();" style="height: 80px; width: 60px;">
+    </div>
     <div th:include="component/common::commonFooter"></div>
 </body>
 <script>

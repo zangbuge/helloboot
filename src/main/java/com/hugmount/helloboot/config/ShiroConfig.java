@@ -70,8 +70,8 @@ public class ShiroConfig {
         map.put("/js", "anon");
         map.put("/css", "anon");
         map.put("/logout", "logout");
-        // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
-        map.put("/**", "authc");
+        // authc :所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
+        map.put("/**", "anon");
 
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
         shiroFilterFactoryBean.setLoginUrl("/index");

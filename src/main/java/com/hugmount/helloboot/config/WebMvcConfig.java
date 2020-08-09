@@ -40,10 +40,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
      *  添加主页
      * @param registry
      */
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/").setViewName("index");
+//    }
 
 
 
