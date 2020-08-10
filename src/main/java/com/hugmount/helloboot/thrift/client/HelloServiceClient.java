@@ -5,6 +5,7 @@ import com.hugmount.helloboot.thrift.server.HelloService;
 import com.hugmount.helloboot.thrift.server.UserInfo;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
@@ -20,7 +21,8 @@ public class HelloServiceClient {
             TTransport tTransport = new TSocket("127.0.0.1", 9899);
             tTransport.open();
             TProtocol protocol = new TBinaryProtocol(tTransport);
-            HelloService.Client client = new HelloService.Client(protocol);
+            TMultiplexedProtocol multiplexedProtocol = new TMultiplexedProtocol(protocol,"HelloService");
+            HelloService.Client client = new HelloService.Client(multiplexedProtocol);
             UserInfo user = client.getUser(12);
             System.out.println("调用结果: " + JSON.toJSONString(user));
             tTransport.close();
