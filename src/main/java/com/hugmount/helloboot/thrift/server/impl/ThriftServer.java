@@ -17,8 +17,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author: Li Huiming
@@ -35,7 +34,6 @@ public class ThriftServer implements ApplicationContextAware {
 
     public void start() {
         new Thread(() -> {
-            TProcessor processor = new HelloService.Processor<HelloService.Iface>(new HelloServiceImpl());
             try {
 //                TServerSocket serverSocket = new TServerSocket(port);
                 TServerSocket serverSocket = new TServerSocket(new InetSocketAddress("0.0.0.0", port));
@@ -53,9 +51,8 @@ public class ThriftServer implements ApplicationContextAware {
                 // TFileTransport: 以文件形式进行传输；
                 args.transportFactory(new TTransportFactory());
                 // 配置处理器用来处理
-                List<TProcessor> arrayList = new ArrayList<>();
-                arrayList.add(processor);
-                TMultiplexedProcessor tMultiplexedProcessor = registerProcessor(arrayList);
+
+                TMultiplexedProcessor tMultiplexedProcessor = registerProcessor(getTProcessorList());
                 args.processor(tMultiplexedProcessor);
                 TServer server = new TThreadPoolServer(args);
                 log.info("thrift server start success, port = {}", port);
@@ -71,13 +68,25 @@ public class ThriftServer implements ApplicationContextAware {
         context = applicationContext;
     }
 
+    public List<Map<String, TProcessor>> getTProcessorList() {
+        List<Map<String, TProcessor>> arrayList = new ArrayList<>();
+        Map<String, TProcessor> map = new HashMap<>();
+        map.put("HelloService", new HelloService.Processor<HelloService.Iface>(new HelloServiceImpl()));
+        arrayList.add(map);
+        return arrayList;
+    }
 
-    public TMultiplexedProcessor registerProcessor(List<TProcessor> tProcessors) {
+
+    public TMultiplexedProcessor registerProcessor(List<Map<String, TProcessor>> tProcessors) {
         TMultiplexedProcessor tMultiplexedProcessor = new TMultiplexedProcessor();
-        for (TProcessor tProcessor : tProcessors) {
-            String tService = "HelloService";
-            tMultiplexedProcessor.registerProcessor(tService, tProcessor);
-            log.info("注册thrift处理器: {}", tService);
+        for (Map<String, TProcessor> tProcessor : tProcessors) {
+            Iterator<Map.Entry<String, TProcessor>> iterator = tProcessor.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, TProcessor> next = iterator.next();
+                String tService = next.getKey();
+                tMultiplexedProcessor.registerProcessor(tService, next.getValue());
+                log.info("注册thrift处理器: {}", tService);
+            }
         }
         return tMultiplexedProcessor;
     }
