@@ -4,7 +4,6 @@ import com.rabbitmq.client.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 /**
  * @Author: Li Huiming
@@ -13,8 +12,6 @@ import java.util.concurrent.TimeoutException;
 
 @Slf4j
 public class RabbitmqUtil {
-
-    private static ConnectionFactory connectionFactory = null;
 
     private static Connection connection = null;
 
@@ -33,11 +30,11 @@ public class RabbitmqUtil {
 
     public static Connection createConnection (String ip, int port, String username, String password, String vHost) {
         if (null != connection) {
-            log.info("rabbitmq已经初始化了");
+            log.info("rabbitmq init already");
             return connection;
         }
 
-        connectionFactory = new ConnectionFactory();
+        ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setHost(ip);
         connectionFactory.setPort(port);
         connectionFactory.setUsername(username);
@@ -46,11 +43,9 @@ public class RabbitmqUtil {
 
         try {
             connection = connectionFactory.newConnection();
-            log.info("创建 rabbitmq connection success !");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+            log.info("create rabbitmq connection success");
+        } catch (Exception e) {
+            log.info("create rabbitmq connection fail: {}", e);
         }
         return connection;
     }
@@ -61,7 +56,7 @@ public class RabbitmqUtil {
     }
 
     public static void sendMsg (Connection connection, String exchangeName, String queueName, String router, String msg) {
-        if (null == router || "" == router.trim()) {
+        if (null == router || "".equals(router.trim())) {
             router = DEFAULT_ROUTER;
         }
         try {
@@ -73,7 +68,7 @@ public class RabbitmqUtil {
             channel.queueDeclare(queueName,true, false, false, null);
             //推送消息到队列中,并指定路由
             channel.basicPublish(exchangeName ,router ,null, msg.getBytes("UTF-8"));
-            log.info("消息推送到 rabbitmq success !");
+            log.info("send msg to rabbitmq success");
 
             //关闭通道
 //            channel.close();
@@ -84,7 +79,7 @@ public class RabbitmqUtil {
     }
 
     public static void receive (String exchangeName, String queueName, String router, final ConsumerService consumerService) {
-        if (null == router || "" == router.trim()) {
+        if (null == router || "".equals(router.trim())) {
             router = DEFAULT_ROUTER;
         }
         receive(connection, exchangeName, queueName, router, consumerService);
@@ -97,7 +92,7 @@ public class RabbitmqUtil {
      * @param consumerService
      */
     public static void receive (Connection connection, String exchangeName, String queueName, final String router, final ConsumerService consumerService) {
-        log.info("rabbitmq初始化消费...");
+        log.info("rabbitmq consumer init start");
         try {
             //创建一个通道
             Channel channel = connection.createChannel();
@@ -110,17 +105,17 @@ public class RabbitmqUtil {
                 public void handleDelivery(String consumerTag, Envelope envelope,
                                            AMQP.BasicProperties properties, byte[] body)
                         throws IOException {
-                    log.info("rabbitmq开始消费...");
+                    log.info("rabbitmq consume start");
                     String msg = new String(body, "UTF-8");
                     consumerService.consume(msg, queueName ,router);
-                    log.info("rabbitmq消费完成 ^_^");
+                    log.info("rabbitmq consume success");
                 }
             };
-            //自动回复队列应答 -- RabbitMQ中的消息确认机制,true: 为自动消费
+            //自动回复队列应答 -- 消息确认机制, true: 为自动消费模式
             channel.basicConsume(queueName, true, consumer);
-            log.info("rabbitmq初始化消费成功");
-        } catch (IOException e) {
-            e.printStackTrace();
+            log.info("rabbitmq consumer init success");
+        } catch (Exception e) {
+            log.error("rabbitmq consumer init fail: {}", e);
         }
 
     }
