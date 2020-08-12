@@ -18,10 +18,10 @@ import org.apache.thrift.transport.TTransportException;
 public class HelloServiceClient {
     public static void main(String[] args) {
         try {
-            TTransport tTransport = new TSocket("127.0.0.1", 9899);
+            TTransport tTransport = new TSocket("127.0.0.1", 9800);
             tTransport.open();
             TProtocol protocol = new TBinaryProtocol(tTransport);
-            TMultiplexedProtocol multiplexedProtocol = new TMultiplexedProtocol(protocol,"HelloService");
+            TMultiplexedProtocol multiplexedProtocol = new TMultiplexedProtocol(protocol,"com.hugmount.helloboot.thrift.server.HelloService");
             HelloService.Client client = new HelloService.Client(multiplexedProtocol);
             UserInfo user = client.getUser(12);
             System.out.println("调用结果: " + JSON.toJSONString(user));

@@ -71,7 +71,7 @@ public class ThriftServer implements ApplicationContextAware {
     public List<Map<String, TProcessor>> getTProcessorList() {
         List<Map<String, TProcessor>> arrayList = new ArrayList<>();
         Map<String, TProcessor> map = new HashMap<>();
-        map.put("HelloService", new HelloService.Processor<HelloService.Iface>(new HelloServiceImpl()));
+        map.put("helloService", new HelloService.Processor<HelloService.Iface>(new HelloServiceImpl()));
         arrayList.add(map);
         return arrayList;
     }
