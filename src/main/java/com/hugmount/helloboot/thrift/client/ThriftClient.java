@@ -31,13 +31,25 @@ public class ThriftClient {
         }
     }
 
-    public static <T> T getClient(Class clazz) {
+    public static <T> T getClient(Class<T> clientClass) {
         try {
-            String name = clazz.getName();
+            String name = clientClass.getCanonicalName();
+            String service = name.substring(0, name.lastIndexOf("."));
+            return (T) get(Class.forName(service));
+        } catch (Exception e) {
+            log.error("get thrift client fail", e);
+        }
+
+        return null;
+    }
+
+    public static Object get(Class serviceClazz) {
+        try {
+            String name = serviceClazz.getName();
             TMultiplexedProtocol tMultiplexedProtocol = new TMultiplexedProtocol(tProtocol, name);
             Class<?> client = Class.forName(name + "$Client");
             Object obj = client.getConstructor(TProtocol.class).newInstance(tMultiplexedProtocol);
-            return (T) obj;
+            return  obj;
 
         } catch (Exception e) {
             log.error("get thrift client fail", e);
