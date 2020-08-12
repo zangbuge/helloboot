@@ -26,7 +26,7 @@ public class ThriftServerProxy {
     @Data
     public static class Processor {
 
-        private String serviceInterface;
+        private Class<?> serviceInterface;
 
         private Object serviceImplObject;
     }
@@ -58,8 +58,9 @@ public class ThriftServerProxy {
         List<Map<String, TProcessor>> arrayList = new ArrayList<>();
         Map<String, TProcessor> map = new HashMap<>();
         for (Processor processor : processors) {
-            String serviceInterface = processor.getServiceInterface();
+            String serviceInterface = processor.getServiceInterface().getCanonicalName();
             Object serviceImplObject = processor.getServiceImplObject();
+            // $Processor 获取内部类
             Class<?> processClass = Class.forName(serviceInterface + "$Processor");
             Class iface = Class.forName(serviceInterface + "$Iface");
             TProcessor tProcessor = (TProcessor) processClass.getDeclaredConstructor(iface).newInstance(serviceImplObject);

@@ -29,6 +29,7 @@ public class ThriftServerStartListener implements ServletContextListener {
             thriftServer = context.getBean(ThriftServer.class);
             thriftServer.start();
 
+            // 代理模式
             ThriftServerProxy thriftServerProxy = thriftServerProxy();
             thriftServerProxy.start();
         }catch (Exception e){
@@ -46,7 +47,7 @@ public class ThriftServerStartListener implements ServletContextListener {
         ThriftServerProxy thriftServerProxy = new ThriftServerProxy();
         thriftServerProxy.setPort(9800);
         ThriftServerProxy.Processor processor = new ThriftServerProxy.Processor();
-        processor.setServiceInterface(HelloService.class.getCanonicalName());
+        processor.setServiceInterface(HelloService.class);
         processor.setServiceImplObject(new HelloServiceImpl());
         List<ThriftServerProxy.Processor> processorList = new LinkedList<>();
         processorList.add(processor);
