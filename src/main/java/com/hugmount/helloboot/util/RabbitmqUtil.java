@@ -40,12 +40,13 @@ public class RabbitmqUtil {
         connectionFactory.setUsername(username);
         connectionFactory.setPassword(password);
         connectionFactory.setVirtualHost(vHost);
-
+        // 网络故障自动连接恢复
+        connectionFactory.setAutomaticRecoveryEnabled(true);
         try {
             connection = connectionFactory.newConnection();
             log.info("create rabbitmq connection success");
         } catch (Exception e) {
-            log.info("create rabbitmq connection fail: {}", e);
+            log.error("create rabbitmq connection fail", e);
         }
         return connection;
     }
@@ -72,9 +73,9 @@ public class RabbitmqUtil {
 
             //关闭通道
 //            channel.close();
-//            connection.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("send msg to rabbitmq fail", e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -102,20 +103,35 @@ public class RabbitmqUtil {
             channel.queueDeclare(queueName,true, false, false, null);
             //定义一个消费者DefaultConsumer, 如果通道中有消息,就会执行回调函数handleDelivery
             Consumer consumer = new DefaultConsumer(channel) {
+                @Override
                 public void handleDelivery(String consumerTag, Envelope envelope,
                                            AMQP.BasicProperties properties, byte[] body)
                         throws IOException {
-                    log.info("rabbitmq consume start");
-                    String msg = new String(body, "UTF-8");
-                    consumerService.consume(msg, queueName ,router);
-                    log.info("rabbitmq consume success");
+
+                    try {
+                        log.info("rabbitmq consume start");
+                        String msg = new String(body, "UTF-8");
+                        consumerService.consume(msg, queueName ,router);
+                        // 消息确认
+                        // deliveryTag:（唯一标识 ID） 它代表了 RabbitMQ 向该 Channel 投递的这条消息的唯一标识 ID
+                        // 是一个单调递增的正整数，delivery tag 的范围仅限于 Channel
+                        // multiple：为了减少网络流量，手动确认可以被批处理，当该参数为 true 时，则可以一次性确认
+                        channel.basicAck(envelope.getDeliveryTag(), false);
+                        log.info("rabbitmq consume success");
+                    } catch (Exception e) {
+                        log.error("rabbitmq consume fail please try again", e);
+                    }
+
                 }
             };
-            //自动回复队列应答 -- 消息确认机制, true: 为自动消费模式
-            channel.basicConsume(queueName, true, consumer);
+
+            // 设置消息确认机制, true: 为自动消费模式, false: 手动
+            // 自动确认会在消息发送给消费者后立即确认，但存在丢失消息的可能
+            channel.basicConsume(queueName, false, consumer);
             log.info("rabbitmq consumer init success");
+
         } catch (Exception e) {
-            log.error("rabbitmq consumer init fail: {}", e);
+            log.error("rabbitmq consumer init fail", e);
         }
 
     }
