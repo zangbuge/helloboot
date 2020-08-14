@@ -72,7 +72,7 @@ public class RabbitmqUtil {
             log.info("send msg to rabbitmq success");
 
             //关闭通道
-//            channel.close();
+            channel.close();
         } catch (Exception e) {
             log.error("send msg to rabbitmq fail", e);
             throw new RuntimeException(e);
