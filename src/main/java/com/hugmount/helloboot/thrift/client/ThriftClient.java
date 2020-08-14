@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
@@ -22,8 +23,10 @@ public class ThriftClient {
         try {
             if (tProtocol == null) {
                 TTransport tTransport = new TSocket(host, port);
+                // 数据传输方式要和服务端一致
+                TFramedTransport tFramedTransport = new TFramedTransport(tTransport);
+                tProtocol = new TBinaryProtocol(tFramedTransport);
                 tTransport.open();
-                tProtocol = new TBinaryProtocol(tTransport);
                 log.info("ThriftClient init success");
             }
         } catch (TTransportException e) {
@@ -49,7 +52,7 @@ public class ThriftClient {
             TMultiplexedProtocol tMultiplexedProtocol = new TMultiplexedProtocol(tProtocol, name);
             Class<?> client = Class.forName(name + "$Client");
             Object obj = client.getConstructor(TProtocol.class).newInstance(tMultiplexedProtocol);
-            return  obj;
+            return obj;
 
         } catch (Exception e) {
             log.error("get thrift client fail", e);

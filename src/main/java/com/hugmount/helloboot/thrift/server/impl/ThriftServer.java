@@ -48,10 +48,9 @@ public class ThriftServer implements ApplicationContextAware {
                 // 配置数据传输的方式
                 // TSocket: 阻塞式socket；
                 // TFramedTransport: 以frame为单位进行传输，非阻塞式服务中使用；
-                // TFileTransport: 以文件形式进行传输；
+                // TFileTransport: 以文件形式进行传输, 可以将一组thrift请求写到文件中
                 args.transportFactory(new TTransportFactory());
                 // 配置处理器用来处理
-
                 TMultiplexedProcessor tMultiplexedProcessor = registerProcessor(getTProcessorList());
                 args.processor(tMultiplexedProcessor);
                 TServer server = new TThreadPoolServer(args);

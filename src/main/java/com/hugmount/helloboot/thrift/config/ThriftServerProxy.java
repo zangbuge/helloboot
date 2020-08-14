@@ -7,13 +7,15 @@ import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
+import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TServerSocket;
-import org.apache.thrift.transport.TTransportFactory;
 
 import java.net.InetSocketAddress;
 import java.util.*;
 
-/** thrift代理
+/**
+ * thrift代理
+ *
  * @Author: Li Huiming
  * @Date: 2020/8/11
  */
@@ -35,17 +37,22 @@ public class ThriftServerProxy {
 
 
     public void start() {
-        new Thread(() ->  run()).start();
+        new Thread(() -> run()).start();
     }
 
     public void run() {
         try {
             TServerSocket tServerSocket = new TServerSocket(new InetSocketAddress("0.0.0.0", port));
             TThreadPoolServer.Args args = new TThreadPoolServer.Args(tServerSocket);
+            // 设置数据传输协议（TBinaryProtocol默认二进制编码格式） TJSONProtocol 使用JSON的数据编码协议进行数据传输
             args.protocolFactory(new TBinaryProtocol.Factory());
-            args.transportFactory(new TTransportFactory());
+            // 设置传输方式 TSocket 阻塞的io  TFramedTransport 非阻塞io
+            args.transportFactory(new TFramedTransport.Factory());
             TMultiplexedProcessor tMultiplexedProcessor = registerProcessor(getTProcessorList());
             args.processor(tMultiplexedProcessor);
+            // TSimpleServer  单线程 阻塞
+            // TThreadPoolServer  多线程  阻塞
+            // TNonblockingServer  多线程  非阻塞
             TServer server = new TThreadPoolServer(args);
             log.info("thrift server ThriftServerProxy start success, port = {}", port);
             server.serve();
