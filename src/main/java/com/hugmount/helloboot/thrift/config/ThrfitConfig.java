@@ -19,4 +19,15 @@ public class ThrfitConfig {
         return bean;
     }
 
+    /**
+     * 注解方式配置
+     * @return
+     */
+    @Bean
+    public ThriftServerProxy thriftServerProxy() {
+        ThriftServerProxy thriftServerProxy = new ThriftServerProxy();
+        thriftServerProxy.setPort(9800);
+        return thriftServerProxy;
+    }
+
 }

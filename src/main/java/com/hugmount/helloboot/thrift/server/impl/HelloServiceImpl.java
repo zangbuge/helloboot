@@ -3,6 +3,7 @@ package com.hugmount.helloboot.thrift.server.impl;
 import com.alibaba.fastjson.JSON;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.impl.TestServiceImpl;
+import com.hugmount.helloboot.thrift.config.ThriftService;
 import com.hugmount.helloboot.thrift.server.HelloService;
 import com.hugmount.helloboot.thrift.server.UserInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@ThriftService
 public class HelloServiceImpl implements HelloService.Iface, ApplicationListener<ApplicationContextEvent> {
 
     private static ApplicationContext applicationContext;

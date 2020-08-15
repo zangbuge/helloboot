@@ -30,8 +30,9 @@ public class ThriftServerStartListener implements ServletContextListener {
             thriftServer.start();
 
             // 代理模式
-            ThriftServerProxy thriftServerProxy = thriftServerProxy();
-            thriftServerProxy.start();
+//            ThriftServerProxy thriftServerProxy = thriftServerProxy();
+//            thriftServerProxy.start();
+
         }catch (Exception e){
             log.error("监听thrift服务启动异常", e);
         }
@@ -42,7 +43,10 @@ public class ThriftServerStartListener implements ServletContextListener {
 
     }
 
-    @Bean
+    /**
+     * 该方式注册服务有注解取代
+     */
+    /*@Bean
     public ThriftServerProxy thriftServerProxy() {
         ThriftServerProxy thriftServerProxy = new ThriftServerProxy();
         thriftServerProxy.setPort(9800);
@@ -53,6 +57,6 @@ public class ThriftServerStartListener implements ServletContextListener {
         processorList.add(processor);
         thriftServerProxy.setProcessors(processorList);
         return thriftServerProxy;
-    }
+    }*/
 
 }
