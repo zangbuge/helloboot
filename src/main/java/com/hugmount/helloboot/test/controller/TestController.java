@@ -3,6 +3,7 @@ package com.hugmount.helloboot.test.controller;
 import com.alibaba.fastjson.JSON;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +21,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping
+@Slf4j
 public class TestController {
 
     @Autowired
@@ -41,6 +43,7 @@ public class TestController {
      */
     @RequestMapping("/")
     public ModelAndView index() {
+        log.info("进入主页");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         Map<String, Object> map = new HashMap<>();
@@ -57,6 +60,7 @@ public class TestController {
 
     @RequestMapping("/test")
     public String test(ModelMap modelMap) {
+        log.info("进入测试 test");
         Map<String, Object> map = new HashMap<>();
         map.put("name", "lhm");
         map.put("today", new Date());
