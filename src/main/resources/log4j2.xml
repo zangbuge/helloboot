@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数-->
 <configuration monitorInterval="300">
     <Properties>
-        <Property name="baseDir">../logs/helloboot</Property>
-        <Property name="logFormat">%d{yyyy-MM-dd HH:mm:ss} [%thread] %level %class: %line %n %msg %n</Property>
+        <Property name="baseDir">../logs</Property>
+        <Property name="logFormat">%d{yyyy-MM-dd HH:mm:ss} %level [%t] %class: %line %n %msg %n</Property>
     </Properties>
     <!--先定义所有的appender-->
     <appenders>
@@ -17,7 +16,7 @@
         <Async name="ASYNC" includeLocation="true">
             <AppenderRef ref="RollingFile"/>
         </Async>
-        <RollingFile name="RollingFile" fileName="${baseDir}/info.log" filePattern="${baseDir}/%d{yyyy-MM}/info.log.%d{yyyy-MM-dd}">
+        <RollingFile name="RollingFile" fileName="${baseDir}/info.log" filePattern="${baseDir}/info.log.%d{yyyy-MM-dd}">
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${logFormat}"/>
             <!-- 保存日志使用时间滚动策略, 具体格式由 filePattern 的配置决定(按天, 月) -->
