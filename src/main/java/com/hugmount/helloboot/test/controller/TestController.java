@@ -31,6 +31,7 @@ public class TestController {
     @PostMapping("/getTestList")
     @ResponseBody
     public String getTestList(Test test){
+        log.info("getTestList: {}", JSON.toJSONString(test));
         List<Test> testList = testService.getTestList(test);
         String listStr = JSON.toJSONString(testList);
         System.out.println(listStr);
