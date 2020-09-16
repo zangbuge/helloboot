@@ -1,8 +1,10 @@
 package com.hugmount.helloboot.test.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.hugmount.helloboot.core.Result;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -72,6 +74,14 @@ public class TestController {
         map.put("city", list);
         modelMap.addAttribute("res", map);
         return "test";
+    }
+
+
+    @ApiOperation("获取当前时间")
+    @RequestMapping("/getCurDate")
+    @ResponseBody
+    public Result<Date> getCurDate() {
+        return Result.createBySuccess("成功", new Date());
     }
 
 }
