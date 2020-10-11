@@ -33,7 +33,6 @@ public class HelloServiceImpl implements HelloService.Iface, ApplicationListener
         log.info("测试thrift获取数据库信息: {}", JSON.toJSONString(testList));
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername("lhm");
-        userInfo.setPassword("SUCCESS");
         return userInfo;
     }
 
