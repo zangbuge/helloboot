@@ -1,3 +1,5 @@
 1. thrift.exe 配置系统环境变量
-2. HelloService.thrift 文件夹下执行命令: thrift -out . --gen java HelloService.thrift
+2. HelloService.thrift 文件夹下执行以下命令:
+    thrift -out ../../java/. --gen java HelloService.thrift
 3. 同文件下会生成 HelloService.java 文件
+4. 若有多个thrift文件, 可在windows系统中将多个命令分行放在  .bat 文件点击批量执行

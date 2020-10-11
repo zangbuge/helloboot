@@ -22,8 +22,8 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
   private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new UserInfoTupleSchemeFactory();
 
   public long id; // required
-  public @org.apache.thrift.annotation.Nullable String username; // required
-  public @org.apache.thrift.annotation.Nullable String password; // required
+  public @org.apache.thrift.annotation.Nullable java.lang.String username; // required
+  public @org.apache.thrift.annotation.Nullable java.lang.String password; // required
   public byte age; // required
   public byte sex; // optional
   public byte workYear; // required
@@ -37,7 +37,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
     SEX((short)5, "sex"),
     WORK_YEAR((short)6, "workYear");
 
-    private static final java.util.Map<String, _Fields> byName = new java.util.HashMap<String, _Fields>();
+    private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
     static {
       for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
@@ -74,7 +74,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
      */
     public static _Fields findByThriftIdOrThrow(int fieldId) {
       _Fields fields = findByThriftId(fieldId);
-      if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+      if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
       return fields;
     }
 
@@ -82,14 +82,14 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
      * Find the _Fields constant that matches name, or null if its not found.
      */
     @org.apache.thrift.annotation.Nullable
-    public static _Fields findByName(String name) {
+    public static _Fields findByName(java.lang.String name) {
       return byName.get(name);
     }
 
     private final short _thriftId;
-    private final String _fieldName;
+    private final java.lang.String _fieldName;
 
-    _Fields(short thriftId, String fieldName) {
+    _Fields(short thriftId, java.lang.String fieldName) {
       _thriftId = thriftId;
       _fieldName = fieldName;
     }
@@ -98,7 +98,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
       return _thriftId;
     }
 
-    public String getFieldName() {
+    public java.lang.String getFieldName() {
       return _fieldName;
     }
   }
@@ -113,17 +113,17 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
   public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-    tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT,
+    tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-    tmpMap.put(_Fields.USERNAME, new org.apache.thrift.meta_data.FieldMetaData("username", org.apache.thrift.TFieldRequirementType.DEFAULT,
+    tmpMap.put(_Fields.USERNAME, new org.apache.thrift.meta_data.FieldMetaData("username", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-    tmpMap.put(_Fields.PASSWORD, new org.apache.thrift.meta_data.FieldMetaData("password", org.apache.thrift.TFieldRequirementType.DEFAULT,
+    tmpMap.put(_Fields.PASSWORD, new org.apache.thrift.meta_data.FieldMetaData("password", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-    tmpMap.put(_Fields.AGE, new org.apache.thrift.meta_data.FieldMetaData("age", org.apache.thrift.TFieldRequirementType.DEFAULT,
+    tmpMap.put(_Fields.AGE, new org.apache.thrift.meta_data.FieldMetaData("age", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BYTE)));
-    tmpMap.put(_Fields.SEX, new org.apache.thrift.meta_data.FieldMetaData("sex", org.apache.thrift.TFieldRequirementType.OPTIONAL,
+    tmpMap.put(_Fields.SEX, new org.apache.thrift.meta_data.FieldMetaData("sex", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BYTE)));
-    tmpMap.put(_Fields.WORK_YEAR, new org.apache.thrift.meta_data.FieldMetaData("workYear", org.apache.thrift.TFieldRequirementType.DEFAULT,
+    tmpMap.put(_Fields.WORK_YEAR, new org.apache.thrift.meta_data.FieldMetaData("workYear", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.BYTE)));
     metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
     org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(UserInfo.class, metaDataMap);
@@ -136,8 +136,8 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
 
   public UserInfo(
     long id,
-    String username,
-    String password,
+    java.lang.String username,
+    java.lang.String password,
     byte age,
     byte workYear)
   {
@@ -211,11 +211,11 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
   }
 
   @org.apache.thrift.annotation.Nullable
-  public String getUsername() {
+  public java.lang.String getUsername() {
     return this.username;
   }
 
-  public UserInfo setUsername(@org.apache.thrift.annotation.Nullable String username) {
+  public UserInfo setUsername(@org.apache.thrift.annotation.Nullable java.lang.String username) {
     this.username = username;
     return this;
   }
@@ -236,11 +236,11 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
   }
 
   @org.apache.thrift.annotation.Nullable
-  public String getPassword() {
+  public java.lang.String getPassword() {
     return this.password;
   }
 
-  public UserInfo setPassword(@org.apache.thrift.annotation.Nullable String password) {
+  public UserInfo setPassword(@org.apache.thrift.annotation.Nullable java.lang.String password) {
     this.password = password;
     return this;
   }
@@ -329,13 +329,13 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
     __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __WORKYEAR_ISSET_ID, value);
   }
 
-  public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable Object value) {
+  public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
     switch (field) {
     case ID:
       if (value == null) {
         unsetId();
       } else {
-        setId((Long)value);
+        setId((java.lang.Long)value);
       }
       break;
 
@@ -343,7 +343,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
       if (value == null) {
         unsetUsername();
       } else {
-        setUsername((String)value);
+        setUsername((java.lang.String)value);
       }
       break;
 
@@ -351,7 +351,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
       if (value == null) {
         unsetPassword();
       } else {
-        setPassword((String)value);
+        setPassword((java.lang.String)value);
       }
       break;
 
@@ -359,7 +359,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
       if (value == null) {
         unsetAge();
       } else {
-        setAge((Byte)value);
+        setAge((java.lang.Byte)value);
       }
       break;
 
@@ -367,7 +367,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
       if (value == null) {
         unsetSex();
       } else {
-        setSex((Byte)value);
+        setSex((java.lang.Byte)value);
       }
       break;
 
@@ -375,7 +375,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
       if (value == null) {
         unsetWorkYear();
       } else {
-        setWorkYear((Byte)value);
+        setWorkYear((java.lang.Byte)value);
       }
       break;
 
@@ -383,7 +383,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
   }
 
   @org.apache.thrift.annotation.Nullable
-  public Object getFieldValue(_Fields field) {
+  public java.lang.Object getFieldValue(_Fields field) {
     switch (field) {
     case ID:
       return getId();
@@ -404,13 +404,13 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
       return getWorkYear();
 
     }
-    throw new IllegalStateException();
+    throw new java.lang.IllegalStateException();
   }
 
   /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
   public boolean isSet(_Fields field) {
     if (field == null) {
-      throw new IllegalArgumentException();
+      throw new java.lang.IllegalArgumentException();
     }
 
     switch (field) {
@@ -427,11 +427,11 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
     case WORK_YEAR:
       return isSetWorkYear();
     }
-    throw new IllegalStateException();
+    throw new java.lang.IllegalStateException();
   }
 
   @Override
-  public boolean equals(Object that) {
+  public boolean equals(java.lang.Object that) {
     if (that == null)
       return false;
     if (that instanceof UserInfo)
@@ -535,7 +535,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
 
     int lastComparison = 0;
 
-    lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+    lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -545,7 +545,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
         return lastComparison;
       }
     }
-    lastComparison = Boolean.valueOf(isSetUsername()).compareTo(other.isSetUsername());
+    lastComparison = java.lang.Boolean.valueOf(isSetUsername()).compareTo(other.isSetUsername());
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -555,7 +555,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
         return lastComparison;
       }
     }
-    lastComparison = Boolean.valueOf(isSetPassword()).compareTo(other.isSetPassword());
+    lastComparison = java.lang.Boolean.valueOf(isSetPassword()).compareTo(other.isSetPassword());
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -565,7 +565,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
         return lastComparison;
       }
     }
-    lastComparison = Boolean.valueOf(isSetAge()).compareTo(other.isSetAge());
+    lastComparison = java.lang.Boolean.valueOf(isSetAge()).compareTo(other.isSetAge());
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -575,7 +575,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
         return lastComparison;
       }
     }
-    lastComparison = Boolean.valueOf(isSetSex()).compareTo(other.isSetSex());
+    lastComparison = java.lang.Boolean.valueOf(isSetSex()).compareTo(other.isSetSex());
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -585,7 +585,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
         return lastComparison;
       }
     }
-    lastComparison = Boolean.valueOf(isSetWorkYear()).compareTo(other.isSetWorkYear());
+    lastComparison = java.lang.Boolean.valueOf(isSetWorkYear()).compareTo(other.isSetWorkYear());
     if (lastComparison != 0) {
       return lastComparison;
     }
@@ -612,8 +612,8 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
   }
 
   @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder("UserInfo(");
+  public java.lang.String toString() {
+    java.lang.StringBuilder sb = new java.lang.StringBuilder("UserInfo(");
     boolean first = true;
 
     sb.append("id:");
@@ -666,7 +666,7 @@ public class UserInfo implements org.apache.thrift.TBase<UserInfo, UserInfo._Fie
     }
   }
 
-  private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+  private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
     try {
       // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
       __isset_bitfield = 0;

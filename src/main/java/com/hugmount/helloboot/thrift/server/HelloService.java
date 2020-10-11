@@ -106,8 +106,8 @@ public class HelloService {
       }
 
       public UserInfo getResult() throws org.apache.thrift.TException {
-        if (getState() != State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
@@ -120,14 +120,14 @@ public class HelloService {
   public static class Processor<I extends Iface> extends org.apache.thrift.TBaseProcessor<I> implements org.apache.thrift.TProcessor {
     private static final org.slf4j.Logger _LOGGER = org.slf4j.LoggerFactory.getLogger(Processor.class.getName());
     public Processor(I iface) {
-      super(iface, getProcessMap(new java.util.HashMap<String, org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>>()));
+      super(iface, getProcessMap(new java.util.HashMap<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>>()));
     }
 
-    protected Processor(I iface, java.util.Map<String, org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> processMap) {
+    protected Processor(I iface, java.util.Map<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> processMap) {
       super(iface, getProcessMap(processMap));
     }
 
-    private static <I extends Iface> java.util.Map<String,  org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> getProcessMap(java.util.Map<String, org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
+    private static <I extends Iface> java.util.Map<java.lang.String,  org.apache.thrift.ProcessFunction<I, ? extends org.apache.thrift.TBase>> getProcessMap(java.util.Map<java.lang.String, org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
       processMap.put("getUser", new getUser());
       return processMap;
     }
@@ -162,14 +162,14 @@ public class HelloService {
   public static class AsyncProcessor<I extends AsyncIface> extends org.apache.thrift.TBaseAsyncProcessor<I> {
     private static final org.slf4j.Logger _LOGGER = org.slf4j.LoggerFactory.getLogger(AsyncProcessor.class.getName());
     public AsyncProcessor(I iface) {
-      super(iface, getProcessMap(new java.util.HashMap<String, org.apache.thrift.AsyncProcessFunction<I, ? extends org.apache.thrift.TBase, ?>>()));
+      super(iface, getProcessMap(new java.util.HashMap<java.lang.String, org.apache.thrift.AsyncProcessFunction<I, ? extends org.apache.thrift.TBase, ?>>()));
     }
 
-    protected AsyncProcessor(I iface, java.util.Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
+    protected AsyncProcessor(I iface, java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
       super(iface, getProcessMap(processMap));
     }
 
-    private static <I extends AsyncIface> java.util.Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(java.util.Map<String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
+    private static <I extends AsyncIface> java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase,?>> getProcessMap(java.util.Map<java.lang.String,  org.apache.thrift.AsyncProcessFunction<I, ? extends  org.apache.thrift.TBase, ?>> processMap) {
       processMap.put("getUser", new getUser());
       return processMap;
     }
@@ -185,7 +185,7 @@ public class HelloService {
 
       public org.apache.thrift.async.AsyncMethodCallback<UserInfo> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<UserInfo>() {
+        return new org.apache.thrift.async.AsyncMethodCallback<UserInfo>() { 
           public void onComplete(UserInfo o) {
             getUser_result result = new getUser_result();
             result.success = o;
@@ -194,12 +194,12 @@ public class HelloService {
             } catch (org.apache.thrift.transport.TTransportException e) {
               _LOGGER.error("TTransportException writing to internal frame buffer", e);
               fb.close();
-            } catch (Exception e) {
+            } catch (java.lang.Exception e) {
               _LOGGER.error("Exception writing to internal frame buffer", e);
               onError(e);
             }
           }
-          public void onError(Exception e) {
+          public void onError(java.lang.Exception e) {
             byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
             org.apache.thrift.TSerializable msg;
             getUser_result result = new getUser_result();
@@ -218,7 +218,7 @@ public class HelloService {
             }
             try {
               fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (Exception ex) {
+            } catch (java.lang.Exception ex) {
               _LOGGER.error("Exception writing to internal frame buffer", ex);
               fb.close();
             }
@@ -251,7 +251,7 @@ public class HelloService {
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       ID((short)1, "id");
 
-      private static final java.util.Map<String, _Fields> byName = new java.util.HashMap<String, _Fields>();
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
       static {
         for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
@@ -278,7 +278,7 @@ public class HelloService {
        */
       public static _Fields findByThriftIdOrThrow(int fieldId) {
         _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
         return fields;
       }
 
@@ -286,14 +286,14 @@ public class HelloService {
        * Find the _Fields constant that matches name, or null if its not found.
        */
       @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(String name) {
+      public static _Fields findByName(java.lang.String name) {
         return byName.get(name);
       }
 
       private final short _thriftId;
-      private final String _fieldName;
+      private final java.lang.String _fieldName;
 
-      _Fields(short thriftId, String fieldName) {
+      _Fields(short thriftId, java.lang.String fieldName) {
         _thriftId = thriftId;
         _fieldName = fieldName;
       }
@@ -302,7 +302,7 @@ public class HelloService {
         return _thriftId;
       }
 
-      public String getFieldName() {
+      public java.lang.String getFieldName() {
         return _fieldName;
       }
     }
@@ -313,7 +313,7 @@ public class HelloService {
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT,
+      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getUser_args.class, metaDataMap);
@@ -371,13 +371,13 @@ public class HelloService {
       __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
     }
 
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable Object value) {
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case ID:
         if (value == null) {
           unsetId();
         } else {
-          setId((Integer)value);
+          setId((java.lang.Integer)value);
         }
         break;
 
@@ -385,30 +385,30 @@ public class HelloService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public Object getFieldValue(_Fields field) {
+    public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
       case ID:
         return getId();
 
       }
-      throw new IllegalStateException();
+      throw new java.lang.IllegalStateException();
     }
 
     /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
     public boolean isSet(_Fields field) {
       if (field == null) {
-        throw new IllegalArgumentException();
+        throw new java.lang.IllegalArgumentException();
       }
 
       switch (field) {
       case ID:
         return isSetId();
       }
-      throw new IllegalStateException();
+      throw new java.lang.IllegalStateException();
     }
 
     @Override
-    public boolean equals(Object that) {
+    public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
       if (that instanceof getUser_args)
@@ -451,7 +451,7 @@ public class HelloService {
 
       int lastComparison = 0;
 
-      lastComparison = Boolean.valueOf(isSetId()).compareTo(other.isSetId());
+      lastComparison = java.lang.Boolean.valueOf(isSetId()).compareTo(other.isSetId());
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -478,8 +478,8 @@ public class HelloService {
     }
 
     @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("getUser_args(");
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("getUser_args(");
       boolean first = true;
 
       sb.append("id:");
@@ -502,7 +502,7 @@ public class HelloService {
       }
     }
 
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
         // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
         __isset_bitfield = 0;
@@ -526,7 +526,7 @@ public class HelloService {
         while (true)
         {
           schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) {
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
             break;
           }
           switch (schemeField.id) {
@@ -534,7 +534,7 @@ public class HelloService {
               if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
                 struct.id = iprot.readI32();
                 struct.setIdIsSet(true);
-              } else {
+              } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
@@ -613,7 +613,7 @@ public class HelloService {
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SUCCESS((short)0, "success");
 
-      private static final java.util.Map<String, _Fields> byName = new java.util.HashMap<String, _Fields>();
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
       static {
         for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
@@ -640,7 +640,7 @@ public class HelloService {
        */
       public static _Fields findByThriftIdOrThrow(int fieldId) {
         _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
         return fields;
       }
 
@@ -648,14 +648,14 @@ public class HelloService {
        * Find the _Fields constant that matches name, or null if its not found.
        */
       @org.apache.thrift.annotation.Nullable
-      public static _Fields findByName(String name) {
+      public static _Fields findByName(java.lang.String name) {
         return byName.get(name);
       }
 
       private final short _thriftId;
-      private final String _fieldName;
+      private final java.lang.String _fieldName;
 
-      _Fields(short thriftId, String fieldName) {
+      _Fields(short thriftId, java.lang.String fieldName) {
         _thriftId = thriftId;
         _fieldName = fieldName;
       }
@@ -664,7 +664,7 @@ public class HelloService {
         return _thriftId;
       }
 
-      public String getFieldName() {
+      public java.lang.String getFieldName() {
         return _fieldName;
       }
     }
@@ -673,7 +673,7 @@ public class HelloService {
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT,
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, UserInfo.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(getUser_result.class, metaDataMap);
@@ -732,7 +732,7 @@ public class HelloService {
       }
     }
 
-    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable Object value) {
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
       switch (field) {
       case SUCCESS:
         if (value == null) {
@@ -746,30 +746,30 @@ public class HelloService {
     }
 
     @org.apache.thrift.annotation.Nullable
-    public Object getFieldValue(_Fields field) {
+    public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
       case SUCCESS:
         return getSuccess();
 
       }
-      throw new IllegalStateException();
+      throw new java.lang.IllegalStateException();
     }
 
     /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
     public boolean isSet(_Fields field) {
       if (field == null) {
-        throw new IllegalArgumentException();
+        throw new java.lang.IllegalArgumentException();
       }
 
       switch (field) {
       case SUCCESS:
         return isSetSuccess();
       }
-      throw new IllegalStateException();
+      throw new java.lang.IllegalStateException();
     }
 
     @Override
-    public boolean equals(Object that) {
+    public boolean equals(java.lang.Object that) {
       if (that == null)
         return false;
       if (that instanceof getUser_result)
@@ -814,7 +814,7 @@ public class HelloService {
 
       int lastComparison = 0;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -841,8 +841,8 @@ public class HelloService {
       }
 
     @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("getUser_result(");
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("getUser_result(");
       boolean first = true;
 
       sb.append("success:");
@@ -872,7 +872,7 @@ public class HelloService {
       }
     }
 
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
