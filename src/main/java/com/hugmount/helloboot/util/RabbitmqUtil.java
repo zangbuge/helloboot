@@ -18,11 +18,11 @@ public class RabbitmqUtil {
     private static final String DEFAULT_ROUTER = "info";
 
     // RabbitMQ有四种交换机类型:
-    // 1. direct : (默认)处理路由键。需要将一个队列绑定到交换机上，要求该消息与一个特定的路由键完全匹配
-    // 2. fanout : 不处理路由键。你只需要简单的将队列绑定到交换机上。Fanout交换机转发消息是最快的
-    // 一个发送到交换机的消息都会被转发到与该交换机绑定的所有队列上。很像子网广播，每台子网内的主机都获得了一份复制的消
-    // 3. topic: 将路由键和某模式进行匹配。此时队列需要绑定要一个模式上。
-    // 符号“#”匹配一个或多个词，符号“”匹配不多不少一个词。因此“abc.#”能够匹配到“abc.def.ghi”，但是“abc.” 只会匹配到“abc.def”
+    // 1. direct(默认) : 处理routingKey。通过routingKey和exchange完全匹配的那个唯一的queue才可以接收消息。可持久化.
+    // 2. fanout : 广播模式不处理路由键。所有bind到此exchange的queue都可以接收消息, Fanout交换机转发消息是最快的,
+    // 若发送的时刻没有对端接收，那消息就没了，因此在广播模式下设置消息持久化是无效的。
+    // 3. topic: 将路由键和某模式进行模糊匹配。此时队列需要绑定要一个模式上。
+    // 符号“#”匹配一个或多个词，符号“*”匹配不多不少一个词。因此“abc.#”能够匹配到“abc.def.ghi”，但是“abc.*” 只会匹配到“abc.def”
     // 4. headers : 不处理路由键。而是根据发送的消息内容中的headers属性进行匹配。在绑定Queue与Exchange时指定一组键值对；
     // 当消息发送到RabbitMQ时会取到该消息的headers与Exchange绑定时指定的键值对进行匹配；如果完全匹配则消息会路由到该队列，
     // 否则不会路由到该队列。headers属性是一个键值对，可以是Hashtable，键值对的值可以是任何类型
@@ -52,19 +52,23 @@ public class RabbitmqUtil {
     }
 
 
-    public static void sendMsg(String exchangeName, String queueName, String router, String msg) {
-        sendMsg(connection, exchangeName, queueName, router, msg);
+    public static void sendMsg(String exchangeName, String exchangeType, String queueName, String router, String msg) {
+        sendMsg(connection, exchangeName, exchangeType, queueName, router, msg);
     }
 
-    public static void sendMsg(Connection connection, String exchangeName, String queueName, String router, String msg) {
+    public static void sendMsg(Connection connection, String exchangeName, String exchangeType, String queueName, String router, String msg) {
         if (null == router || "".equals(router.trim())) {
             router = DEFAULT_ROUTER;
         }
+        if (null == exchangeType || "".equals(exchangeType.trim())) {
+            exchangeType = EXCHANGE_TYPE;
+        }
+
         try {
             //创建一个通道
             Channel channel = connection.createChannel();
             //指定交换机类型
-            channel.exchangeDeclare(exchangeName, EXCHANGE_TYPE);
+            channel.exchangeDeclare(exchangeName, exchangeType);
             //声明一个队列, 如果不存在则创建, true表示持久化
             channel.queueDeclare(queueName, true, false, false, null);
             //推送消息到队列中,并指定路由

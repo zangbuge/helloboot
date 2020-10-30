@@ -19,7 +19,7 @@ public class TestRabbitmq {
         String router = "hello";
 
         RabbitmqUtil.createConnection(ip, port, username, password, vhost);
-//        RabbitmqUtil.sendMsg(exchangeName, queueName ,router ,"我就试试1");
+//        RabbitmqUtil.sendMsg(exchangeName, null, queueName ,router ,"我就试试1");
 //        ConsumerDemo consumerDemo = new ConsumerDemo();
 //        RabbitmqUtil.receive(exchangeName, queueName, router,consumerDemo);
 
@@ -28,11 +28,11 @@ public class TestRabbitmq {
 //        RabbitmqUtil.sendMsg(exchangeName, queueName ,"good" ,"换个路由, 我就试试33");
 
         // 本地测试 不关闭channel 达到2044个管道时资源耗尽异常
-        long start = System.currentTimeMillis();
+       /* long start = System.currentTimeMillis();
         for (int i = 0; i < 100000; i++) {
             RabbitmqUtil.sendMsg(exchangeName, queueName ,router ,"我就试试RabbitmqUtil " + i);
         }
         long end = System.currentTimeMillis();
-        System.out.println("urtil用时: " + (end - start));
+        System.out.println("urtil用时: " + (end - start));*/
     }
 }
