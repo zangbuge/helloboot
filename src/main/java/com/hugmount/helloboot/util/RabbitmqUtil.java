@@ -28,7 +28,7 @@ public class RabbitmqUtil {
     // 否则不会路由到该队列。headers属性是一个键值对，可以是Hashtable，键值对的值可以是任何类型
     private static final String EXCHANGE_TYPE = "direct";
 
-    public static Connection createConnection (String ip, int port, String username, String password, String vHost) {
+    public static Connection createConnection(String ip, int port, String username, String password, String vHost) {
         if (null != connection) {
             log.info("rabbitmq init already");
             return connection;
@@ -52,11 +52,11 @@ public class RabbitmqUtil {
     }
 
 
-    public static void sendMsg (String exchangeName, String queueName, String router, String msg) {
+    public static void sendMsg(String exchangeName, String queueName, String router, String msg) {
         sendMsg(connection, exchangeName, queueName, router, msg);
     }
 
-    public static void sendMsg (Connection connection, String exchangeName, String queueName, String router, String msg) {
+    public static void sendMsg(Connection connection, String exchangeName, String queueName, String router, String msg) {
         if (null == router || "".equals(router.trim())) {
             router = DEFAULT_ROUTER;
         }
@@ -64,11 +64,11 @@ public class RabbitmqUtil {
             //创建一个通道
             Channel channel = connection.createChannel();
             //指定交换机类型
-            channel.exchangeDeclare(exchangeName ,EXCHANGE_TYPE);
+            channel.exchangeDeclare(exchangeName, EXCHANGE_TYPE);
             //声明一个队列, 如果不存在则创建, true表示持久化
-            channel.queueDeclare(queueName,true, false, false, null);
+            channel.queueDeclare(queueName, true, false, false, null);
             //推送消息到队列中,并指定路由
-            channel.basicPublish(exchangeName ,router ,null, msg.getBytes("UTF-8"));
+            channel.basicPublish(exchangeName, router, null, msg.getBytes("UTF-8"));
             log.info("send msg to rabbitmq success");
 
             //关闭通道
@@ -79,7 +79,7 @@ public class RabbitmqUtil {
         }
     }
 
-    public static void receive (String exchangeName, String queueName, String router, final ConsumerService consumerService) {
+    public static void receive(String exchangeName, String queueName, String router, final ConsumerService consumerService) {
         if (null == router || "".equals(router.trim())) {
             router = DEFAULT_ROUTER;
         }
@@ -88,11 +88,12 @@ public class RabbitmqUtil {
 
     /**
      * 该方法只用初始化一次即可
+     *
      * @param connection
      * @param queueName
      * @param consumerService
      */
-    public static void receive (Connection connection, String exchangeName, String queueName, final String router, final ConsumerService consumerService) {
+    public static void receive(Connection connection, String exchangeName, String queueName, final String router, final ConsumerService consumerService) {
         log.info("rabbitmq consumer init start");
         try {
             //创建一个通道
@@ -100,7 +101,7 @@ public class RabbitmqUtil {
             //订阅路由,可有多个订阅
             channel.queueBind(queueName, exchangeName, router);
             //声明要关注的队列
-            channel.queueDeclare(queueName,true, false, false, null);
+            channel.queueDeclare(queueName, true, false, false, null);
             //定义一个消费者DefaultConsumer, 如果通道中有消息,就会执行回调函数handleDelivery
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
@@ -111,7 +112,7 @@ public class RabbitmqUtil {
                     try {
                         log.info("rabbitmq consume start");
                         String msg = new String(body, "UTF-8");
-                        consumerService.consume(msg, queueName ,router);
+                        consumerService.consume(msg, queueName, router);
                         // 消息确认
                         // deliveryTag:（唯一标识 ID） 它代表了 RabbitMQ 向该 Channel 投递的这条消息的唯一标识 ID
                         // 是一个单调递增的正整数，delivery tag 的范围仅限于 Channel
