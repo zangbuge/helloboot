@@ -18,6 +18,7 @@ public class TestRabbitmq {
         String queueName = "abdc";
         String router = "hello";
 
+        // 生产者发布消息的时候,可以自动创建队列, 订阅者在启动的时候绑定的队列必须是已存在(或先启动生产者程序)
         RabbitmqUtil.createConnection(ip, port, username, password, vhost);
 //        RabbitmqUtil.sendMsg(exchangeName, null, queueName ,router ,"我就试试1");
 //        ConsumerDemo consumerDemo = new ConsumerDemo();

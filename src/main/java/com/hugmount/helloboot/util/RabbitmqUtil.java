@@ -135,6 +135,9 @@ public class RabbitmqUtil {
             channel.basicConsume(queueName, false, consumer);
             log.info("rabbitmq consumer init success");
 
+            // channel.basicConsume() // 订阅模式(也叫push模式)
+            // channel.basicGet() // 检索模式(也叫pull模式)
+
         } catch (Exception e) {
             log.error("rabbitmq consumer init fail", e);
         }
