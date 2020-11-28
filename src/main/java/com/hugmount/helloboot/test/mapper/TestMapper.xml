@@ -4,6 +4,7 @@
 
     <select id="getTestList" parameterType="com.hugmount.helloboot.test.pojo.Test" resultType="com.hugmount.helloboot.test.pojo.Test">
         select id id
+        , creat_time creatTime
         FROM t_Test
 
     </select>
