@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : hellogradle
-Source Server Version : 50723
-Source Host           : localhost:3306
+Source Server Version : 50637
+Source Host           : 127.0.0.1:3306
 Source Database       : catering
 
 Target Server Type    : MYSQL
-Target Server Version : 50723
+Target Server Version : 50637
 File Encoding         : 65001
 
-Date: 2020-05-14 17:29:50
+Date: 2020-11-28 17:36:58
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -125,12 +125,13 @@ CREATE TABLE `t_test` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `creat_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of t_test
 -- ----------------------------
-INSERT INTO `t_test` VALUES ('1', 'lhm', '2忘42342');
-INSERT INTO `t_test` VALUES ('2', '小鱼人', '7777777');
-INSERT INTO `t_test` VALUES ('3', 'hello', '888888');
+INSERT INTO `t_test` VALUES ('1', 'lhm', '2忘42342', '2020-11-28 17:08:16');
+INSERT INTO `t_test` VALUES ('2', '小鱼人', '7777777', null);
+INSERT INTO `t_test` VALUES ('3', 'hello', '888888', null);

@@ -6,6 +6,10 @@
         select id id
         , creat_time creatTime
         FROM t_Test
+        <if test="id == 2">
+            WHERE
+            id = #{id}
+        </if>
 
     </select>
 </mapper>
