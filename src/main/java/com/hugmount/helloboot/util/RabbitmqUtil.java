@@ -67,12 +67,12 @@ public class RabbitmqUtil {
         try {
             //创建一个通道
             Channel channel = connection.createChannel();
-            //指定交换机类型
-            channel.exchangeDeclare(exchangeName, exchangeType);
-            //声明一个队列, 如果不存在则创建, true表示持久化
+            //指定交换机类型 第三个参数true 表示exchange持久化
+            channel.exchangeDeclare(exchangeName, exchangeType, true);
+            //声明一个队列, 如果不存在则创建, 第二个参数 durable: true表示队列持久化
             channel.queueDeclare(queueName, true, false, false, null);
-            //推送消息到队列中,并指定路由
-            channel.basicPublish(exchangeName, router, null, msg.getBytes("UTF-8"));
+            //推送消息到队列中,并指定路由,设置消息持久化 MessageProperties.PERSISTENT_TEXT_PLAIN, 基于队列也设置了持久化
+            channel.basicPublish(exchangeName, router, MessageProperties.PERSISTENT_TEXT_PLAIN, msg.getBytes("UTF-8"));
             log.info("send msg to rabbitmq success");
 
             //关闭通道
