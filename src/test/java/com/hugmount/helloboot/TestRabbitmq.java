@@ -14,13 +14,13 @@ public class TestRabbitmq {
         String password = "123456";
         String vhost = "test";
 
-        String exchangeName = "hello123";
-        String queueName = "abdc123";
-        String router = "hello";
+        String exchangeName = "hello2";
+        String queueName = "hello2";
+        String router = "hello2";
 
         // 生产者发布消息的时候,可以自动创建队列, 订阅者在启动的时候绑定的队列必须是已存在(或先启动生产者程序)
         RabbitmqUtil.createConnection(ip, port, username, password, vhost);
-        RabbitmqUtil.sendMsg(exchangeName, null, queueName ,router ,"我就试试死信", "9000", "test_dlx_exchange_hello");
+        RabbitmqUtil.sendMsg(exchangeName, null, queueName ,router ,"我就试试死信", "9000", "test_dlx_exchange_1", "test_dlx_router_1");
 //        ConsumerDemo consumerDemo = new ConsumerDemo();
 //        RabbitmqUtil.receive(exchangeName, queueName, router,consumerDemo);
 

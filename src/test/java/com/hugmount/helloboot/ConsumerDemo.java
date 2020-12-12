@@ -11,6 +11,6 @@ public class ConsumerDemo extends RabbitmqUtil.ConsumerService {
         if (receiveMsg.contains("1")) {
 //            throw new RuntimeException("报错");
         }
-        System.out.println("我已经消费了哦, 信息: " + receiveMsg);
+        System.out.println("已经消费信息: " + receiveMsg);
     }
 }

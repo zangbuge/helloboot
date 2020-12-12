@@ -15,13 +15,13 @@ public class TestRabbitmqDLX {
         String password = "123456";
         String vhost = "test";
 
-        String exchangeName = "test_dlx_exchange_hello";
-        String queueName = "test_dlx_queue_abdc";
-        String router = "hello";
+        String exchangeName = "test_dlx_exchange_1";
+        String queueName = "test_dlx_queue_1";
+        String router = "test_dlx_router_1";
 
         // 生产者发布消息的时候,可以自动创建队列, 订阅者在启动的时候绑定的队列必须是已存在(或先启动生产者程序)
         RabbitmqUtil.createConnection(ip, port, username, password, vhost);
-        RabbitmqUtil.sendMsg(exchangeName, BuiltinExchangeType.FANOUT.getType(), queueName ,router ,"我就试试");
+        RabbitmqUtil.sendMsg(exchangeName, BuiltinExchangeType.DIRECT.getType(), queueName ,router ,"我就试试");
         ConsumerDemo consumerDemo = new ConsumerDemo();
         RabbitmqUtil.receive(exchangeName, queueName, router,consumerDemo);
         System.out.println("死信队列");

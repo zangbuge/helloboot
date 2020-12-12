@@ -55,14 +55,17 @@ public class RabbitmqUtil {
 
 
     public static void sendMsg(String exchangeName, String exchangeType, String queueName, String router, String msg) {
-        sendMsg(connection, exchangeName, exchangeType, queueName, router, msg, null, null);
+        sendMsg(connection, exchangeName, exchangeType, queueName, router, msg, null, null, null);
     }
 
-    public static void sendMsg(String exchangeName, String exchangeType, String queueName, String router, String msg, String exp, String dlxExchangeName) {
-        sendMsg(connection, exchangeName, exchangeType, queueName, router, msg, exp, dlxExchangeName);
+    public static void sendMsg(String exchangeName, String exchangeType, String queueName, String router, String msg,
+                               String exp, String dlxExchangeName, String dlxRoutingkey) {
+
+        sendMsg(connection, exchangeName, exchangeType, queueName, router, msg, exp, dlxExchangeName, dlxRoutingkey);
     }
 
-    public static void sendMsg(Connection connection, String exchangeName, String exchangeType, String queueName, String router, String msg, String exp, String dlxExchangeName) {
+    public static void sendMsg(Connection connection, String exchangeName, String exchangeType, String queueName, String router, String msg,
+                               String exp, String dlxExchangeName, String dlxRoutingkey) {
         if (null == router || "".equals(router.trim())) {
             router = DEFAULT_ROUTER;
         }
@@ -80,11 +83,14 @@ public class RabbitmqUtil {
                     .build();
         }
 
+        // 死信队列和普通队列没有什么区别
+        // 消息转入死信队列的几种情况: 1.消息TTL过期, 2.消息被拒绝(basic.reject / basic.nack) 3.队列达到最大长度
         Map<String,Object> params = new HashMap<>();
         if (dlxExchangeName != null) {
-            params.put("x-dead-letter-exchange", dlxExchangeName); //声明当前队列绑定的死信交换机
-//            params.put("x-dead-letter-routing-key", router); //声明当前队列的死信路由键
-//            params.put("x-max-length", 30000); // 队列最大容量，超过长度的消息进入死信队列
+            // 声明当前队列绑定的死信交换机
+            params.put("x-dead-letter-exchange", dlxExchangeName);
+            // 声明当前队列的死信路由键
+            params.put("x-dead-letter-routing-key", dlxRoutingkey);
         }
 
         try {
