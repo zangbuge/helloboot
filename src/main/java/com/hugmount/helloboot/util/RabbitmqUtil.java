@@ -4,6 +4,8 @@ import com.rabbitmq.client.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: Li Huiming
@@ -53,15 +55,36 @@ public class RabbitmqUtil {
 
 
     public static void sendMsg(String exchangeName, String exchangeType, String queueName, String router, String msg) {
-        sendMsg(connection, exchangeName, exchangeType, queueName, router, msg);
+        sendMsg(connection, exchangeName, exchangeType, queueName, router, msg, null, null);
     }
 
-    public static void sendMsg(Connection connection, String exchangeName, String exchangeType, String queueName, String router, String msg) {
+    public static void sendMsg(String exchangeName, String exchangeType, String queueName, String router, String msg, String exp, String dlxExchangeName) {
+        sendMsg(connection, exchangeName, exchangeType, queueName, router, msg, exp, dlxExchangeName);
+    }
+
+    public static void sendMsg(Connection connection, String exchangeName, String exchangeType, String queueName, String router, String msg, String exp, String dlxExchangeName) {
         if (null == router || "".equals(router.trim())) {
             router = DEFAULT_ROUTER;
         }
         if (null == exchangeType || "".equals(exchangeType.trim())) {
             exchangeType = EXCHANGE_TYPE;
+        }
+
+        // 默认消息持久化
+        AMQP.BasicProperties persistentTextPlain = MessageProperties.PERSISTENT_TEXT_PLAIN;
+        if (exp != null && !"".equals(exp.trim())) {
+            // deliveryMode设置消息是否持久化，1： 非持久化 2：持久化
+            persistentTextPlain = new AMQP.BasicProperties.Builder().deliveryMode(2)
+                    .contentEncoding("UTF-8")
+                    .expiration(exp) // 失效时间 单位毫秒
+                    .build();
+        }
+
+        Map<String,Object> params = new HashMap<>();
+        if (dlxExchangeName != null) {
+            params.put("x-dead-letter-exchange", dlxExchangeName); //声明当前队列绑定的死信交换机
+//            params.put("x-dead-letter-routing-key", router); //声明当前队列的死信路由键
+//            params.put("x-max-length", 30000); // 队列最大容量，超过长度的消息进入死信队列
         }
 
         try {
@@ -70,9 +93,10 @@ public class RabbitmqUtil {
             //指定交换机类型 第三个参数true 表示exchange持久化
             channel.exchangeDeclare(exchangeName, exchangeType, true);
             //声明一个队列, 如果不存在则创建, 第二个参数 durable: true表示队列持久化
-            channel.queueDeclare(queueName, true, false, false, null);
+            channel.queueDeclare(queueName, true, false, false, params);
+            channel.queueBind(queueName, exchangeName, router);
             //推送消息到队列中,并指定路由,设置消息持久化 MessageProperties.PERSISTENT_TEXT_PLAIN, 基于队列也设置了持久化
-            channel.basicPublish(exchangeName, router, MessageProperties.PERSISTENT_TEXT_PLAIN, msg.getBytes("UTF-8"));
+            channel.basicPublish(exchangeName, router, persistentTextPlain, msg.getBytes("UTF-8"));
             log.info("send msg to rabbitmq success");
 
             //关闭通道
