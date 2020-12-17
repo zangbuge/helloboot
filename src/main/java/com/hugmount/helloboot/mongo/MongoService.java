@@ -7,6 +7,8 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,8 +35,24 @@ public class MongoService {
         // 为实体类创建索引
         datastore.ensureIndexes();
 
-        List<User> users = datastore.find(User.class).asList();
-        System.out.println(JSON.toJSONString(users));
+        List<User> find = datastore.find(User.class).asList();
+        System.out.println(JSON.toJSONString(find));
+
+        Query<User> query = datastore.createQuery(User.class);
+        query.filter("child.tel", "123");
+        List<User> userList = query.asList();
+        System.out.println(JSON.toJSONString(userList));
+
+        // 修改addr 条件query
+        UpdateOperations<User> updateOperations = datastore.createUpdateOperations(User.class);
+        updateOperations.set("addr","宋庄");
+        datastore.update(query, updateOperations);
+
+        User user = new User();
+        user.setId("add123");
+        user.setName("test");
+        user.setAddr("保存 或根据id全更新");
+        datastore.save(user);
 
     }
 }
