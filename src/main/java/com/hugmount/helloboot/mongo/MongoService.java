@@ -26,7 +26,10 @@ public class MongoService {
 
         MongoClientOptions.Builder builder = MongoClientOptions.builder();
         builder.connectTimeout(9000);
-        builder.maxWaitTime(6000);
+        builder.maxWaitTime(6000); // 线程阻塞等待最长时间
+        builder.connectionsPerHost(8); // 最大连接数
+        builder.minConnectionsPerHost(2); // 每个主机的最小连接数
+        builder.maxConnectionIdleTime(1000 * 60 * 30); // 池连接的最大空闲时间
         MongoClientOptions options = builder.build();
         MongoClient mongoClient = new MongoClient(addressList, credential, options);
 
