@@ -54,5 +54,7 @@ public class MongoService {
         user.setAddr("保存 或根据id全更新");
         datastore.save(user);
 
+//        datastore.delete(query);
+
     }
 }
