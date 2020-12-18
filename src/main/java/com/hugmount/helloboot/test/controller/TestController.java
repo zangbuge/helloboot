@@ -2,6 +2,8 @@ package com.hugmount.helloboot.test.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.hugmount.helloboot.core.Result;
+import com.hugmount.helloboot.mongo.MongoService;
+import com.hugmount.helloboot.mongo.User;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +31,26 @@ public class TestController {
     @Autowired
     TestService testService;
 
+    @Autowired
+    MongoService mongoService;
+
+    @RequestMapping("/testMongo")
+    @ResponseBody
+    public String testMongo() {
+        List<User> users = mongoService.queryList("child.tel", "123", User.class);
+        log.info(JSON.toJSONString(users));
+
+        User user = mongoService.queryOne("id", "add123", User.class);
+        log.info(JSON.toJSONString(user));
+        user.setName("lihuiming");
+        mongoService.save(user);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("addr", "宋庄嘉华");
+        mongoService.update("child.tel", "123", map, User.class);
+
+        return "success";
+    }
 
     @PostMapping("/getTestList")
     @ResponseBody

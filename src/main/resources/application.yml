@@ -58,3 +58,10 @@ dubbo:
 thrift:
   port: 9899
   host: localhost
+
+mongo:
+  host: localhost
+  port: 27017
+  username: admin
+  password: 123456
+  database: admin
