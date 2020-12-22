@@ -58,4 +58,33 @@ cd usr/share/nginx/
 远程中心镜像地址, 搜索nginx 点击containers 即可看到docker中所有nginx支持的镜像
 https://hub.docker.com  
 
+#### Dockerfile
+创建 hellodocker 文件夹
+文件夹下创建 index.html
+<html>hello docker</html>
+
+再创建Dockerfile文件  文件名必须是Dockerfile 没有后缀, 内容为: 
+FROM nginx
+COPY ./index.html /usr/share/nginx/html/index.html
+EXPOSE 80
+
+进入hellodocker文件夹执行命令
+docker image build ./ -t hello-docker:1.0.0 # 打包镜像
+
+创建容器及启动容器
+docker container create -p 2333:80 hello-docker:1.0.0
+docker container start xxx # xxx 为上一条命令运行得到的结果
+
+访问主机 127.0.0.1:2333 应该能看到刚刚自己写的index.html内容
+
+当容器运行后，可以通过如下命令进入容器内部
+docker container exec -it xxx /bin/bash # xxx 为容器ID
+
+
+
+
+
+
+
+
 
