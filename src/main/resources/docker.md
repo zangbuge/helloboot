@@ -11,13 +11,13 @@ uname -r  #查看centos内核版本
 yum -y update 更新yum包到最新版本
 
 yum方式安装
-yum install -y yum-utils device-mapper-persistent-data lvm2   #安装所需的软件包
+yum install -y yum-utils device-mapper-persistent-data lvm2   #安装docker所需的依赖软件包
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo  #使用阿里云镜像
 yum makecache fast			#生成缓存将软件包信息提前在本地缓存一份，用来提高搜索安装软件的速度
-rpm --import https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+rpm --import https://mirrors.aliyun.com/docker-ce/linux/centos/gpg   #增加docker资源库
 yum -y install docker-ce 使用yum安装社区版本
-systemctl enable docker
-systemctl restart docker 启动docker并加入开机启动
+systemctl enable docker  让docker加入开机启动
+systemctl restart docker 启动docker
 
 查看版本
 docker version
@@ -27,11 +27,12 @@ sudo usermod -aG docker lhmuser #不用使用sudo
 
 常用命令
 docker info   查看信息
-docker images 查看docker的本地images
+docker images 查看docker的本地镜像
 docker ps     查看正在运行的容器
-docker build  
-docker pull 
-docker run
+docker build  根据Dockerfile打包镜像
+docker pull   拉取远程仓库镜像
+docker run    运行容器
+docker stop xxx  停止容器 xxx为运行容器ID
 
 docker架构3个部分
 client      客户端执行命令
@@ -50,7 +51,7 @@ docker run --rm --name myNginx -p 8880:80 nginx  #本地没有镜像则去远程
 启动一个容器, 即创建一个linux系统,里运行着nginx
 
 进入容器
-docker exec -it 32434werwer bash   it 后面跟容器的Id
+docker exec -it 32434werwer bash   it后面跟容器的Id
 
 进入容器中ngxin目录
 cd usr/share/nginx/
