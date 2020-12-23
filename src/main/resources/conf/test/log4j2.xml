@@ -3,7 +3,7 @@
 <configuration monitorInterval="300">
     <Properties>
         <Property name="baseDir">log</Property>
-        <Property name="logFormat">%d{yyyy-MM-dd HH:mm:ss} %level %class: %line %n %msg %n</Property>
+        <Property name="logFormat">%d{yyyy-MM-dd HH:mm:ss} %level %t %class: %line %n %msg %n</Property>
     </Properties>
     <!--先定义所有的appender-->
     <appenders>
