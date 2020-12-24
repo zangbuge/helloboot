@@ -83,6 +83,24 @@ docker container exec -it xxx /bin/bash # xxx 为容器ID
 
 
 
+#### docker安装mysql
+docker pull mysql:5.7  #拉取docker mysql官方镜像 或 docker pull mysql:latest  最新的
+docker images          
+docker run --name mysql5.7 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7  #启动mysql
+MYSQL_ROOT_PASSWORD=123456：设置 MySQL 服务 root 用户的密码
+即可登录mysql
+
+mysql的默认配置文件是 /etc/mysql/my.cnf 文件, 如果想要自定义配置，建议向 /etc/mysql/conf.d 目录中创建 .cnf 文件
+进入容器
+docker exec -it mysql5.7 bash
+登录mysql
+mysql -u root -p
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Lzslov123!';
+添加远程登录用户
+CREATE USER 'liaozesong'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+GRANT ALL PRIVILEGES ON *.* TO 'liaozesong'@'%';
+
+
 
 
 
