@@ -33,6 +33,7 @@ docker build  根据Dockerfile打包镜像
 docker pull   拉取远程仓库镜像
 docker run    运行容器
 docker stop xxx  停止容器 xxx为运行容器ID
+docker image history boot-docker-intro  查看镜像构建历史
 
 docker架构3个部分
 client      客户端执行命令
@@ -99,6 +100,26 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'Lzslov123!';
 添加远程登录用户
 CREATE USER 'liaozesong'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
 GRANT ALL PRIVILEGES ON *.* TO 'liaozesong'@'%';
+
+
+#### 打包springboot应用
+Dockerfile文件如下
+
+FROM maven:3.5.2-jdk-8-alpine AS MAVEN_BUILD
+MAINTAINER Brian Hannaway
+COPY pom.xml /build/
+COPY src /build/src/
+WORKDIR /build/
+RUN mvn package
+FROM openjdk:8-jre-alpine
+WORKDIR /app
+COPY --from=MAVEN_BUILD /build/target/helloboot-0.0.1-SNAPSHOT.jar /app/
+ENTRYPOINT ["java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar"]
+
+docker image build ./ -t helloboot:0.0.1   #打包镜像  时间会比较长或30分钟
+
+docker container run -p 8086:8086 helloboot:0.0.1    #启动应用
+
 
 
 
