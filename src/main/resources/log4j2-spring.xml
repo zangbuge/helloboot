@@ -2,6 +2,7 @@
 <configuration monitorInterval="300">
     <Properties>
         <Property name="baseDir">../logs</Property>
+        <Property name="projectName">helloboot</Property>
         <Property name="logFormat">%d{yyyy-MM-dd HH:mm:ss} %level [%t] %class: %line %n %msg %n</Property>
     </Properties>
     <!--先定义所有的appender-->
@@ -16,7 +17,7 @@
         <Async name="ASYNC" includeLocation="true">
             <AppenderRef ref="RollingFile"/>
         </Async>
-        <RollingFile name="RollingFile" fileName="${baseDir}/info.log" filePattern="${baseDir}/info.log.%d{yyyy-MM-dd}">
+        <RollingFile name="RollingFile" fileName="${baseDir}/${projectName}.log" filePattern="${baseDir}/${projectName}.log.%d{yyyy-MM-dd}-%i">
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${logFormat}"/>
             <!-- 保存日志使用时间滚动策略, 具体格式由 filePattern 的配置决定(按天, 月) -->
