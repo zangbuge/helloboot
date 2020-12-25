@@ -131,7 +131,11 @@ docker run --name mymongo -d -p 27017:27017 mongo
 docker exec -it xxx mongo admin  #进入mongo命令
 db.createUser({ user:'admin',pwd:'123456',roles:[ { role:'root', db: 'admin'}]})  #创建用户
 
-
+#### 推送镜像到远程仓库
+docker login -u 用户名  #登录到官方Docker Hub仓库
+必须先打一个tag再推送
+docker tag helloboot:0.0.1 zangbuge/helloboot
+docker push zangbuge/helloboot
 
 #### 安装jenkins
 docker run -p 8080:8080 -p 50000:50000 -v jenkins_data:/var/jenkins_home jenkinsci/blueocean
