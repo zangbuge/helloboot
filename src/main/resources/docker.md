@@ -34,6 +34,11 @@ docker pull   拉取远程仓库镜像
 docker run    运行容器
 docker stop xxx  停止容器 xxx为运行容器ID
 docker image history boot-docker-intro  查看镜像构建历史
+docker rm 删除容器 
+docker rmi 删除镜像 
+docker search 在Docker Hub中查找镜像 
+-d: 后台运行容器，并返回容器ID； 
+-name=”nginx-lb”: 为容器指定一个名称； 
 
 docker架构3个部分
 client      客户端执行命令
@@ -119,6 +124,18 @@ ENTRYPOINT ["java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar"]
 docker image build ./ -t helloboot:0.0.1   #打包镜像  时间会比较长或30分钟
 
 docker container run -p 8086:8086 helloboot:0.0.1    #启动应用
+
+
+#### 安装mongo
+docker run --name mymongo -d -p 27017:27017 mongo
+docker exec -it xxx mongo admin  #进入mongo命令
+db.createUser({ user:'admin',pwd:'123456',roles:[ { role:'root', db: 'admin'}]})  #创建用户
+
+
+
+#### 安装jenkins
+docker run -p 8080:8080 -p 50000:50000 -v jenkins_data:/var/jenkins_home jenkinsci/blueocean
+访问jenkins地址 8080
 
 
 
