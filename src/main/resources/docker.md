@@ -146,7 +146,8 @@ mkdir -p /var/jenkins_mount  #先创建一个jenkins工作目录
 chmod 777 /var/jenkins_mount  #设置权限
 docker run --name myjenkins -d -p 18080:8080 -p 50000:50000 -v /var/jenkins_mount:/var/jenkins_home -v /etc/localtime:/etc/localtime jenkins/jenkins
 访问jenkins地址 18080
-
+vi /var/jenkins_mount/secrets/initialAdminPassword  #Jenkins密码位置
+docker logs myjenkins  #查看docker容器日志
 
 
 
