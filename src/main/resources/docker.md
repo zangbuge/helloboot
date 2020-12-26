@@ -149,6 +149,12 @@ docker run --name myjenkins -d -p 18080:8080 -p 50000:50000 -v /var/jenkins_moun
 vi /var/jenkins_mount/secrets/initialAdminPassword  #Jenkins密码位置
 docker logs myjenkins  #查看docker容器日志
 
+#### jenkins自动化部署
+jenkins中全局配置git环境 
+whereis git  #查看git安装路径
+配置git路径为 /usr/bin/git
+
+
 
 
 
