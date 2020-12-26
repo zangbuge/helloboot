@@ -29,8 +29,10 @@ sudo usermod -aG docker lhmuser #不用使用sudo
 docker info   查看信息
 docker images 查看docker的本地镜像
 docker ps     查看正在运行的容器
+docker ps -a  列出所有容器包含未运行的
 docker build  根据Dockerfile打包镜像
 docker pull   拉取远程仓库镜像
+docker pull jenkins/jenkins  #下载某用户镜像 用户名/镜像名
 docker run    运行容器
 docker stop xxx  停止容器 xxx为运行容器ID
 docker image history boot-docker-intro  查看镜像构建历史
@@ -138,8 +140,12 @@ docker tag helloboot:0.0.1 zangbuge/helloboot
 docker push zangbuge/helloboot
 
 #### 安装jenkins
-docker run -p 8080:8080 -p 50000:50000 -v jenkins_data:/var/jenkins_home jenkinsci/blueocean
-访问jenkins地址 8080
+# -v /var/jenkins_mount:/var/jenkins_mount /var/jenkins_home目录为容器
+# -v /etc/localtime:/etc/localtime让容器使用和服务器同样的时间设置
+mkdir -p /var/jenkins_mount  #先创建一个jenkins工作目录 
+chmod 777 /var/jenkins_mount  #设置权限
+docker run --name myjenkins -d -p 18080:8080 -p 50000:50000 -v /var/jenkins_mount:/var/jenkins_home -v /etc/localtime:/etc/localtime jenkins/jenkins
+访问jenkins地址 18080
 
 
 
