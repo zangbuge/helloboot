@@ -175,11 +175,14 @@ vi /etc/sysconfig/jenkins
 #启动服务
 service jenkins start
 
+### 设置docker权限
+#否则可能出现错误: dial unix /var/run/docker.sock: connect: permission denied
+chmod 666 /var/run/docker.sock  #docker每重启一次,都要设置一次
+
 登陆jenkins后创建项目后只需在 源码管理 中配置项目git地址
 然后在构建中添加shell脚本
 ```aidl
-#!/bin/bash
-sudo /var/lib/jenkins/workspace/helloboot/src/main/resources/sh/docker.sh
+sh /var/lib/jenkins/workspace/helloboot/src/main/resources/sh/docker.sh
 ```
 
 
