@@ -126,8 +126,14 @@ COPY --from=MAVEN_BUILD /build/target/helloboot-0.0.1-SNAPSHOT.jar /app/
 ENTRYPOINT ["java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar"]
 
 docker image build ./ -t helloboot:0.0.1   #打包镜像  时间会比较长或30分钟
-
 docker container run -p 8086:8086 helloboot:0.0.1    #启动应用
+
+docker logs -f -t --tail 100 datacenterId  #查看容器启动项目的日志
+-f 跟踪实时日志 --follow
+-t 显示时间戳
+100 只显示最后100行
+
+docker logs --since 30m CONTAINER_ID #查看最近30分钟的日志
 
 
 #### 安装mongo
