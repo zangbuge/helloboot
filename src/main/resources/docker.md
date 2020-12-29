@@ -172,6 +172,9 @@ wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/redhat/jenkins-2.271-1.1.noarc
 rpm -ivh jenkins-2.271-1.1.noarch.rpm
 #修改端口 JENKINS_PORT="8080"
 vi /etc/sysconfig/jenkins 
+设置jenkins和系统时间一致
+JAVA_ARGS="-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai -Dfile.encoding=UTF-8 -Djava.awt.headless=true"
+
 #启动服务
 service jenkins start
 
