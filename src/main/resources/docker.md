@@ -163,6 +163,19 @@ groupadd jenkins
 useradd jenkins -g jenkins
 
 
+#### centos安装jenkins
+#下载源文件 国内清华大学镜像(官网极慢)
+wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/redhat/jenkins-2.271-1.1.noarch.rpm
+#安装
+rpm -ivh jenkins-2.271-1.1.noarch.rpm
+#修改端口 JENKINS_PORT="8080"
+vi /etc/sysconfig/jenkins 
+#启动服务
+service jenkins start
+
+
+
+
 
 
 
