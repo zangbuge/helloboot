@@ -177,7 +177,10 @@ service jenkins start
 
 登陆jenkins后创建项目后只需在 源码管理 中配置项目git地址
 然后在构建中添加shell脚本
-
+```aidl
+#!/bin/bash
+sudo /var/lib/jenkins/workspace/helloboot/src/main/resources/sh/docker.sh
+```
 
 
 

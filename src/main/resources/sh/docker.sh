@@ -4,7 +4,7 @@ image_id=`docker images |grep "$image_name" |grep 0.0.1 |awk '{print $3}'`
 echo "$container_id 容器ID"
 echo "$image_id 镜像ID"
 
-cd /var/jenkins_mount/workspace/helloboot
+cd /var/lib/jenkins/workspace/helloboot
 docker stop $container_id
 docker rmi $image_id
 
