@@ -88,6 +88,8 @@ docker container start xxx # xxx 为上一条命令运行得到的结果
 
 当容器运行后，可以通过如下命令进入容器内部
 docker container exec -it xxx /bin/bash # xxx 为容器ID
+-it 等在容器内的命令执行完毕才会出来到当前操作,而bash 是打开容器内的一个终端近程,又因为it的等待 
+所以就会一直以终端连接的方式停留在容器内部
 
 
 
@@ -140,19 +142,25 @@ docker tag helloboot:0.0.1 zangbuge/helloboot
 docker push zangbuge/helloboot
 
 #### 安装jenkins
-# -v /var/jenkins_mount:/var/jenkins_mount /var/jenkins_home目录为容器
+# -v /var/jenkins_mount:/var/jenkins_mount 挂载目录
 # -v /etc/localtime:/etc/localtime让容器使用和服务器同样的时间设置
 mkdir -p /var/jenkins_mount  #先创建一个jenkins工作目录 
 sudo chmod -R 777 /var/jenkins_mount  #设置权限 -R 指级联应用到目录里的所有子目录和文件, 777 是所有用户都拥有最高权限
-docker run --name myjenkins -d -p 18080:8080 -p 50000:50000 -v /var/jenkins_mount:/var/jenkins_home -v /etc/localtime:/etc/localtime jenkins/jenkins
+docker run -u 1000:1000 --name myjenkins -d -p 18080:8080 -p 50000:50000 -v /var/jenkins_mount:/var/jenkins_home --privileged jenkins/jenkins
 访问jenkins地址 18080
 vi /var/jenkins_mount/secrets/initialAdminPassword  #Jenkins密码位置
 docker logs myjenkins  #查看docker容器日志
 
-#### jenkins自动化部署
 jenkins中全局配置git环境 
 whereis git  #查看git安装路径
 配置git路径为 /usr/bin/git
+#进入容器查看所属用户
+ls -la /var/jenkins_home
+#查看用户名的uid gid
+id jenkins
+#添加用户
+groupadd jenkins
+useradd jenkins -g jenkins
 
 
 
