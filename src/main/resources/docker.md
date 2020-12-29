@@ -164,6 +164,8 @@ useradd jenkins -g jenkins
 
 
 #### centos安装jenkins
+#先安装jdk, jenkins是基于java环境的
+yum -y install java-1.8.0-openjdk
 #下载源文件 国内清华大学镜像(官网极慢)
 wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/redhat/jenkins-2.271-1.1.noarch.rpm
 #安装
@@ -172,6 +174,9 @@ rpm -ivh jenkins-2.271-1.1.noarch.rpm
 vi /etc/sysconfig/jenkins 
 #启动服务
 service jenkins start
+
+登陆jenkins后创建项目后只需在 源码管理 中配置项目git地址
+然后在构建中添加shell脚本
 
 
 
