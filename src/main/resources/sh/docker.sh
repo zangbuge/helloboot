@@ -1,4 +1,5 @@
-image_name=helloboot  # 注意 `` 是反引号
+#!/bin/bash
+image_name=helloboot  # 注意 反引号
 container_id=`docker ps |grep "$image_name" |awk '{print $1}'`
 image_id=`docker images |grep "$image_name" |grep 0.0.1 |awk '{print $3}'`
 echo "$container_id 容器ID"
