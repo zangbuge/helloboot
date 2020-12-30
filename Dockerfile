@@ -7,7 +7,7 @@ RUN mvn package
 FROM openjdk:8-jre-alpine
 WORKDIR /app
 COPY --from=MAVEN_BUILD /build/target/helloboot-0.0.1-SNAPSHOT.jar /app/
-ENTRYPOINT ["java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar", " &"]
+ENTRYPOINT ["nohup ", "java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar", "> /var/log/start.log", " &"]
 
 
 ### 说明

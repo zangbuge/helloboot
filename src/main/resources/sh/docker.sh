@@ -12,7 +12,9 @@ docker rmi $image_id
 docker image build ./ -t $image_name:0.0.1
 docker container run --name $image_name -p 8086:8086 $image_name:0.0.1
 
-docker logs -f -t --tail 100 $image_name | sed '/JVM running for/q'
+keywords="JVM running for"
+logfile="/var/log/start.log"
+{ sed /"$keywords"/q; kill $!; } < < (exec timeout 5m tail -Fn 0 $logfile)
 echo "$image_name 容器创建完成"
 
 
