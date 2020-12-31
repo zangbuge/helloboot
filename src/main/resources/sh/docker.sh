@@ -10,7 +10,7 @@ docker stop $container_id
 docker rmi $image_id
 
 docker image build ./ -t $image_name:0.0.1
-docker container run --name $image_name -p 8086:8086 $image_name:0.0.1
+docker container run --rm --name $image_name -p 8086:8086 $image_name:0.0.1
 
 keywords="JVM running for"
 logfile="/var/log/start.log"
