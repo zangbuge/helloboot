@@ -5,11 +5,11 @@ COPY src /build/src/
 COPY settings.xml /usr/share/maven/conf/settings.xml
 WORKDIR /build/
 RUN mvn dependency:go-offline
-RUN mvn -f /usr/share/maven/conf/settings.xml clean package
+RUN mvn clean package
 FROM openjdk:8-jre-alpine
 WORKDIR /app
 COPY --from=MAVEN_BUILD /build/target/helloboot-0.0.1-SNAPSHOT.jar /app/
-ENTRYPOINT ["java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar", " &"]
+ENTRYPOINT ["nohup", "java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar", " &"]
 
 
 ### 说明
@@ -21,5 +21,5 @@ ENTRYPOINT ["java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar", " &"]
 # FROM openjdk:8-jre-alpine 告知Docker多阶段构建的下一步采用openjdk:8-jre-alpine的基础镜像
 # COPY--from=MAVEN_BUILD/build/target/docker-boot-intro-0.1.0.jar  /app/ 告知Docker从MAVEN_BUILD阶段的/build/target目录复制ocker-boot-intro-0.1.0.jar到/app目录
 # ENTRYPOINT["java","-jar","app.jar"] 告知Docker在容器运行本镜像时，运行哪些命令
-# RUN mvn dependency:go-offline 结合docker的cache机制,避免maven的依赖每次都要重新下载,配置setting.xml
-# COPY settings.xml /usr/share/maven/conf/settings.xml 使用docker缓存的maven依赖
+# COPY settings.xml /usr/share/maven/conf/settings.xml 使用自定义配置maven仓库位置
+# RUN mvn dependency:go-offline 结合docker的cache机制,避免maven的依赖每次都要重新下载,且在pom.xml配置缓存插件
