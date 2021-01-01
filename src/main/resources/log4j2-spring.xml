@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration monitorInterval="300">
     <Properties>
-        <Property name="baseDir">/app/logs</Property>
+        <Property name="baseDir">/app/logs/helloboot</Property>
         <Property name="projectName">helloboot</Property>
         <Property name="logFormat">%d{yyyy-MM-dd HH:mm:ss} %level [%t] %class: %line %n %msg %n</Property>
     </Properties>
