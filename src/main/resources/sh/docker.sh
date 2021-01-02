@@ -13,7 +13,15 @@ docker rmi $image_id
 
 docker image build ./ -t $image_name:0.0.1
 docker container run -d --rm --name $image_name -p 8086:8086 -v /app/logs:/app/logs $image_name:0.0.1
-
+echo "启动中..."
+while true
+do
+port_open=`netstat -an |grep 8086 |grep LISTEN`
+if [ -n "$port_open" ]
+then
+break
+fi
+done
 echo "$image_name 容器启动完成"
 
 

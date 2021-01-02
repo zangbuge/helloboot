@@ -18,12 +18,12 @@
         <java.version>1.8</java.version>
     </properties>
 
-    <repositories>
+    <!--<repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-    </repositories>
+    </repositories>-->
 
     <profiles>
         <profile>
@@ -266,11 +266,11 @@
             <version>4.6.2</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.github.zangbuge</groupId>
             <artifactId>ajiao</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
 
         <!-- thrift 生成 .java 服务的版本一定要对应-->
         <dependency>
