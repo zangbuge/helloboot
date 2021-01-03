@@ -137,7 +137,7 @@ docker logs --since 30m CONTAINER_ID #查看最近30分钟的日志
 
 
 #### 安装mongo
-docker run --name mymongo -d -p 27017:27017 mongo
+docker run --name mymongo -d -p 27017:27017 -v /data/mongo:/data/db mongo
 docker exec -it xxx mongo admin  #进入mongo命令
 db.createUser({ user:'admin',pwd:'123456',roles:[ { role:'root', db: 'admin'}]})  #创建用户
 
