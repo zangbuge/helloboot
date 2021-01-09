@@ -203,6 +203,17 @@ sh /var/lib/jenkins/workspace/helloboot/src/main/resources/sh/docker.sh
 
 
 #### k8s
+安装epel-release源
+yum -y install epel-release
+关闭防火墙
+systemctl stop firewalld
+systemctl disable firewalld
+setenforce 0
+查看防火墙状态
+firewall-cmd --state
+关闭swap
+swapoff -a
+
 安装Kubeadm, 配置yum源 执行如下命令：
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo 
 [kubernetes] 
@@ -210,6 +221,8 @@ name=Kubernetes
 baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64 
 enabled=1 
 gpgcheck=0 
+repo_gpgcheck=0
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 
 ##### k8s会自动安装docker, 必须卸载已安装的docker 否则冲突
@@ -224,19 +237,30 @@ systemctl enable etcd
 #输入如下命令查看 etcd 健康状况
 etcdctl -C http://localhost:2379 cluster-health
 
-#### 安装 Kubernetes
+#### 安装 Kubernetes 
+如果出现冲突,使用命令卸载
+yum remove  kubernetes-client-1.5.2-0.7.git269f928.el7.x86_64
+
 yum install kubernetes -y
+cd /etc/kubernetes
+ls #成功会有以下文件
+apiserver  apiserver.rpmnew  apiserver.rpmsave  config  controller-manager  manifests  scheduler
+
 #查看k8s版本
 kubectl version
-
+docker --version
+etcd --version 
+cat /etc/redhat-release
 #### 启动etcd、kube-apiserver、kube-controller-manager、kube-scheduler等服务，并设置开机启动。
 for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler; do systemctl restart $SERVICES;systemctl enable $SERVICES;systemctl status $SERVICES ; done
 
-#安装 flannel 网络统一管理
+#安装 flannel 网络管理组件
 yum install flannel -y
-
 #在etcd中定义flannel网络
 etcdctl mk /atomic.io/network/config '{"Network":"172.17.0.0/16"}'
+
+#安装node组件
+yum -y install flannel kubernetes-node
 
 #启动修改后的 flannel ，并依次重启 docker、kubernete
 service docker restart
@@ -248,5 +272,14 @@ systemctl start flanneld
 systemctl restart kubelet
 systemctl restart kube-proxy
 
+#node节点机上启动kube-proxy,kubelet,docker,flanneld等服务，并设置开机启动
+for SERVICES in kube-proxy kubelet docker flanneld;do systemctl restart $SERVICES;systemctl enable $SERVICES;systemctl status $SERVICES; done
+
 #查看k8s集群状态
 kubectl get no 
+#查看运行的node节点机器
+kubectl get nodes
+
+
+
+
