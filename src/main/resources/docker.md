@@ -18,6 +18,9 @@ rpm --import https://mirrors.aliyun.com/docker-ce/linux/centos/gpg   #增加dock
 yum -y install docker-ce 使用yum安装社区版本
 systemctl enable docker  让docker加入开机启动
 systemctl restart docker 启动docker
+yum -y remove docker-ce  卸载docker
+yum -y remove docker-ce-cli 
+
 
 查看版本
 docker version
@@ -199,8 +202,36 @@ sh /var/lib/jenkins/workspace/helloboot/src/main/resources/sh/docker.sh
 
 
 
+#### k8s
+安装Kubeadm, 配置yum源 执行如下命令：
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo 
+[kubernetes] 
+name=Kubernetes 
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64 
+enabled=1 
+gpgcheck=0 
+EOF
 
+##### k8s会自动安装docker, 必须卸载已安装的docker 否则冲突
+yum -y remove docker-ce  卸载docker
+yum -y remove docker-ce-cli 
 
+#安装etcd
+yum install etcd -y
+#启动etcd
+systemctl start etcd
+systemctl enable etcd
+#输入如下命令查看 etcd 健康状况
+etcdctl -C http://localhost:2379 cluster-health
 
+#### 安装 Kubernetes
+yum install kubernetes -y
+#查看k8s版本
+kubectl version
 
+#### 启动etcd、kube-apiserver、kube-controller-manager、kube-scheduler等服务，并设置开机启动。
+for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler; do systemctl restart $SERVICES;systemctl enable $SERVICES;systemctl status $SERVICES ; done
+
+#在etcd中定义flannel网络
+etcdctl mk /atomic.io/network/config '{"Network":"172.17.0.0/16"}'
 
