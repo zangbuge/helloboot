@@ -232,6 +232,21 @@ kubectl version
 #### 启动etcd、kube-apiserver、kube-controller-manager、kube-scheduler等服务，并设置开机启动。
 for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler; do systemctl restart $SERVICES;systemctl enable $SERVICES;systemctl status $SERVICES ; done
 
+#安装 flannel 网络统一管理
+yum install flannel -y
+
 #在etcd中定义flannel网络
 etcdctl mk /atomic.io/network/config '{"Network":"172.17.0.0/16"}'
 
+#启动修改后的 flannel ，并依次重启 docker、kubernete
+service docker restart
+systemctl restart kube-apiserver
+systemctl restart kube-controller-manager
+systemctl restart kube-scheduler
+systemctl enable flanneld
+systemctl start flanneld
+systemctl restart kubelet
+systemctl restart kube-proxy
+
+#查看k8s集群状态
+kubectl get no 
