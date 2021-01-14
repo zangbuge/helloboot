@@ -226,9 +226,14 @@ repo_gpgcheck=0
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 
-##### k8s会自动安装docker, 必须卸载已安装的docker 否则冲突
-yum -y remove docker-ce  卸载docker
-yum -y remove docker-ce-cli 
+#查看支持k8s版本
+yum list kubelet --showduplicates | sort -r 
+#安装docker
+yum install docker-ce-18.09.6 docker-ce-cli-18.09.6
+# 首先查看已安装Docker
+yum list installed |grep docker
+# 执行卸载
+yum -y remove docker-ce.x86_64
 
 #安装etcd
 yum install etcd -y
@@ -242,6 +247,7 @@ etcdctl -C http://localhost:2379 cluster-health
 如果出现冲突,使用命令卸载
 yum remove  kubernetes-client-1.5.2-0.7.git269f928.el7.x86_64
 
+##### k8s会自动安装docker, 必须卸载已安装的docker 否则冲突
 yum install kubernetes -y
 cd /etc/kubernetes
 ls #成功会有以下文件
