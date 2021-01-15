@@ -287,6 +287,32 @@ kubectl get no
 #查看运行的node节点机器
 kubectl get nodes
 
+-------------------------------------------------------
+Warning: RPMDB altered outside of yum
+【解决办法】删除 yum 的历史记录
+rm -rf /var/lib/yum/history/*.sqlite 
 
+Kubernetes集群组件
+etcd 一个高可用的K/V键值对存储和服务发现系统
+flannel 实现夸主机的容器网络的通信
+kube-apiserver 提供kubernetes集群的API调用
+kube-controller-manager 确保集群服务
+kube-scheduler 调度容器，分配到Node
+kubelet 在Node节点上按照配置文件中定义的容器规格启动容器
+kube-proxy 提供网络代理服务
 
+kubeadm  启动 k8s 集群的命令工具
+kubelet  集群容器内的命令工具
+kubectl  操作集群的命令工具
+yum install docker-ce kubeadm kubelet kubectl -y
 
+启动
+systemctl enable etcd
+systemctl enable kube-apiserver
+systemctl enable kube-controller-manager
+systemctl enable kube-scheduler
+
+systemctl start etcd
+systemctl start kube-apiserver
+systemctl start kube-controller-manager
+systemctl start kube-scheduler
