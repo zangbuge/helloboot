@@ -16,10 +16,17 @@
     </p>
     <div>
         <img id="pic" src="" onclick="setImg();" style="height: 80px; width: 60px;">
+        <div id="page" class="page" maxshowpageitem="5" pagelistcount="10"></div>
     </div>
     <div th:include="component/common::commonFooter"></div>
 </body>
 <script>
+    // maxshowpageitem 显示按钮个数
+    // pagelistcount 总页数
+    $("#page").initPage(100, 1, function (index) {
+        console.info(index)
+    });
+    
     function hello(that) {
         //使用自定义属性传值, 避免在事件 hello('hugmount') 中传值,数值太长变成科学计数法的问题
         var msg = $(that).attr("data-msg");
