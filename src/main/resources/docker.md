@@ -226,8 +226,11 @@ docker pull nacos/nacos-server
 docker network create common-network 
 #查看网络
 docker network ls
-#启动 nacos
-docker run -d --name nacos --network common-network --env MODE=standalone -p 8848:8848 nacos/nacos-server
+#启动 nacos   
+--restart=always 设置重启docker时也重启nacos 
+docker update –restart = no <container_id> 更新容器的–restart标志.关闭
+-itd 设置nacos一直运行, nacos在docker容器运行必须有一个前台进程， 如果没有前台进程执行，容器认为空闲，就会自行退出
+docker run -itd --name nacos --restart=always --network common-network --env MODE=standalone -p 8848:8848 nacos/nacos-server 
 #管理界面 默认端口号是：8848
 http://127.0.0.1:8848/nacos/
 #默认账号密码：nacos/nacos
