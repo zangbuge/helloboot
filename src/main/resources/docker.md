@@ -220,9 +220,17 @@ chmod 666 /var/run/docker.sock  #docker每重启一次,都要设置一次
 sh /var/lib/jenkins/workspace/helloboot/src/main/resources/sh/docker.sh
 ```
 
-
-
-
+### nacos
+docker pull nacos/nacos-server
+#创建自定义网络（用于容器通讯）
+docker network create common-network 
+#查看网络
+docker network ls
+#启动 nacos
+docker run -d --name nacos --network common-network --env MODE=standalone -p 8848:8848 nacos/nacos-server
+#管理界面 默认端口号是：8848
+http://127.0.0.1:8848/nacos/
+#默认账号密码：nacos/nacos
 
 #### k8s
 安装epel-release源
