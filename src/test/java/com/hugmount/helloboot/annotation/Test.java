@@ -19,16 +19,26 @@ public class Test {
             System.out.println("path = " + annotation.path());
         }
 
+        System.out.println("获取该类及基类所有public方法");
         Method[] methods = orderLogClass.getMethods();
+        System.out.println(JSON.toJSONString(methods));
+
+        Method[] declaredMethods = orderLogClass.getDeclaredMethods();
+        System.out.println("获取该类本身所有方法(私有 公共 保护)");
+        System.out.println(JSON.toJSONString(declaredMethods));
+
+        System.out.println("该类及父类所有public属性");
         Field[] fields = orderLogClass.getFields();
+        System.out.println(JSON.toJSONString(fields));
+
+        System.out.println("获取该类本身所有属性成员(包含private)");
+        Field[] declaredFields = orderLogClass.getDeclaredFields();
+        System.out.println(JSON.toJSONString(declaredFields));
+
+        System.out.println("获取该类本身某个属性的值");
         Field declaredField = orderLogClass.getDeclaredField("date");
         OrderLog orderLog = orderLogClass.newInstance();
-        System.out.println("date的值: " + declaredField.get(orderLog));
-        
-        System.out.println("该类所有public方法");
-        System.out.println(JSON.toJSONString(methods, true));
-        System.out.println("该类所有public属性");
-        System.out.println(JSON.toJSONString(fields ,true));
+        System.out.println("date: " + declaredField.get(orderLog));
 
 
     }
