@@ -1,7 +1,9 @@
 package com.hugmount.helloboot;
 
+import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSON;
 import com.hugmount.helloboot.util.HttpUtil;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,4 +28,14 @@ public class TestHttp {
         System.out.println("testPost返回: " + post);
 
     }
+
+    @Test
+    public void testHuTool() {
+        String url = "http://127.0.0.1:8001/testBody";
+        Map<String, String> map = new HashMap<>();
+        map.put("lhm", "123");
+        String testlhm = HttpRequest.post(url).header("token", "hello").body(JSON.toJSONString(map)).execute().body();
+        System.out.println(testlhm);
+    }
+
 }
