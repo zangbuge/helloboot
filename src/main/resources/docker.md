@@ -235,6 +235,12 @@ docker run -itd --name nacos --restart=always --network common-network --env MOD
 http://127.0.0.1:8848/nacos/
 #默认账号密码：nacos/nacos
 
+### 安装redis
+#快捷启动
+docker run -itd --name redis-test -p 6379:6379 redis
+#配置启动
+sudo docker run -itd -p 6379:6379 --rm --name myredis -v /data/redis/redis.conf:/etc/redis/redis.conf -v /data/redis/db:/data redis redis-server /etc/redis/redis.conf --appendonly yes
+
 #### k8s
 安装epel-release源
 yum -y install epel-release
