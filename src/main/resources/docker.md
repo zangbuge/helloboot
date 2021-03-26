@@ -235,6 +235,22 @@ docker run -itd --name nacos --restart=always --network common-network --env MOD
 http://127.0.0.1:8848/nacos/
 #默认账号密码：nacos/nacos
 
+### 指定mysql配置  MODE 默认cluster 集群模式
+```aidl
+docker run \
+--name mynacos -d \
+-p 8848:8848 \
+--privileged=true \
+--restart=always \
+-e JVM_XMS=256m \
+-e JVM_XMX=256m \
+-e MODE=standalone \
+-e PREFER_HOST_MODE=hostname \
+-v /home/nacos/logs:/home/nacos/logs \
+-v /home/nacos/init.d/custom.properties:/home/nacos/init.d/custom.properties \
+nacos/nacos-server
+```
+
 ### 安装redis
 #快捷启动
 docker run -itd --name redis-test -p 6379:6379 redis
