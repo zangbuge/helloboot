@@ -237,18 +237,19 @@ http://127.0.0.1:8848/nacos/
 
 ### 指定mysql配置  MODE 默认cluster 集群模式
 ```aidl
-docker run \
---name mynacos -d \
--p 8848:8848 \
---privileged=true \
---restart=always \
--e JVM_XMS=256m \
--e JVM_XMX=256m \
+docker run -d \
 -e MODE=standalone \
--e PREFER_HOST_MODE=hostname \
--v /home/nacos/logs:/home/nacos/logs \
--v /home/nacos/init.d/custom.properties:/home/nacos/init.d/custom.properties \
-nacos/nacos-server
+-e SPRING_DATASOURCE_PLATFORM=mysql \
+-e MYSQL_SERVICE_HOST=115.159.66.110 \
+-e MYSQL_SERVICE_PORT=3306 \
+-e MYSQL_SERVICE_USER=root \
+-e MYSQL_SERVICE_PASSWORD=123456 \
+-e MYSQL_SERVICE_DB_NAME=nacos_config \
+-p 8848:8848 \
+--restart=always \
+--name mynacos \
+-v /root/nacos/standalone-logs/:/home/nacos/logs \
+nacos/nacos-server:1.2.1
 ```
 
 ### 安装redis
