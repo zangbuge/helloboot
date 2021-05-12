@@ -1,9 +1,6 @@
 package com.hugmount.helloboot.util;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
@@ -14,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-/** SXSSFWorkbook优化版，处理大批量数据提升效率，节约内存
+/**
+ * SXSSFWorkbook优化版，处理大批量数据提升效率，节约内存
+ *
  * @Author： Li HuiMing
  * @Date: 2021/5/12
  */
@@ -43,6 +42,9 @@ public class POIUtil {
         Font cellFont = workbook.createFont();
         cellFont.setBold(false);
         cellStyle.setFont(cellFont);
+        // 设置单元格格式为文本
+        DataFormat dataFormat = workbook.createDataFormat();
+        cellStyle.setDataFormat(dataFormat.getFormat("@"));
 
         // 创建一个sheet
         SXSSFSheet sheet = workbook.createSheet("Sheet1");
