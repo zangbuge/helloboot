@@ -5,6 +5,9 @@ import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.servlet.ServletOutputStream;
@@ -119,14 +122,15 @@ public class POIUtil {
         try {
             XSSFWorkbook wb = new XSSFWorkbook(inputStream);
             SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(wb);
-            SXSSFSheet sheetAt = sxssfWorkbook.getSheetAt(0);
+            XSSFWorkbook xssfWorkbook = sxssfWorkbook.getXSSFWorkbook();
+            XSSFSheet sheetAt = xssfWorkbook.getSheetAt(0);
             if (sheetAt == null) {
                 throw new RuntimeException("该文件中没有excel数据");
             }
             List<Map<String, Object>> rowList = new ArrayList<>();
             int lastRowNum = sheetAt.getLastRowNum();
             for (int i = 0; i <= lastRowNum; i++) {
-                SXSSFRow row = sheetAt.getRow(i);
+                XSSFRow row = sheetAt.getRow(i);
                 if (row == null) {
                     continue;
                 }
@@ -136,7 +140,7 @@ public class POIUtil {
                 boolean isSkip = true;
                 short lastCellNum = row.getLastCellNum();
                 for (short j = 0; j <= lastCellNum; j++) {
-                    SXSSFCell cell = row.getCell(j);
+                    XSSFCell cell = row.getCell(j);
                     String cellValueStr = getCellValueStr(cell);
                     rowData.put(String.valueOf(j), cellValueStr);
                     if (!"".equals(cellValueStr)) {
@@ -155,7 +159,7 @@ public class POIUtil {
         }
     }
 
-    static String getCellValueStr(SXSSFCell cell) {
+    static String getCellValueStr(XSSFCell cell) {
         String cellStr = "";
         if (null == cell) {
             return cellStr;

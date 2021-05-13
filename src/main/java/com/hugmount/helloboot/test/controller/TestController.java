@@ -13,13 +13,12 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -133,6 +132,15 @@ public class TestController {
 
         SXSSFWorkbook workbook = POIUtil.exportExcel(linkedHashMap, list);
         POIUtil.downloadExcel(workbook, response, "test.xlsx");
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/importExcel")
+    public String importExcel(@RequestParam MultipartFile file) throws IOException {
+        List<Map<String, Object>> maps = POIUtil.importExcel(file.getInputStream());
+        log.info(JSON.toJSONString(maps));
+        return "success";
     }
 
 }
