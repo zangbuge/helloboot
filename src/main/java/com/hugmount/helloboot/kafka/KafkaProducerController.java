@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date: 2021/1/25
  */
 @Slf4j
-@RestController
+//@RestController
 @RequestMapping("/kafka")
 public class KafkaProducerController {
 

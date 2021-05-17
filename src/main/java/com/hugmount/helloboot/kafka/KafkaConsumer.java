@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @Author: Li Huiming
  * @Date: 2021/1/25
  */
-@Component
+//@Component
 @Slf4j
 public class KafkaConsumer {
 
