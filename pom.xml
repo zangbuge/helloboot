@@ -36,9 +36,9 @@
             </activation>
         </profile>
         <profile>
-            <id>product</id>
+            <id>prod</id>
             <properties>
-                <prop.name>product</prop.name>
+                <prop.name>prod</prop.name>
             </properties>
         </profile>
 
