@@ -9,6 +9,7 @@ import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 /**
  * http请求工具类
@@ -64,8 +65,9 @@ public class HttpUtil {
 
     /**
      * 使用URLConnection发送post
-     * @param url     请求链接
-     * @param params  map类型的参数
+     *
+     * @param url    请求链接
+     * @param params map类型的参数
      * @return 请求响应结果
      */
     public static String sendPost(String url, Map<String, Object> params, Map<String, Object> headerMap) {
@@ -89,20 +91,18 @@ public class HttpUtil {
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
 
-            if (null != headerMap) {
-                Iterator<Entry<String, Object>> iterator = headerMap.entrySet().iterator();
+            Optional.ofNullable(headerMap).ifPresent(head -> {
+                Iterator<Entry<String, Object>> iterator = head.entrySet().iterator();
                 while (iterator.hasNext()) {
                     Entry<String, Object> next = iterator.next();
-                    conn.setRequestProperty(next.getKey().toString(), next.getValue().toString());
+                    conn.setRequestProperty(next.getKey(), next.getValue().toString());
                 }
-            }
-            // 发送POST请求必须设置如下两行
+            });
+            // Post请求往往需要向服务器端发送数据参数，所以需要setDoInput(true)
+            // 设置了就可以调用getOutputStream()方法从服务器端获得字节输出流
             conn.setDoOutput(true);
-            conn.setDoInput(true);
-            //默认编码格式
-            String charset = "UTF-8";
             // 获取URLConnection对象对应的输出流
-            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), charset);
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), UTF_8);
             if (sbParams != null && sbParams.length() > 0) {
                 // 设置请求参数
                 writer.write(sbParams.substring(0, sbParams.length() - 1));
@@ -110,7 +110,7 @@ public class HttpUtil {
                 writer.flush();
             }
             // 定义BufferedReader输入流来读取URL的响应
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), charset));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), UTF_8));
             StringBuffer resultBuffer = new StringBuffer();
             String temp;
             while ((temp = reader.readLine()) != null) {
@@ -128,6 +128,7 @@ public class HttpUtil {
 
     /**
      * 使用 HttpURLConnection 下载文件
+     *
      * @param urlParam
      * @param params
      * @param fileSavePath 设置保存文件的路径
