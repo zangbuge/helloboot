@@ -45,8 +45,11 @@ public class TestController {
 
         User user = mongoService.queryOne("id", "add123", User.class);
         log.info(JSON.toJSONString(user));
-        user.setName("lihuiming");
-        mongoService.save(user);
+
+        User user1 = new User();
+        user1.setId("add123");
+        user1.setName("lihuiming");
+        mongoService.save(user1);
 
         Map<String, Object> map = new HashMap<>();
         map.put("addr", "宋庄嘉华");
