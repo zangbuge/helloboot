@@ -3,9 +3,9 @@ jasypt:
     password: 123456
 
 server:
-    port: 8086
-    servlet:
-        context-path: /helloboot
+  port: 8086
+  servlet:
+    context-path: /helloboot
 
 spring:
   datasource:
@@ -66,30 +66,30 @@ spring:
 
 ## 配置pageHelper
 pagehelper:
-    helperDialect: mysql
-    reasonable: true
-    supportMethodsArguments: true
-    params: count=countSql
-    returnPageInfo: check
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  returnPageInfo: check
 
 ## Dubbo 服务提供者配置
 dubbo:
-    application:
+  application:
     ###########注册到注册中心的名称############
-        name: helloboot
-    ###########采用协议和端口号################
-    protocol:
+    name: helloboot
+  ###########采用协议和端口号################
+  protocol:
     ###########采用dubbo协议####################
-        name: dubbo
+    name: dubbo
     ###########发布dubbo端口号为20880###########
-        port: 20881
-    registry:
+    port: 20881
+  registry:
     ###########注册中心地址#####################
-        address: zookeeper://192.168.10.180:2182
-    consumer:
-        timeout: 30000
-        check: false
-        retries: 0
+    address: zookeeper://192.168.10.180:2182
+  consumer:
+    timeout: 30000
+    check: false
+    retries: 0
 
 thrift:
   port: 9899
