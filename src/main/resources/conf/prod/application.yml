@@ -96,7 +96,7 @@ thrift:
   host: localhost
 
 mongo:
-  host: localhost
+  host: 115.159.66.110
   port: 27017
   username: admin
   password: 123456
