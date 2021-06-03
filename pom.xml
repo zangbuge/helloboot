@@ -349,6 +349,8 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!-- springboot通过mvn spring-boot:run 启动java web应用控制台中文乱码问题处理 -->
+                    <!-- spring-boot:run 方式debug启动, 需在jvmArguments加上一下参数, 并新增一个remote配置
+                    -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005  -->
                     <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
                 </configuration>
             </plugin>
