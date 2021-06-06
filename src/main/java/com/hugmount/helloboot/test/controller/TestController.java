@@ -10,6 +10,8 @@ import com.hugmount.helloboot.util.POIUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Li Huiming
@@ -36,6 +39,9 @@ public class TestController {
 
     @Autowired
     MongoService mongoService;
+
+    @Autowired
+    RedissonClient redissonClient;
 
     @RequestMapping("/testMongo")
     @ResponseBody
@@ -60,7 +66,7 @@ public class TestController {
 
     @PostMapping("/getTestList")
     @ResponseBody
-    public String getTestList(Test test){
+    public String getTestList(Test test) {
         log.info("getTestList: {}", JSON.toJSONString(test));
         List<Test> testList = testService.getTestList(test);
         String listStr = JSON.toJSONString(testList);
@@ -70,6 +76,7 @@ public class TestController {
 
     /**
      * 默认主页
+     *
      * @return
      */
     @RequestMapping("/")
@@ -143,6 +150,21 @@ public class TestController {
     public String importExcel(@RequestParam MultipartFile file) throws IOException {
         List<Map<String, Object>> maps = POIUtil.importExcel(file.getInputStream());
         log.info(JSON.toJSONString(maps));
+        return "success";
+    }
+
+    @ResponseBody
+    @RequestMapping("/testRedis")
+    public String testRedis() {
+        RLock rLock = redissonClient.getLock("lock_key_" + "productId");
+        try {
+            rLock.lock(10, TimeUnit.SECONDS);
+            log.info("执行任务中");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rLock.unlock();
+        }
         return "success";
     }
 
