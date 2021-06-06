@@ -14,11 +14,11 @@ public class RedissonConfig {
         Config config = new Config();
 //        config.useSentinelServers() // 哨兵配置
 //        .setMasterName("my-sentinel-name") // 设置sentinel.conf配置里的sentinel别名
+//         这里设置sentinel节点的服务IP和端口，一般sentinel至少3个节点
 //        .addSentinelAddress("redis://127.0.0.1:26379")
         config.useSingleServer()
                 .setPassword("123456")
                 .setAddress("redis://115.159.66.110:6379");
-        // 这里设置sentinel节点的服务IP和端口，sentinel是采用Paxos拜占庭协议，一般sentinel至少3个节点
         RedissonClient redisson = Redisson.create(config);
         return redisson;
     }

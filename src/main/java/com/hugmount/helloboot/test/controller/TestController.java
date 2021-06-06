@@ -156,6 +156,9 @@ public class TestController {
     @ResponseBody
     @RequestMapping("/testRedis")
     public String testRedis() {
+        // 默认非公平锁
+        // 非公平锁：多个线程去获取锁的时候，会直接去尝试获取，获取不到，再去进入等待队列，如果能获取到，就直接获取到锁
+        // 优点：可以减少CPU唤醒线程的开销，整体的吞吐效率会高点
         RLock rLock = redissonClient.getLock("lock_key_" + "productId");
         try {
             rLock.lock(10, TimeUnit.SECONDS);
@@ -165,6 +168,12 @@ public class TestController {
         } finally {
             rLock.unlock();
         }
+
+        // 公平锁
+        // 多个线程按照申请锁的顺序去获得锁，线程会直接进入队列去排队，永远都是队列的第一位才能得到锁
+        // 优点 所有的线程都能得到资源，不会饿死在队列中
+        // 缺点 吞吐量会下降很多，队列里面除了第一个线程，其他的线程都会阻塞，cpu唤醒阻塞线程的开销会很大
+        RLock key = redissonClient.getFairLock("key");
         return "success";
     }
 
