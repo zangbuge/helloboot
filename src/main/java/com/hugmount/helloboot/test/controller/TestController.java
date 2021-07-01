@@ -231,14 +231,12 @@ public class TestController {
     }
 
     public Integer getIncr() {
-        RMapCache<Object, Integer> order = redissonClient.getMapCache("order_name_space", IntegerCodec.INSTANCE);
+        RMap<Object, Integer> order_name_space = redissonClient.getMap("name_space", IntegerCodec.INSTANCE);
         // 业务号段的key
         String seqKey = "order_seq";
-        // 过期时间, 0表示永不过期
-        int timeout = 0;
-        order.putIfAbsent(seqKey, 0, timeout, TimeUnit.DAYS);
+        order_name_space.putIfAbsent(seqKey, 0);
         // 加1并获取计算后的值
-        Integer id = order.addAndGet(seqKey, 1);
+        Integer id = order_name_space.addAndGet(seqKey, 1);
         return id;
     }
 
