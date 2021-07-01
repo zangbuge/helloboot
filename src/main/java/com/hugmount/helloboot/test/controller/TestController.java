@@ -10,10 +10,8 @@ import com.hugmount.helloboot.util.POIUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.redisson.api.RBucket;
-import org.redisson.api.RLock;
-import org.redisson.api.RReadWriteLock;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
+import org.redisson.client.codec.IntegerCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -182,9 +180,10 @@ public class TestController {
 
     /**
      * 读写锁
-     *一次只有一个线程可以占有写模式 的读写锁, 但是可以有多个线程同时占有读模式 的读写锁
+     * 一次只有一个线程可以占有写模式 的读写锁, 但是可以有多个线程同时占有读模式 的读写锁
      * 读写锁适合对数据结构的读大于写很多的情况. 因为, 读模式锁定时可以共享, 以写模式锁住时意味着独占, 所以读写锁又叫共享-独占锁.
      * 无论是读请求先执行还是写请求先执行，只要涉及到写锁，则都会阻塞，如果是先写再读，则读锁等待，如果是先读再写，则写锁等待
+     *
      * @return
      */
     @GetMapping("/read")
@@ -214,6 +213,9 @@ public class TestController {
         RReadWriteLock orderId = redissonClient.getReadWriteLock("orderId");
         RLock rLock = orderId.writeLock();
         try {
+            int incr = getIncr();
+            log.info("生成分布式ID为: {}", incr);
+
             rLock.lock();
             RBucket<Object> bucket = redissonClient.getBucket("lhm");
             bucket.set(name);
@@ -227,4 +229,17 @@ public class TestController {
         }
         return "error";
     }
+
+    public Integer getIncr() {
+        RMapCache<Object, Integer> order = redissonClient.getMapCache("order_name_space", IntegerCodec.INSTANCE);
+        // 业务号段的key
+        String seqKey = "order_seq";
+        // 过期时间, 0表示永不过期
+        int timeout = 0;
+        order.putIfAbsent(seqKey, 0, timeout, TimeUnit.DAYS);
+        // 加1并获取计算后的值
+        Integer id = order.addAndGet(seqKey, 1);
+        return id;
+    }
+
 }
