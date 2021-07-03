@@ -45,6 +45,18 @@ docker search 在Docker Hub中查找镜像
 -d: 后台运行容器，并返回容器ID； 
 -name=”nginx-lb”: 为容器指定一个名称； 
 
+Docker这些none:none的镜像
+docker images -a 有一堆<none>:<none>的镜像,可分为两类：好与坏、有用与无用
+好的<none>:<none>镜像是由于镜像分层的中间镜像。
+它们只会在docker images -a才会显示出来，用docker images是不会显示的。它们也不会造成空间问题。
+坏的<none>:<none>镜像会占用空间，(重复build)主要是由于新加镜像替换原来相对标签的镜像，
+原来镜像就变成了<none>:<none>而不会被删除, 这些坏的镜像也叫 dangling images
+Docker没有自动删除这些镜像的机制，可以通过以下命令删除：
+docker rmi $(docker images -f "dangling=true" -q)
+检查一下是否还有<none>的镜像
+docker images | grep '<none>'
+
+
 docker架构3个部分
 client      客户端执行命令
 dockerhost  包含containers, images
