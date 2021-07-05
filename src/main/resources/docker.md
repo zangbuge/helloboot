@@ -224,7 +224,7 @@ service jenkins start
 ### 设置docker权限
 #否则可能出现错误: dial unix /var/run/docker.sock: connect: permission denied
 chmod 666 /var/run/docker.sock  #docker每重启一次,都要设置一次
-或者 sudo usermod -aG docker jenkins #把jenkins用户加入docker组,只设置一次
+或者 sudo usermod -a -G docker jenkins #需要重启jenkins 把jenkins用户加入docker组,只设置一次
 
 登陆jenkins后创建项目后只需在 源码管理 中配置项目git地址
 然后在构建中添加shell脚本
