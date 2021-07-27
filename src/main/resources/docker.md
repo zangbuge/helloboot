@@ -120,6 +120,7 @@ mysql的默认配置文件是 /etc/mysql/my.cnf 文件, 如果想要自定义配
 lower_case_table_names=1  #表示数据库不区分大小写, 否则表名不一致会报错
 ```aidl
 [mysqld]
+max_allowed_packet = 20M
 datadir=/var/lib/mysql
 socket=/var/lib/mysql/mysql.sock
 # Disabling symbolic-links is recommended to prevent assorted security risks
