@@ -1,14 +1,24 @@
 package com.hugmount.helloboot;
 
+import com.alibaba.fastjson.JSON;
+import com.hugmount.helloboot.test.pojo.Test;
+import org.apache.commons.lang3.SerializationUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RBucket;
+import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
+import org.redisson.codec.SerializationCodec;
 import org.redisson.config.Config;
+
+import java.util.concurrent.TimeUnit;
 
 public class TestRedisson {
     public static void main(String[] args) {
         Config config = new Config();
-        config.setCodec(new org.redisson.client.codec.StringCodec());
+        // org.redisson.codec.SerializationCodec JDK序列化编码
+        // org.redisson.codec.JsonJacksonCodec   Jackson JSON 编码
+        // org.redisson.codec.FstCodec           FST 10倍于JDK序列化性能而且100%兼容的编码   默认编码
+        config.setCodec(new SerializationCodec());
 
         //指定使用单节点部署方式
         config.useSingleServer().setAddress("redis://115.159.66.110:6379");
@@ -18,11 +28,20 @@ public class TestRedisson {
         config.useSingleServer().setConnectTimeout(9000);//同任何节点建立连接时的等待超时。时间单位是毫秒。
         config.useSingleServer().setTimeout(3000);//等待节点回复命令的时间。该时间从命令发送成功时开始计时。
 
+        Test test = new Test();
+        test.setId(111L);
+
         RedissonClient redissonClient = Redisson.create(config);
-        RBucket<Object> bucket = redissonClient.getBucket("lhm");
-        bucket.set("lihuiming");
-        Object val = bucket.get();
-        System.out.println("获取redis值: " + val);
+        RBucket<byte[]> bucket = redissonClient.getBucket("lhm");
+        bucket.set(SerializationUtils.serialize(test));
+        byte[] obj = bucket.get();
+        Object deserialize = SerializationUtils.deserialize(obj);
+        System.out.println("获取redis值: " + JSON.toJSONString(deserialize));
+
+        RMapCache<String, Object> map = redissonClient.getMapCache("map");
+        map.put("lhm", test, 30, TimeUnit.SECONDS);
+        Object lhm = map.get("lhm");
+        System.out.println(JSON.toJSONString(lhm));
     }
 
 }
