@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -42,6 +43,9 @@ public class TestController {
 
     @Autowired
     RedissonClient redissonClient;
+
+    @Resource(name = "rDelayedQueue")
+    private RDelayedQueue<String> rDelayedQueue;
 
     @RequestMapping("/testMongo")
     @ResponseBody
@@ -238,6 +242,14 @@ public class TestController {
         // 加1并获取计算后的值
         Integer id = order_name_space.addAndGet(seqKey, 1);
         return id;
+    }
+
+    @ResponseBody
+    @GetMapping("/offerAsync")
+    public Result<String> offerAsync() {
+        log.info("redis延迟队列");
+        rDelayedQueue.offerAsync("hello redis delayed queue", 5, TimeUnit.SECONDS);
+        return Result.createBySuccess("success");
     }
 
 }
