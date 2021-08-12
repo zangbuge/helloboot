@@ -112,7 +112,8 @@ docker container exec -it xxx /bin/bash # xxx 为容器ID
 docker pull mysql:5.7  #拉取docker mysql官方镜像 或 docker pull mysql:latest  最新的
 docker images          
 #启动mysql
-docker run --name mysql5.7 -p 3306:3306 -e TZ="Asia/Shanghai" -v $PWD/mysql/conf.d/:/etc/mysql/conf.d/ -v $PWD/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7  
+# 挂载配置文件导致持久化数据失效,暂时去掉 -v $PWD/mysql/conf.d/:/etc/mysql/conf.d/
+docker run -d --name mysql5.7 -p 3306:3306 -e TZ="Asia/Shanghai" -v $PWD/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7  
 MYSQL_ROOT_PASSWORD=123456：设置 MySQL 服务 root 用户的密码
 即可登录mysql
 
