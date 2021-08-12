@@ -173,6 +173,9 @@ docker logs -f -t --tail 100 datacenterId  #查看容器启动项目的日志
 
 docker logs --since 30m CONTAINER_ID #查看最近30分钟的日志
 
+# 进入到应用容器内 容器尚未bash安装  使用bash进入会出现错误: starting container process caused: exec: "bash": executable file not found in $PATH: unknown
+docker exec -it helloboot sh
+
 
 #### 安装mongo
 docker run --name mymongo -d -p 27017:27017 -v /data/configdb:/data/configdb -v /data/mongo:/data/db mongo
