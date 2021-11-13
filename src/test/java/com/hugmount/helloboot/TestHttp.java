@@ -17,15 +17,19 @@ public class TestHttp {
         String testJson = "http://127.0.0.1:8001/testJson";
         String testPost = "http://127.0.0.1:8001/testPost";
         Map<String, Object> header = new HashMap<>();
-        header.put("token","1234567890");
+        header.put("token", "1234567890");
         Map<String, Object> map = new HashMap<>();
-        map.put("userId","123");
-        map.put("nickname","李会明");
-        String json = HttpUtil.sendPost(testJson, JSON.toJSONString(map), header);
+        map.put("userId", "123");
+        map.put("nickname", "李会明");
+        String json = HttpUtil.sendPostJson(testJson, JSON.toJSONString(map), header);
         System.out.println("testJson返回: " + json);
 
-        String post = HttpUtil.sendPost(testPost, map, header);
+        String post = HttpUtil.sendPostForm(testPost, map, header);
         System.out.println("testPost返回: " + post);
+
+        String downloadUrl = "http://127.0.0.1:8001/downloadExcel";
+        String s = HttpUtil.downloadFile(downloadUrl, map, header, "d:/excelTest.xlsx");
+        System.out.println(s);
 
     }
 
