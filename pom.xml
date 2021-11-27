@@ -254,13 +254,6 @@
             <artifactId>httpmime</artifactId>
             <version>4.5.2</version>
         </dependency>
-
-        <dependency>
-            <!-- 2007停止维护-->
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>
         <!-- httpclient end -->
 
         <!-- 三方加密解密工具 -->
