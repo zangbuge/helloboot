@@ -272,8 +272,9 @@ nacos/nacos-server:1.2.1
 ### 安装redis
 #快捷启动
 docker run -itd --name redis-test -p 6379:6379 redis
-#配置启动
-sudo docker run -itd -p 6379:6379 --rm --name myredis -v /data/redis/redis.conf:/etc/redis/redis.conf -v /data/redis/db:/data redis redis-server /etc/redis/redis.conf --appendonly yes
+#制定配置启动
+#宿主机下添加配置文件 /data/redis/conf/redis.conf
+docker run -itd -p 6379:6379 --rm --name myredis -v /data/redis/conf:/etc/redis/conf -v /data/redis/db:/data redis redis-server /etc/redis/conf/redis.conf
 
 #### k8s
 安装epel-release源
