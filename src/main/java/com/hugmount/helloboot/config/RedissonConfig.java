@@ -14,13 +14,13 @@ public class RedissonConfig {
     private String idAddr;
 
     @Value("${spring.redis.port}")
-    private int port;
+    private String port;
 
     @Value("${spring.redis.password}")
     private String password;
 
     @Value("${spring.redis.timeout}")
-    private int timeout;
+    private String timeout;
 
 
     @Bean
@@ -34,7 +34,7 @@ public class RedissonConfig {
 
         String addr = "redis://" + idAddr + ":" + port;
         config.useSingleServer()
-                .setTimeout(timeout)
+                .setTimeout(Integer.parseInt(timeout))
                 .setPassword(password)
                 .setAddress(addr);
         RedissonClient redisson = Redisson.create(config);
