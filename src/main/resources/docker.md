@@ -8,7 +8,6 @@ https://zhuanlan.zhihu.com/p/83309276
 条件
 要求linux内核版本高于3.10
 uname -r  #查看centos内核版本
-yum -y update 更新yum包到最新版本
 
 yum方式安装
 yum install -y yum-utils device-mapper-persistent-data lvm2   #安装docker所需的依赖软件包
@@ -220,11 +219,21 @@ wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/redhat/jenkins-2.271-1.1.noarc
 rpm -ivh jenkins-2.271-1.1.noarch.rpm
 #修改端口 JENKINS_PORT="8080"
 vi /etc/sysconfig/jenkins 
-设置jenkins和系统时间一致
+设置jenkins和系统时间一致, 新增配置
 JAVA_ARGS="-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai -Dfile.encoding=UTF-8 -Djava.awt.headless=true"
-
+#将Jenkins用户添加到根组, 解决安装插件时"无法连接到Jenkins"问题
+sudo usermod -a -G root jenkins
 #启动服务
 service jenkins start
+#查看admin密码
+vi /var/lib/jenkins/secrets/initialAdminPassword
+
+#彻底卸载jenkins
+service jenkins stop
+yum -y remove jenkins
+rm -rf /var/cache/jenkins
+rm -rf /var/lib/jenkins
+
 
 ### 设置docker权限
 #否则可能出现错误: dial unix /var/run/docker.sock: connect: permission denied
