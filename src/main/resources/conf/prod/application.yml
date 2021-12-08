@@ -8,10 +8,16 @@ server:
     context-path: /helloboot
 
 spring:
+  redis:
+    host: www.fxitalk.com
+    port: 6379
+    password: 123456
+    timeout: 3000
+
   datasource:
     master:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://115.159.66.110:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useSSL=false
+      url: jdbc:mysql://www.fxitalk.com:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useSSL=false
       username: root
       password: 123456
 
@@ -96,7 +102,7 @@ thrift:
   host: localhost
 
 mongo:
-  host: 115.159.66.110
+  host: www.fxitalk.com
   port: 27017
   username: admin
   password: 123456
