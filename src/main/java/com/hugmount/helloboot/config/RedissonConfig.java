@@ -19,9 +19,6 @@ public class RedissonConfig {
     @Value("${spring.redis.password}")
     private String password;
 
-    @Value("${spring.redis.timeout}")
-    private String timeout;
-
 
     @Bean
     public RedissonClient redissonClient() {
@@ -34,7 +31,6 @@ public class RedissonConfig {
 
         String addr = "redis://" + idAddr + ":" + port;
         config.useSingleServer()
-                .setTimeout(Integer.parseInt(timeout))
                 .setPassword(password)
                 .setAddress(addr);
         RedissonClient redisson = Redisson.create(config);
