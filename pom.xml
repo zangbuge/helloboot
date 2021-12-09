@@ -390,6 +390,7 @@
                             <outputDirectory>src/main/resources/</outputDirectory>
                             <resources>
                                 <resource>
+                                    <!-- 处理文件时替换文件中的变量 -->
                                     <directory>src/main/resources/conf/${prop.name}</directory>
                                     <includes>
                                         <include>**/*</include>
@@ -404,17 +405,6 @@
         </plugins>
 
         <resources>
-
-            <resource>
-                <directory>src/main/resources</directory>
-                <!-- 处理文件时替换文件中的变量 -->
-                <filtering>true</filtering>
-                <excludes>
-                    <!-- 打包时排除文件 -->
-                    <exclude>*.yml</exclude>
-                </excludes>
-            </resource>
-
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
