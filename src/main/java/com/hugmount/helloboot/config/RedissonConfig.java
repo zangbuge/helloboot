@@ -13,8 +13,7 @@ public class RedissonConfig {
     @Value("${spring.redis.host}")
     private String idAddr;
 
-    @Value("${spring.redis.port}")
-    private String port;
+    private int port = 6379;
 
     @Value("${spring.redis.password}")
     private String password;
