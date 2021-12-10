@@ -111,12 +111,11 @@ docker container exec -it xxx /bin/bash # xxx 为容器ID
 docker pull mysql:5.7  #拉取docker mysql官方镜像 或 docker pull mysql:latest  最新的
 docker images          
 #启动mysql
-# 挂载配置文件导致持久化数据失效,暂时去掉 -v $PWD/mysql/conf.d/:/etc/mysql/conf.d/
-docker run -d --name mysql5.7 -p 3306:3306 -e TZ="Asia/Shanghai" -v $PWD/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7  
-MYSQL_ROOT_PASSWORD=123456：设置 MySQL 服务 root 用户的密码
-即可登录mysql
+docker run -d --name mysql57 -p 3306:3306 -e TZ="Asia/Shanghai" -v $PWD/mysql/conf.d/:/etc/mysql/conf.d/ -v /data/mysql/db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7 
 
-mysql的默认配置文件是 /etc/mysql/my.cnf 文件, 如果想要自定义配置，建议向 /etc/mysql/conf.d/ 目录中创建 my.cnf 文件
+MYSQL_ROOT_PASSWORD=123456：设置 MySQL 服务 root 用户的密码 即可登录mysql
+
+mysql的默认配置文件是 /etc/mysql/my.cnf 文件
 lower_case_table_names=1  #表示数据库不区分大小写, 否则表名不一致会报错
 ```aidl
 [mysqld]
