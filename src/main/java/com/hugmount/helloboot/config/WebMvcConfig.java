@@ -6,6 +6,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 /** 直接继承WebMvcConfigurationSupport会使springboot默认配置失效
  * @Author: Li Huiming
  * @Date: 2019/6/3
@@ -46,5 +49,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //    }
 
 
+    /**
+     * 设置时区
+     */
+    @PostConstruct
+    public void timeZone() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+    }
 
 }
