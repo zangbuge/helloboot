@@ -8,7 +8,7 @@ RUN mvn -s /usr/share/maven/conf/settings.xml clean package
 FROM openjdk:8-jre-alpine
 WORKDIR /app
 COPY --from=MAVEN_BUILD /build/target/helloboot-0.0.1-SNAPSHOT.jar /app/
-ENTRYPOINT ["nohup", "java", "-jar", "-Xms1024m -Xmx1024m -Xmn256m -Xss256k -XX:+UseParallelGC -XX:SurvivorRatio=8", "helloboot-0.0.1-SNAPSHOT.jar", " &"]
+ENTRYPOINT ["nohup", "java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar", " &"]
 
 
 ### 说明
@@ -28,5 +28,3 @@ ENTRYPOINT ["nohup", "java", "-jar", "-Xms1024m -Xmx1024m -Xmn256m -Xss256k -XX:
 # -Xmx1024m (堆默认大小) 此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存
 # -Xmn256m (新生代大小)  整个JVM内存大小 = 年轻代大小 + 年老代大小 + 持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8
 # -Xss256k (棧最大深度大小) 设置每个线程的堆栈大小
-# -XX:+UseParallelGC     选择垃圾收集器为并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集
-# -XX:SurvivorRatio=8    新生代分区比例 8:2
