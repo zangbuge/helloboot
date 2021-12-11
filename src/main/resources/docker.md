@@ -111,33 +111,11 @@ docker container exec -it xxx /bin/bash # xxx 为容器ID
 docker pull mysql:5.7  #拉取docker mysql官方镜像 或 docker pull mysql:latest  最新的
 docker images          
 #启动mysql
-docker run -d --name mysql57 -p 3306:3306 -e TZ="Asia/Shanghai" -v $PWD/mysql/conf.d/:/etc/mysql/conf.d/ -v /data/mysql/db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7 
+docker run -d --name mysql57 -p 3306:3306 -e TZ="Asia/Shanghai" -v $PWD/mysql/conf:/etc/mysql/conf.d -v $PWD/mysql/db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7 --lower_case_table_names=1
 
 MYSQL_ROOT_PASSWORD=123456：设置 MySQL 服务 root 用户的密码 即可登录mysql
-
-mysql的默认配置文件是 /etc/mysql/my.cnf 文件
 lower_case_table_names=1  #表示数据库不区分大小写, 否则表名不一致会报错
-```aidl
-[mysqld]
-max_allowed_packet = 20M
-datadir=/var/lib/mysql
-socket=/var/lib/mysql/mysql.sock
-# Disabling symbolic-links is recommended to prevent assorted security risks
-symbolic-links=0
-# Settings user and group are ignored when systemd is used.
-# If you need to run mysqld under a different user or group,
-# customize your systemd unit file for mariadb according to the
-# instructions in http://fedoraproject.org/wiki/Systemd
-lower_case_table_names=1
-[mysqld_safe]
-log-error=/var/log/mariadb/mariadb.log
-pid-file=/var/run/mariadb/mariadb.pid
 
-#
-# include all files from the config directory
-#
-!includedir /etc/my.cnf.d
-```
 进入容器
 docker exec -it mysql5.7 bash
 登录mysql
