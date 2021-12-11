@@ -10,13 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedissonConfig {
 
-    @Value("${spring.redis.host}")
-    private String host;
+    @Value("${redis.address}")
+    private String address;
 
-    @Value("${spring.redis.port}")
-    private String port;
-
-    @Value("${spring.redis.password}")
+    @Value("${redis.password}")
     private String password;
 
 
@@ -29,10 +26,9 @@ public class RedissonConfig {
 //         这里设置sentinel节点的服务IP和端口，一般sentinel至少3个节点
 //        .addSentinelAddress("redis://127.0.0.1:26379")
 
-        String addr = "redis://" + host + ":" + port;
         config.useSingleServer()
                 .setPassword(password)
-                .setAddress(addr);
+                .setAddress(address);
         RedissonClient redisson = Redisson.create(config);
         return redisson;
     }

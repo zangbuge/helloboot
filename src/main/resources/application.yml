@@ -8,12 +8,6 @@ server:
         context-path: /helloboot
 
 spring:
-  redis:
-    host: www.fxitalk.com
-    port: 6379
-    password: 123456
-    timeout: 3000
-
   datasource:
     master:
       driver-class-name: com.mysql.jdbc.Driver
@@ -107,3 +101,8 @@ mongo:
   username: admin
   password: 123456
   database: admin
+
+redis:
+  address: redis://www.fxitalk.com:6379
+  password: 123456
+  database: 0
