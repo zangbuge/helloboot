@@ -54,7 +54,7 @@ public class MasterDataSourceConfiguration {
         dataSource.setPassword(this.password);
         try {
             //没有该配置,druid中sql监控不会显示
-            dataSource.setFilters("stat,wall,logback");
+            dataSource.setFilters("stat,wall,slf4j");
         } catch (SQLException e) {
             e.printStackTrace();
         }
