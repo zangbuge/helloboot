@@ -29,8 +29,8 @@ public class RedissonConfig {
 //         这里设置sentinel节点的服务IP和端口，一般sentinel至少3个节点
 //        .addSentinelAddress("redis://127.0.0.1:26379")
 
-        String address = YmlUtil.getValue("redis.address");
-        String password = YmlUtil.getValue("redis.password");
+        String address = "redis://www.fxitalk.com:6379";
+        String password = "123456";
         log.info("redisson address: {}", address);
         config.useSingleServer()
                 .setPassword(password)
