@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.config;
 
+import com.hugmount.helloboot.util.YmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -12,11 +13,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedissonConfig {
 
-    @Value("${redis.address}")
+    /*@Value("${redis.address}")
     private String address;
 
     @Value("${redis.password}")
-    private String password;
+    private String password;*/
 
 
     @Bean
@@ -28,6 +29,8 @@ public class RedissonConfig {
 //         这里设置sentinel节点的服务IP和端口，一般sentinel至少3个节点
 //        .addSentinelAddress("redis://127.0.0.1:26379")
 
+        String address = YmlUtil.getValue("redis.address");
+        String password = YmlUtil.getValue("redis.password");
         log.info("redisson address: {}", address);
         config.useSingleServer()
                 .setPassword(password)

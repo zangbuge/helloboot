@@ -106,3 +106,5 @@ redis:
   address: redis://www.fxitalk.com:6379
   password: 123456
   database: 0
+
+profile: prod
