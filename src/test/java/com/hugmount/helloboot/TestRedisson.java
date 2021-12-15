@@ -21,7 +21,7 @@ public class TestRedisson {
         config.setCodec(new SerializationCodec());
 
         //指定使用单节点部署方式
-        config.useSingleServer().setAddress("redis://115.159.66.110:6379");
+        config.useSingleServer().setAddress("redis://118.195.172.19:6379");
         config.useSingleServer().setPassword("123456");
         config.useSingleServer().setConnectionPoolSize(500);//设置对于master节点的连接池中连接数最大为500
         config.useSingleServer().setIdleConnectionTimeout(9000);//如果当前连接池里的连接数量超过了最小空闲连接数，而同时有连接空闲时间超过了该数值，那么这些连接将会自动被关闭，并从连接池里去掉。时间单位是毫秒。

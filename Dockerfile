@@ -4,7 +4,7 @@ COPY pom.xml /build/
 COPY src /build/src/
 COPY settings.xml /usr/share/maven/conf/settings.xml
 WORKDIR /build/
-RUN mvn -s /usr/share/maven/conf/settings.xml clean package
+RUN mvn -s /usr/share/maven/conf/settings.xml clean package -Pprod
 FROM openjdk:8-jre-alpine
 WORKDIR /app
 COPY --from=MAVEN_BUILD /build/target/helloboot-0.0.1-SNAPSHOT.jar /app/
