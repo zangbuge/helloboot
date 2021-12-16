@@ -390,7 +390,12 @@
                     <include>**/*.yml</include>
                     <include>**/*.xml</include>
                     <include>**/*.html</include>
+                    <include>**/*.css</include>
+                    <include>**/*.js</include>
+                    <include>**/*.png</include>
+                    <include>**/*.jpg</include>
                 </includes>
+                <!-- 是否支持占位符 ${} 取变量值 -->
                 <filtering>true</filtering>
             </resource>
             <resource>
