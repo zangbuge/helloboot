@@ -378,28 +378,6 @@
                             </nonFilteredFileExtensions>
                         </configuration>
                     </execution>
-
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <overwrite>true</overwrite>
-                            <outputDirectory>src/main/resources/</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <!-- 处理文件时替换文件中的变量 -->
-                                    <directory>src/main/resources/conf/${prop.name}</directory>
-                                    <includes>
-                                        <include>**/*</include>
-                                    </includes>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -409,8 +387,8 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.properties</include>
-                    <include>**/*.xml</include>
                     <include>**/*.yml</include>
+                    <include>**/*.xml</include>
                     <include>**/*.html</include>
                 </includes>
                 <filtering>true</filtering>
@@ -420,7 +398,12 @@
                 <includes>
                     <include>**/*.xml</include>
                 </includes>
-                <filtering>true</filtering>
+            </resource>
+
+            <resource>
+                <!-- 打包时转移文件位置 这里会直接把${prop.name}对应文件夹下的内容打包到jar文件的classpath下 -->
+                <directory>src/main/resources/conf/${prop.name}/</directory>
+                <targetPath>${project.build.directory}/classes</targetPath>
             </resource>
         </resources>
 
