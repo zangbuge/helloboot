@@ -1,63 +1,58 @@
 <!DOCTYPE generatorConfiguration
-		PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-	<!--导入属性配置信息 ;相对该项目路径-->
-	<properties resource="generator/generator.properties"></properties>
-	<!--指定特定数据库的jdbc驱动jar包的位置; 相对电脑路径 -->
-<!--	<classPathEntry location="${jdbc_driverLocation}"/>-->
-	<context id="DB2Tables" targetRuntime="MyBatis3">
-		
-		<commentGenerator>
-			<!-- 是否生成注释: true不生成 ;	false生成 ;-->
-			<property name="suppressAllComments" value="true" />
-		</commentGenerator>
-		
-		<!--jdbc的数据库连接 -->
-		<jdbcConnection 
-			driverClass="${jdbc_driverClassName}" 
-			connectionURL="${jdbc_url}" 
-			userId="${jdbc_username}" 
-			password="${jdbc_password}">
-		</jdbcConnection>
-		
-		<!-- 非必需，类型转换 
-		是否使用bigDecimal; false可自动转化以下类型（Long, Integer, Short） -->
-		<javaTypeResolver >
-			<property name="forceBigDecimals" value="false" />
-		</javaTypeResolver>
-		
-		<!-- 生成javabean的位置 ;targetPackage:相对src(java)文件路径,生成文件的位置 ,如com.color.dog; targetProject:直接填写项目名 -->
-		<javaModelGenerator targetPackage="${buidPath}" targetProject="${projectName}">
-			<!-- 是否允许子包，即targetPackage.schemaName.tableName -->
+    <!--导入属性配置信息 ;相对该项目路径-->
+    <properties resource="generator/generator.properties"></properties>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 是否生成注释: true不生成 ;	false生成 ; -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--jdbc的数据库连接 -->
+        <jdbcConnection
+                driverClass="${jdbc_driverClassName}"
+                connectionURL="${jdbc_url}"
+                userId="${jdbc_username}"
+                password="${jdbc_password}">
+        </jdbcConnection>
+
+        <!-- 是否使用bigDecimal; false可自动转化以下类型（Long, Integer, Short） -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- 生成javabean的位置 ;targetPackage:相对src(java)文件路径,生成文件的位置-->
+        <javaModelGenerator targetPackage="${build_path}" targetProject="src/main/java">
+            <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
             <property name="enableSubPackages" value="false"/>
             <!-- 是否对model添加 构造函数;设置为true后;
 				  同时:resultMap标签内将不使用result标签而使用构造器constructor标签 -->
-			<property name="constructorBased" value="false"/>
+            <property name="constructorBased" value="false"/>
             <!-- 是否对类CHAR类型的列的数据进行trim操作 -->
             <property name="trimStrings" value="true"/>
             <!-- 建立的Model对象是否 不可改变  即生成的Model对象不会有 setter方法，只有构造方法 -->
             <property name="immutable" value="false"/>
-		</javaModelGenerator>
-		
-		<!-- 生成Mapper映射文件生成所在的目录  -->
-		<sqlMapGenerator targetPackage="${buidPath}" targetProject="${projectName}" />
-		
-		<!-- 生成dao文件的位置 -->
-		<javaClientGenerator targetPackage="${buidPath}" targetProject="${projectName}" 
-			type="MIXEDMAPPER" />
-		
-		<!-- tableName:数据库中的表格; domainObjectName:对应vo的名称-->
-		<table 
-			tableName="${jdbc_tableName}" 
-			domainObjectName="${project_objectName}"
-			enableCountByExample="false"
-			enableUpdateByExample="false"
-			enableDeleteByExample="false"
-			enableSelectByExample="false"
-			selectByExampleQueryId="false">
-		</table>
-	</context>
+        </javaModelGenerator>
+
+        <!-- 生成Mapper映射文件生成所在的目录  -->
+        <sqlMapGenerator targetPackage="${build_path}" targetProject="src/main/java"/>
+
+        <!-- 生成dao文件的位置 -->
+        <javaClientGenerator targetPackage="${build_path}" targetProject="src/main/java" type="MIXEDMAPPER"/>
+
+        <!-- tableName:数据库中的表格; domainObjectName:对应model的名称-->
+        <table
+                tableName="${table_name}"
+                domainObjectName="${object_name}"
+                enableCountByExample="false"
+                enableUpdateByExample="false"
+                enableDeleteByExample="false"
+                enableSelectByExample="false"
+                selectByExampleQueryId="false">
+        </table>
+    </context>
 </generatorConfiguration>
 
 
