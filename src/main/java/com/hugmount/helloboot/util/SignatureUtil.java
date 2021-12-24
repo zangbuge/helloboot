@@ -9,7 +9,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 public class SignatureUtil {
 
     public static void main(String[] args) {
-        System.out.println(sign("123", ""));
+        System.out.println(sign("lhm", ""));
+        System.out.println(sha256Sign("lhm", ""));
     }
 
     /**
@@ -39,9 +40,14 @@ public class SignatureUtil {
     }
 
 
-    public static String SHA256Sign(String content, String salt) {
+    public static String sha256Sign(String content, String salt) {
         String sign = DigestUtils.sha256Hex(content + salt);
         return sign;
+    }
+
+    public static boolean sha256Verify(String sign, String content, String salt) {
+        String signCur = DigestUtils.sha256Hex(content + salt);
+        return signCur.equals(sign);
     }
 
 }
