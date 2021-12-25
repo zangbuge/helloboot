@@ -245,7 +245,7 @@ http://127.0.0.1:8848/nacos/
 docker run -d \
 -e MODE=standalone \
 -e SPRING_DATASOURCE_PLATFORM=mysql \
--e MYSQL_SERVICE_HOST=115.159.66.110 \
+-e MYSQL_SERVICE_HOST=www.fxitalk.com \
 -e MYSQL_SERVICE_PORT=3306 \
 -e MYSQL_SERVICE_USER=root \
 -e MYSQL_SERVICE_PASSWORD=123456 \
@@ -254,7 +254,7 @@ docker run -d \
 --restart=always \
 --name mynacos \
 -v /root/nacos/standalone-logs/:/home/nacos/logs \
-nacos/nacos-server:1.2.1
+nacos/nacos-server:2.0.3
 ```
 
 ### 安装redis
