@@ -1,7 +1,6 @@
 package com.hugmount.helloboot.util;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 
 /**
  * @author Li Huiming
@@ -34,6 +33,34 @@ public class ClassUtil {
         Type[] actualTypeArguments = genericInterface.getActualTypeArguments();
         Class actualClazz = (Class) actualTypeArguments[actualTypeIndex];
         return actualClazz;
+    }
+
+    public static void setFieldValue(Object obj, String fieldName, String fieldValue) {
+        try {
+            Field field = obj.getClass().getField(fieldName);
+            field.set(obj, fieldValue);
+        } catch (Exception e) {
+            throw new RuntimeException("设置字段参数异常", e);
+        }
+    }
+
+
+    public static void getMethod(Object obj, String methodName, Class<?>... parameterTypes) {
+        try {
+            Method method = obj.getClass().getMethod(methodName, parameterTypes);
+            // 值为 true 则指示反射的对象在使用时应该取消 Java 语言访问检查
+            method.setAccessible(true);
+        } catch (Exception e) {
+            throw new RuntimeException("反射获取方法对象异常", e);
+        }
+    }
+
+    public static Object invokeMethod(Object obj, Method method, Object... parameters) {
+        try {
+            return method.invoke(obj, method, parameters);
+        } catch (Exception e) {
+            throw new RuntimeException("反射执行方法异常", e);
+        }
     }
 
 }
