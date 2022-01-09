@@ -124,6 +124,8 @@ mysql -u root -p
 ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
 添加远程登录用户
 CREATE USER 'lhm'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+
 查看用户
 select user, host from mysql.user;
 
