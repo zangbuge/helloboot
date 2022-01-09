@@ -72,7 +72,7 @@ docker run --rm --name myNginx -p 8880:80 nginx  #本地没有镜像则去远程
 启动后可以通过主机8880端口访问nginx了
 启动一个容器, 即创建一个linux系统,里运行着nginx
 
-进入容器
+进入容器  -it 表示产生一个交互式终端, 和容器进行命令交互
 docker exec -it 32434werwer bash   it后面跟容器的Id
 
 进入容器中ngxin目录
@@ -262,10 +262,10 @@ nacos/nacos-server:2.0.3
 
 ### 安装redis
 #快捷启动
-docker run -itd --name redis-test -p 6379:6379 redis
+docker run -d --name redis-test -p 6379:6379 redis
 #制定配置启动
 #宿主机下添加配置文件 /data/redis/conf/redis.conf
-docker run -itd -p 6379:6379 --rm --name myredis -v /data/redis/conf:/etc/redis/conf -v /data/redis/db:/data redis redis-server /etc/redis/conf/redis.conf
+docker run -d -p 6379:6379 --rm --name myredis -v /data/redis/conf:/etc/redis/conf -v /data/redis/db:/data redis redis-server /etc/redis/conf/redis.conf
 
 #### k8s
 安装epel-release源
