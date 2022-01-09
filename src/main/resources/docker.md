@@ -111,20 +111,21 @@ docker container exec -it xxx /bin/bash # xxx 为容器ID
 docker pull mysql:5.7  #拉取docker mysql官方镜像 或 docker pull mysql:latest  最新的
 docker images          
 #启动mysql
-docker run -d --name mysql57 -p 3306:3306 -e TZ="Asia/Shanghai" -v $PWD/mysql/conf:/etc/mysql/conf.d -v $PWD/mysql/db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7 --lower_case_table_names=1
+docker run -d --restart=always --name mysql57 -p 3306:3306 -e TZ="Asia/Shanghai" -v $PWD/mysql/conf:/etc/mysql/conf.d -v $PWD/mysql/db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7 --lower_case_table_names=1
 
 MYSQL_ROOT_PASSWORD=123456：设置 MySQL 服务 root 用户的密码 即可登录mysql
 lower_case_table_names=1  #表示数据库不区分大小写, 否则表名不一致会报错
 
 进入容器
-docker exec -it mysql5.7 bash
+docker exec -it mysql57 bash
 登录mysql
 mysql -u root -p
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'Lzslov123!';
+修改密码
+ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
 添加远程登录用户
-CREATE USER 'liaozesong'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
-GRANT ALL PRIVILEGES ON *.* TO 'liaozesong'@'%';
-
+CREATE USER 'lhm'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+查看用户
+select user, host from mysql.user;
 
 #### 打包springboot应用
 Dockerfile文件如下
