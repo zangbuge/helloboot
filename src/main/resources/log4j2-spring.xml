@@ -3,7 +3,7 @@
     <Properties>
         <Property name="baseDir">/app/logs/helloboot</Property>
         <Property name="projectName">helloboot</Property>
-        <Property name="logFormat">%d{yyyy-MM-dd HH:mm:ss} %level [%t] %class: %line %n %msg %n</Property>
+        <Property name="logFormat">%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%t] %class: %line %n %msg %n</Property>
     </Properties>
     <!--先定义所有的appender-->
     <appenders>
@@ -17,13 +17,14 @@
         <AsyncLogger name="ASYNC" includeLocation="true">
             <AppenderRef ref="RollingFile"/>
         </AsyncLogger>
-        <RollingFile name="RollingFile" fileName="${baseDir}/${projectName}.log" filePattern="${baseDir}/${projectName}.log.%d{yyyy-MM-dd}-%i">
+        <RollingFile name="RollingFile" fileName="${baseDir}/${projectName}.log"
+                     filePattern="${baseDir}/${projectName}.log.%d{yyyy-MM-dd}-%i">
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${logFormat}"/>
             <!-- 保存日志使用时间滚动策略, 具体格式由 filePattern 的配置决定(按天, 月) -->
             <TimeBasedTriggeringPolicy interval="1"/>
             <!-- 日志保留时间, 默认是保存7份, 超过了就会覆盖之前的 -->
-            <DefaultRolloverStrategy max="100"/>
+            <DefaultRolloverStrategy max="30"/>
         </RollingFile>
     </appenders>
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
