@@ -13,10 +13,7 @@
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${logFormat}"/>
         </Console>
-        <!--设置异步记录器，指向配置引用AppenderRef 官网说明: 异步logger比异步appender快12倍,比同步logger快68倍。-->
-        <AsyncLogger name="ASYNC" includeLocation="true">
-            <AppenderRef ref="RollingFile"/>
-        </AsyncLogger>
+
         <RollingFile name="RollingFile" fileName="${baseDir}/${projectName}.log"
                      filePattern="${baseDir}/${projectName}.log.%d{yyyy-MM-dd}-%i">
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
@@ -29,6 +26,10 @@
     </appenders>
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
+        <!--设置异步记录器，指向配置引用AppenderRef 官网说明: 异步logger比异步appender快12倍,比同步logger快68倍。-->
+        <AsyncLogger name="ASYNC" includeLocation="true">
+            <AppenderRef ref="RollingFile"/>
+        </AsyncLogger>
         <root level="INFO">
             <appender-ref ref="Console"/>
             <appender-ref ref="RollingFile"/>
