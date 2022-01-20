@@ -13,10 +13,10 @@
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${logFormat}"/>
         </Console>
-        <!--异步日志配置，指向配置引用AppenderRef-->
-        <Async name="ASYNC" includeLocation="true">
+        <!--设置异步记录器，指向配置引用AppenderRef 官网说明: 异步logger比异步appender快12倍,比同步logger快68倍。-->
+        <AsyncLogger name="ASYNC" includeLocation="true">
             <AppenderRef ref="RollingFile"/>
-        </Async>
+        </AsyncLogger>
         <RollingFile name="RollingFile" fileName="${baseDir}/${projectName}.log" filePattern="${baseDir}/${projectName}.log.%d{yyyy-MM-dd}-%i">
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${logFormat}"/>
