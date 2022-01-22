@@ -38,31 +38,6 @@ public class TestController {
     @Autowired
     TestService testService;
 
-    @Autowired
-    MongoService mongoService;
-
-
-    @RequestMapping("/testMongo")
-    @ResponseBody
-    public String testMongo() {
-        List<User> users = mongoService.queryList("child.tel", "123", User.class);
-        log.info(JSON.toJSONString(users));
-
-        User user = mongoService.queryOne("id", "add123", User.class);
-        log.info(JSON.toJSONString(user));
-
-        User user1 = new User();
-        user1.setId("add123");
-        user1.setName("lihuiming");
-        mongoService.save(user1);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("addr", "宋庄嘉华");
-        mongoService.update("child.tel", "123", map, User.class);
-
-        return "success";
-    }
-
     @PostMapping("/getTestList")
     @ResponseBody
     public String getTestList(Test test) {

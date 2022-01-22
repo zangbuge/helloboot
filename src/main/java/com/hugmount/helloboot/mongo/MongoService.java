@@ -12,6 +12,7 @@ import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -24,6 +25,7 @@ import java.util.Map;
  * @Author: Li Huiming
  * @Date: 2020/12/17
  */
+@Profile("prod")
 @Slf4j
 @Service
 public class MongoService {
