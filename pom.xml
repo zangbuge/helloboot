@@ -293,6 +293,13 @@
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
         <dependency>
+            <!-- log4j2异步器在内部使用Disruptor，一个无锁的线程间通信库而不是队列，从而产生更高的吞吐量和更低的延迟-->
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
             <version>3.6.4</version>
