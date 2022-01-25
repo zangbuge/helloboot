@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration monitorInterval="300">
     <Properties>
-        <Property name="baseDir">/app/logs/helloboot</Property>
-        <Property name="projectName">helloboot</Property>
+        <!-- 获取jvm参数 -Dapp.name=hello  -->
+        <Property name="APP_NAME" value="${sys:app.name:-helloboot}"/>
+        <property name="PROFILE" value="${sys:spring.profiles.active:-prod}"/>
+        <Property name="baseDir">/app/logs/${PROFILE}/${APP_NAME}</Property>
         <Property name="logFormat">%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%t] %class: %line %n %msg %n</Property>
     </Properties>
     <!--先定义所有的appender-->
@@ -14,8 +16,8 @@
             <PatternLayout pattern="${logFormat}"/>
         </Console>
 
-        <RollingFile name="RollingFile" fileName="${baseDir}/${projectName}.log"
-                     filePattern="${baseDir}/${projectName}.log.%d{yyyy-MM-dd}-%i">
+        <RollingFile name="RollingFile" fileName="${baseDir}/${APP_NAME}.log"
+                     filePattern="${baseDir}/${APP_NAME}.log.%d{yyyy-MM-dd}-%i">
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${logFormat}"/>
             <!-- 保存日志使用时间滚动策略, 具体格式由 filePattern 的配置决定(按天, 月) -->
