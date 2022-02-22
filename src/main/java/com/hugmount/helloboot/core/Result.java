@@ -7,6 +7,12 @@ import lombok.Data;
 import java.io.Serializable;
 
 /** 服务器响应vo
+ *  阿里规范：命名必须遵守驼峰形式，DO/DTO/VO 除外。 正确命名如： XmlService, TcpService
+ *  1.数据对象：xxxDO，xxx即为数据表名；
+ *  2.数据传输对象：xxxDTO，xxx为业务领域相关的名称；
+ *  3.展示对象：xxxVO，xxx一般为网页的名称；
+ *  4.POJO 是DO/DTO/BO/VO的统称，禁止命名成xxxPOJO。
+ *
  * @Author: Li Huiming
  * @Date: 2019/3/14
  */
