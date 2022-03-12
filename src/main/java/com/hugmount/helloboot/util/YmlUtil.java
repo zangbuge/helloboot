@@ -25,8 +25,9 @@ public class YmlUtil {
      */
     public static String getValue(String key){
         Map<String,String> map = getYmlByFileName(null);
-        if(map == null)
+        if (map == null) {
             return null;
+        }
         return map.get(key.trim());
     }
 

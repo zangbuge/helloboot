@@ -15,8 +15,9 @@ public class RabbitmqHeadler {
     private static MQConnectionPool mqConnectionPool;
 
     public static void init(PoolProperties poolProperties) {
-        if (mqConnectionPool == null)
+        if (mqConnectionPool == null) {
             mqConnectionPool = new MQConnectionPool(poolProperties);
+        }
     }
 
     public static synchronized void sendMsg(String exchangeName, String exchangeType,  String queueName, String router, String msg) {
