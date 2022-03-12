@@ -17,7 +17,8 @@ public class SpringUtil implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+        // 这里不要用this
+        SpringUtil.applicationContext = applicationContext;
     }
 
     /**
