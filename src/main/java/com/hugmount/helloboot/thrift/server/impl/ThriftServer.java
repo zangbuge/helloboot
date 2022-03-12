@@ -1,6 +1,7 @@
 package com.hugmount.helloboot.thrift.server.impl;
 
 import com.hugmount.helloboot.thrift.server.HelloService;
+import com.hugmount.helloboot.util.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.TProcessor;
@@ -33,7 +34,7 @@ public class ThriftServer implements ApplicationContextAware {
     private static ApplicationContext context;
 
     public void start() {
-        new Thread(() -> {
+        ThreadUtil.execute(() -> {
             try {
 //                TServerSocket serverSocket = new TServerSocket(port);
                 TServerSocket serverSocket = new TServerSocket(new InetSocketAddress("0.0.0.0", port));
@@ -51,7 +52,7 @@ public class ThriftServer implements ApplicationContextAware {
                 // TFileTransport: 以文件形式进行传输, 可以将一组thrift请求写到文件中
                 args.transportFactory(new TTransportFactory());
                 // 配置处理器用来处理
-                TMultiplexedProcessor tMultiplexedProcessor = registerProcessor(getTProcessorList());
+                TMultiplexedProcessor tMultiplexedProcessor = registerProcessor(getProcessorList());
                 args.processor(tMultiplexedProcessor);
                 TServer server = new TThreadPoolServer(args);
                 log.info("thrift server start success, port = {}", port);
@@ -59,7 +60,7 @@ public class ThriftServer implements ApplicationContextAware {
             } catch (TTransportException e) {
                 log.error("thrift server start fail", e);
             }
-        }).start();
+        });
     }
 
     @Override
@@ -67,7 +68,7 @@ public class ThriftServer implements ApplicationContextAware {
         context = applicationContext;
     }
 
-    public List<Map<String, TProcessor>> getTProcessorList() {
+    public List<Map<String, TProcessor>> getProcessorList() {
         List<Map<String, TProcessor>> arrayList = new ArrayList<>();
         Map<String, TProcessor> map = new HashMap<>();
         map.put("helloService", new HelloService.Processor<HelloService.Iface>(new HelloServiceImpl()));

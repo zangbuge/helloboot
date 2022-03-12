@@ -113,7 +113,7 @@ public class RabbitmqUtil {
         }
     }
 
-    public static void receive(String exchangeName, String queueName, String router, final ConsumerService consumerService) {
+    public static void receive(String exchangeName, String queueName, String router, final BaseConsumerService consumerService) {
         if (null == router || "".equals(router.trim())) {
             router = DEFAULT_ROUTER;
         }
@@ -127,7 +127,7 @@ public class RabbitmqUtil {
      * @param queueName
      * @param consumerService
      */
-    public static void receive(Connection connection, String exchangeName, String queueName, final String router, final ConsumerService consumerService) {
+    public static void receive(Connection connection, String exchangeName, String queueName, final String router, final BaseConsumerService consumerService) {
         log.info("rabbitmq consumer init start");
         try {
             //创建一个通道
@@ -174,7 +174,12 @@ public class RabbitmqUtil {
 
     }
 
-    public static abstract class ConsumerService {
+    public static abstract class BaseConsumerService {
+        /**
+         *
+         * @param receiveMsg
+         * @param args
+         */
         public abstract void consume(String receiveMsg, String... args);
     }
 

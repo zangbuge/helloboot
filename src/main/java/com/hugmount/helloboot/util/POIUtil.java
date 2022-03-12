@@ -14,6 +14,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -182,8 +183,10 @@ public class POIUtil {
                 // 读取数字
                 else {
                     double number = cell.getNumericCellValue();
+                    BigDecimal bigDecimal1 = new BigDecimal(number);
+                    BigDecimal bigDecimal2 = new BigDecimal((long) number);
                     // 整数
-                    if (number == (long) number) {
+                    if (bigDecimal1.compareTo(bigDecimal2) == 0) {
                         cellStr = String.valueOf((long) number);
                     }
                     // 包含小数的double

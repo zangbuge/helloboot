@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.thrift.config;
 
+import com.hugmount.helloboot.util.ThreadUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TMultiplexedProcessor;
@@ -37,7 +38,7 @@ public class ThriftServerProxy {
 
 
     public void start() {
-        new Thread(() -> run()).start();
+        ThreadUtil.execute(() -> run());
     }
 
     public void run() {
@@ -48,7 +49,7 @@ public class ThriftServerProxy {
             args.protocolFactory(new TBinaryProtocol.Factory());
             // 设置传输方式 TSocket 阻塞的io  TFramedTransport 非阻塞io
             args.transportFactory(new TFramedTransport.Factory());
-            TMultiplexedProcessor tMultiplexedProcessor = registerProcessor(getTProcessorList());
+            TMultiplexedProcessor tMultiplexedProcessor = registerProcessor(getProcessorList());
             args.processor(tMultiplexedProcessor);
             // TSimpleServer  单线程 阻塞
             // TThreadPoolServer  多线程  阻塞
@@ -61,7 +62,7 @@ public class ThriftServerProxy {
         }
     }
 
-    public List<Map<String, TProcessor>> getTProcessorList() throws Exception {
+    public List<Map<String, TProcessor>> getProcessorList() throws Exception {
         List<Map<String, TProcessor>> arrayList = new ArrayList<>();
         Map<String, TProcessor> map = new HashMap<>();
         for (Processor processor : processors) {

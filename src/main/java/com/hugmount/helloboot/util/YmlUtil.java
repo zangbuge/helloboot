@@ -68,26 +68,26 @@ public class YmlUtil {
     /**
      * 遍历yml文件，获取map集合
      *
-     * @param key_str
+     * @param keyStr
      * @param obj
      * @return
      */
-    public static Map<String, String> forEachYaml(String key_str, Map<String, Object> obj) {
+    public static Map<String, String> forEachYaml(String keyStr, Map<String, Object> obj) {
         for (Map.Entry<String, Object> entry : obj.entrySet()) {
             String key = entry.getKey();
             Object val = entry.getValue();
 
-            String str_new = "";
-            if (!StringUtils.isEmpty(key_str)) {
-                str_new = key_str + "." + key;
+            String strNew = "";
+            if (!StringUtils.isEmpty(keyStr)) {
+                strNew = keyStr + "." + key;
             } else {
-                str_new = key;
+                strNew = key;
             }
 
             if (val instanceof Map) {
-                forEachYaml(str_new, (Map<String, Object>) val);
+                forEachYaml(strNew, (Map<String, Object>) val);
             } else {
-                result.put(str_new, val.toString());
+                result.put(strNew, val.toString());
             }
         }
         return result;

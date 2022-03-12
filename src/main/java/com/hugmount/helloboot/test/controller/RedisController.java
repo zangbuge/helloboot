@@ -100,12 +100,12 @@ public class RedisController {
     }
 
     public Integer getIncr() {
-        RMap<Object, Integer> order_name_space = redissonClient.getMap("name_space", IntegerCodec.INSTANCE);
+        RMap<Object, Integer> nameSpace = redissonClient.getMap("name_space", IntegerCodec.INSTANCE);
         // 业务号段的key
         String seqKey = "order_seq";
-        order_name_space.putIfAbsent(seqKey, 0);
+        nameSpace.putIfAbsent(seqKey, 0);
         // 加1并获取计算后的值
-        Integer id = order_name_space.addAndGet(seqKey, 1);
+        Integer id = nameSpace.addAndGet(seqKey, 1);
         return id;
     }
 

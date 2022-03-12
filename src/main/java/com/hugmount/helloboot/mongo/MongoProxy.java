@@ -2,6 +2,7 @@ package com.hugmount.helloboot.mongo;
 
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.FindIterable;
@@ -37,12 +38,9 @@ public class MongoProxy {
 
             //MongoCredential.createScramSha1Credential()三个参数分别为 用户名 数据库名称 密码
             MongoCredential credential = MongoCredential.createScramSha1Credential("admin", "admin", "123456".toCharArray());
-            List<MongoCredential> credentials = new ArrayList<>();
-            credentials.add(credential);
-
+            MongoClientOptions options = MongoClientOptions.builder().build();
             //通过连接认证获取MongoDB连接
-            MongoClient mongoClient = new MongoClient(addrs,credentials);
-
+            MongoClient mongoClient = new MongoClient(addrs, credential, options);
             //连接到数据库
             MongoDatabase mongoDatabase = mongoClient.getDatabase("admin");
             MongoCollection<Document> user = mongoDatabase.getCollection("user");

@@ -9,6 +9,9 @@ import lombok.Getter;
  */
 public enum RouteEnum {
 
+    /**
+     * 测试
+     */
     TEST(TestHandler.class, "测试处理类");
 
     @Getter

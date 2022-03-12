@@ -164,7 +164,7 @@ public class HttpClientUtil {
             }
 
             HttpEntity entity = httpResponse.getEntity();
-            String res = EntityUtils.toString(entity, HTTP.UTF_8);
+            String res = EntityUtils.toString(entity, "UTF-8");
             return res;
         } catch (Exception e) {
             log.error("请求失败,url: {}", url, e);
