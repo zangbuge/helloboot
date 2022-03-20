@@ -1,6 +1,7 @@
 参考资料
 http://c.biancheng.net/view/3118.html
 https://zhuanlan.zhihu.com/p/83309276
+https://docs.docker.com/engine/reference/commandline/run/
 
 环境
 腾讯云 centos v7.6
