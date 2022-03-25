@@ -170,11 +170,13 @@ docker tag helloboot:0.0.1 zangbuge/helloboot
 docker push zangbuge/helloboot
 
 #### 安装jenkins
-# -v /var/jenkins_mount:/var/jenkins_mount 挂载目录
+# -v /var/jenkins_mount:/var/jenkins_home 挂载目录
 # -v /etc/localtime:/etc/localtime让容器使用和服务器同样的时间设置
+# -v /var/run/docker.sock:/var/run/docker.sock 与 -v /usr/bin/docker:/usr/bin/docker是把宿主机docker 映射到容器内
 mkdir -p /var/jenkins_mount  #先创建一个jenkins工作目录 
 sudo chmod -R 777 /var/jenkins_mount  #设置权限 -R 指级联应用到目录里的所有子目录和文件, 777 是所有用户都拥有最高权限
-docker run -u 1000:1000 --name myjenkins -d -p 18080:8080 -p 50000:50000 -v /var/jenkins_mount:/var/jenkins_home --privileged jenkins/jenkins
+sudo chmod 777 /var/run/docker.sock   #在容器内构建docker权限
+docker run -u 1000:1000 --privileged=true  --name myjenkins -d -p 18080:8080 -p 50000:50000 -v /var/jenkins_mount:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker jenkins/jenkins
 访问jenkins地址 18080
 vi /var/jenkins_mount/secrets/initialAdminPassword  #Jenkins密码位置
 docker logs myjenkins  #查看docker容器日志
@@ -192,12 +194,12 @@ useradd jenkins -g jenkins
 
 
 #### centos安装jenkins
-#先安装jdk, jenkins是基于java环境的
+#先安装jdk, jenkins是基于java环境的, 查看安装的路径 which java
 yum -y install java-1.8.0-openjdk
-#下载源文件 国内清华大学镜像(官网极慢)
-wget https://mirrors.tuna.tsinghua.edu.cn/jenkins/redhat/jenkins-2.271-1.1.noarch.rpm
+#下载源文件(官网极慢)
+wget https://pkg.jenkins.io/redhat/jenkins-2.156-1.1.noarch.rpm
 #安装
-rpm -ivh jenkins-2.271-1.1.noarch.rpm
+rpm -ivh jenkins-2.156-1.1.noarch.rpm
 #修改端口 JENKINS_PORT="8080"
 vi /etc/sysconfig/jenkins 
 设置jenkins和系统时间一致, 新增配置
@@ -206,6 +208,8 @@ JAVA_ARGS="-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai -Dfile.enc
 sudo usermod -a -G root jenkins
 #启动服务
 service jenkins start
+# 若失败,查看失败原因
+systemctl status jenkins.service
 #查看admin密码
 vi /var/lib/jenkins/secrets/initialAdminPassword
 
