@@ -101,10 +101,38 @@ public class RabbitmqUtil {
             //声明一个队列, 如果不存在则创建, 第二个参数 durable: true表示队列持久化
             channel.queueDeclare(queueName, true, false, false, params);
             channel.queueBind(queueName, exchangeName, router);
+            // 生产端可靠性投递
+            // 1. 事务消息机制,会严重降低性能, 一般不采用这种方法
+            // 2. confirm消息确认机制
+            channel.confirmSelect(); // 开启发送方确认模式
+            channel.addConfirmListener(new ConfirmListener() {
+                /**
+                 * 投递成功
+                 * @param deliveryTag
+                 * @param multiple
+                 * @throws IOException
+                 */
+                @Override
+                public void handleAck(long deliveryTag, boolean multiple) throws IOException {
+
+                }
+
+                /** 投递失败
+                 * 正常只有rabbit出问题才会走此方法：如磁盘写满了，MQ出现了一些异常，或者Queue容量到达上限了等等
+                 * @param deliveryTag
+                 * @param multiple
+                 * @throws IOException
+                 */
+                @Override
+                public void handleNack(long deliveryTag, boolean multiple) throws IOException {
+                    log.error("rabbitmq message push fail. deliveryTag: {}, msg: {}", deliveryTag, msg);
+                }
+            });
             //推送消息到队列中,并指定路由,设置消息持久化 MessageProperties.PERSISTENT_TEXT_PLAIN, 基于队列也设置了持久化
             channel.basicPublish(exchangeName, router, persistentTextPlain, msg.getBytes("UTF-8"));
             log.info("send msg to rabbitmq success");
-
+            //等待服务器端confirm, 实际上是一种串行confirm
+            // channel.waitForConfirms();
             //关闭通道
             channel.close();
         } catch (Exception e) {
@@ -155,6 +183,8 @@ public class RabbitmqUtil {
                         log.info("rabbitmq consume success");
                     } catch (Exception e) {
                         log.error("rabbitmq consume fail please try again", e);
+                        // 第二个参数false表示是否应用于多消息, 第三个参数true表示是否重新放入队列, 也会被自己消费到
+                        channel.basicNack(envelope.getDeliveryTag(), false, true);
                     }
 
                 }
