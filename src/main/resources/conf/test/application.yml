@@ -11,7 +11,7 @@ spring:
   datasource:
     master:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://118.195.172.19:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useSSL=false
+      url: jdbc:mysql://127.0.0.1:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useSSL=false
       username: root
       password: 123456
 

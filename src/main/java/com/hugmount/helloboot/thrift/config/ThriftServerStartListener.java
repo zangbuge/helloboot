@@ -18,6 +18,7 @@ import java.util.List;
  * @Date: 2020/5/14
  */
 @Slf4j
+@Deprecated
 public class ThriftServerStartListener implements ServletContextListener {
 
     private static ThriftServer thriftServer;
