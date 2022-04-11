@@ -9,7 +9,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
  */
 public class TestCxf {
     public static void main(String[] args) {
-        // WS接口地址
+        // WS接口地址 https协议要换成?singlewsdl
         String address = "http://localhost:8086/helloboot/ws/helloService?wsdl";
         // 代理工厂
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
@@ -29,6 +29,7 @@ public class TestCxf {
         //-impl 生成web service的实现代码
         //-ant  生成build.xml文件
         //-all 生成所有开始端点代码
+        //https协议要把[?wsdl] 换成[?singlewsdl]
         HelloService userService = (HelloService) jaxWsProxyFactoryBean.create();
         String res = userService.sayHello("lhm");
         System.out.println("调用webservice返回" + res);
