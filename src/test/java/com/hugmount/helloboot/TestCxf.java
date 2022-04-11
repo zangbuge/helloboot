@@ -22,6 +22,7 @@ public class TestCxf {
         // 解压apache-cxf-2.6.2.zip 进入bin目录
         // 执行wsdl2java命令
         // wsdl2java -p com -d src -all wsdlUrl
+        // wsdl2java -d src -p comcj -encoding utf-8 -client wsdlUrl
         //-p  指定其wsdl的命名空间，也就是要生成代码的包名
         //-d  指定要产生代码所在目录
         //-client 生成客户端测试web service的代码
