@@ -10,7 +10,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 public class TestCxf {
     public static void main(String[] args) {
         // WS接口地址
-        String address = "http://localhost:8086/helloboot/cxf/cxfHelloService?wsdl";
+        String address = "http://localhost:8086/helloboot/ws/helloService?wsdl";
         // 代理工厂
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         // 设置代理地址

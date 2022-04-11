@@ -5,6 +5,8 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 /**
+ * 提供WebService服务
+ *
  * @author Li Huiming
  * @date 2022/4/11
  */

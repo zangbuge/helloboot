@@ -21,7 +21,7 @@ public class CxfConfig {
 
     @Bean
     public ServletRegistrationBean cxfServlet() {
-        return new ServletRegistrationBean(new CXFServlet(), "/cxf/*");
+        return new ServletRegistrationBean(new CXFServlet(), "/ws/*");
     }
 
     @Bean(name = Bus.DEFAULT_BUS_ID)
@@ -29,17 +29,28 @@ public class CxfConfig {
         return new SpringBus();
     }
 
+    /**
+     * HelloServiceImpl 必须在这里注入, 不能使用@Service
+     *
+     * @return
+     */
     @Bean
     public HelloService userService() {
         return new HelloServiceImpl();
     }
 
+    /**
+     * 必须绑定webservice接口
+     * 若多个服务配置依次注入
+     *
+     * @return
+     */
     @Bean
-    public Endpoint endpoint() {
+    public Endpoint helloServiceEndpoint() {
         // 绑定webservice接口
         EndpointImpl endpoint = new EndpointImpl(springBus(), userService());
         // 发布的名称
-        endpoint.publish("/cxfHelloService");
+        endpoint.publish("/helloService");
         return endpoint;
     }
 
