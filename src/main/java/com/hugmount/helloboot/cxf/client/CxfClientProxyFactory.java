@@ -25,10 +25,14 @@ public class CxfClientProxyFactory {
     private String username;
     private String password;
 
+    private JaxWsProxyFactoryBean jaxWsProxyFactoryBean = null;
+
     public <T> T createObject(Class<T> t) {
-        JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
+        if (jaxWsProxyFactoryBean != null) {
+            return jaxWsProxyFactoryBean.create(t);
+        }
+        jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         jaxWsProxyFactoryBean.setAddress(url);
-        jaxWsProxyFactoryBean.setServiceClass(t);
         // 设置认证方式 http base
         jaxWsProxyFactoryBean.setUsername(username);
         jaxWsProxyFactoryBean.setPassword(password);
