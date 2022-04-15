@@ -80,7 +80,7 @@ public class HttpUtil {
                 out.write(jsonParam.getBytes(UTF_8));
                 out.flush();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException("URLConnection设置参数异常", e);
             }
         }
 
@@ -89,7 +89,7 @@ public class HttpUtil {
             try (InputStream inputStream = urlConnection.getInputStream();
                  FileOutputStream fileOutputStream = new FileOutputStream(downloadFile)) {
 
-                byte buffer[] = new byte[1024];
+                byte[] buffer = new byte[1024];
                 int cnt;
                 while ((cnt = inputStream.read(buffer)) != -1) {
                     fileOutputStream.write(buffer, 0, cnt);
@@ -97,9 +97,8 @@ public class HttpUtil {
                 fileOutputStream.flush();
                 return "SUCCESS";
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException("URLConnection下载文件异常", e);
             }
-            return null;
         }
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), UTF_8))) {
@@ -111,10 +110,8 @@ public class HttpUtil {
             }
             return builder.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("URLConnection获取响应异常", e);
         }
-
-        return null;
     }
 
 }
