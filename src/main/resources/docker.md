@@ -106,7 +106,17 @@ docker container exec -it xxx /bin/bash # xxx 为容器ID
 -it 等在容器内的命令执行完毕才会出来到当前操作,而bash 是打开容器内的一个终端近程,又因为it的等待 
 所以就会一直以终端连接的方式停留在容器内部
 
-
+#nginx配置log打印格式, nginx.conf 的log_format 指令
+$remote_addr： 用以记录客户端的ip地址；
+$remote_user： 用来记录客户端用户名称；
+$time_local：  用来记录访问时间与时区；
+$request：     用来记录请求的http的方式与url；
+$request_time：用来记录请求花费的时间；
+$status：      用来记录请求状态；成功是200
+$body_bytes_sent：    记录发送给客户端文件主体内容大小；
+$http_referer：       用来记录从那个页面链接访问过来的;
+$http_user_agent：    记录客户浏览器的相关信息,对应的是 "Mozilla/5.0 (iPhone; CPU iPhone...";
+$http_x_forwarded_for:代理IP,记录经过的所有服务器的IP地址;
 
 #### docker安装mysql
 docker pull mysql:5.7  #拉取docker mysql官方镜像 或 docker pull mysql:latest  最新的
