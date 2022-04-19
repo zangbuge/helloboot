@@ -69,16 +69,16 @@ jps -v 输出JVM启动时显示指定的JVM参数
     FGC：老年代回收次数
     FGCT：老年代回收耗时
     GCT：GC总耗时
-
+ 
 4. jstack 用于生成java虚拟机当前时刻的线程快照
 生成线程快照的主要目的是定位线程出现长时间停顿的原因，
-如线程间死锁、死循环、请求外部资源导致的长时间等待等
-jstack pid > jstack_info.txt
+如线程间死锁,死循环,CPU使用过高,请求外部资源导致的长时间等待等问题
+
 查看进程下哪些线程占用了高的cpu 
-top -p pid -H
-将十进制pid转换为十六进制的pid
-printf  "%x" 8247
-
-
-
-
+top
+查看某个进程pid下占用最高的线程pid (docker容器内不支持,可执行命令htop 进到htop页面按shift+p按照CPU使用率排序)
+top -Hp pid 
+将十进制线程pid转换为十六进制
+printf "%x" 1700
+导出线程快照, 用十六进制在jstack_info.txt中查找 nid=十六进制
+jstack pid > jstack_info.txt 
