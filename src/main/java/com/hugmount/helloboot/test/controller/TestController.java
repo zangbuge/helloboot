@@ -13,6 +13,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.redisson.api.*;
 import org.redisson.client.codec.IntegerCodec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,9 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping
 @Slf4j
 public class TestController {
+
+    @Value("${lhm}")
+    private String testApollo;
 
     @Autowired
     TestService testService;
@@ -90,6 +94,7 @@ public class TestController {
     @RequestMapping("/getCurDate")
     @ResponseBody
     public Result<Date> getCurDate() {
+        log.info("测试apollo: {}", testApollo);
         return Result.createBySuccess("成功", new Date());
     }
 

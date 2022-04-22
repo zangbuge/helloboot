@@ -282,6 +282,28 @@ docker run -d --name redis-test -p 6379:6379 redis
 #宿主机下添加配置文件 /data/redis/conf/redis.conf
 docker run -d -p 6379:6379 --rm --name myredis -v /data/redis/conf:/etc/redis/conf -v /data/redis/db:/data redis redis-server /etc/redis/conf/redis.conf
 
+
+### 安装apollo　文档：　https://www.apolloconfig.com/#/zh/deployment/quick-start　
+1. 下载官方压缩包: https://github.com/apolloconfig/apollo/releases/tag/v1.9.2
+　　下载２个DB脚本:　　https://github.com/apolloconfig/apollo-build-scripts/tree/master/sql
+    并新建２个数据库ApolloConfigDB，ApolloPortalDB
+config：提供配置的读取、推送等功能;
+admin： 提供配置的修改、发布等功能;
+portal：后台配置管理页面; 需要修改apollo-env.properties 配置环境, 先只保留local和dev其他注释掉
+apollo-env.properties
+```aidl
+local.meta=http://localhost:8080
+dev.meta=http://localhost:8080
+```
+2. 解压后修改config下数据源的配置 application-github.properties
+依次启动
+java -jar apollo-configservice-1.9.2.jar ./config/application-github.properties
+java -jar apollo-adminservice-1.9.2.jar  ./config/application-github.properties
+java -jar apollo-portal-1.9.2.jar ./config/application-github.properties
+3. 访问页面: http://localhost:8070
+登录默认账号：apollo
+登录默认密码：admin
+
 #### k8s
 安装epel-release源
 yum -y install epel-release

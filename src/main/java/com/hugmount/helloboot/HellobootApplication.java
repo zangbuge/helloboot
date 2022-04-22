@@ -1,6 +1,7 @@
 package com.hugmount.helloboot;
 
 import com.alibaba.dubbo.config.spring.context.annotation.EnableDubbo;
+import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 })
 @MapperScan("com.hugmount.helloboot.*.mapper")
 @EnableDubbo
+@EnableApolloConfig
 public class HellobootApplication {
 
 	public static void main(String[] args) {
