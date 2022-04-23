@@ -290,7 +290,7 @@ docker run -d -p 6379:6379 --rm --name myredis -v /data/redis/conf:/etc/redis/co
 config：提供配置的读取、推送等功能;
 admin： 提供配置的修改、发布等功能;
 portal：后台配置管理页面; 需要修改apollo-env.properties 配置环境, 先只保留local和dev其他注释掉
-apollo-env.properties
+apollo-env.properties 集群meta地址逗号分隔, 或换成eureka地址
 ```aidl
 local.meta=http://localhost:8080
 dev.meta=http://localhost:8080

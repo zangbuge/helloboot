@@ -105,6 +105,7 @@ mongo:
 # jvm参数配置环境 -Denv=dev ,meta地址为config地址非登录地址
 apollo:
   meta: http://localhost:8080
+  cacheDir: /opt/data/
   bootstrap:
     enabled: true
     namespaces: application
