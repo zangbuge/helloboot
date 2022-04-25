@@ -178,6 +178,7 @@ docker login -u 用户名  #登录到官方Docker Hub仓库
 必须先打一个tag再推送
 docker tag helloboot:0.0.1 zangbuge/helloboot
 docker push zangbuge/helloboot
+docker logout 退出登录
 
 #### 安装jenkins
 # -v /var/jenkins_mount:/var/jenkins_home 挂载目录
@@ -433,7 +434,11 @@ cp harbor.yml.tmpl harbor.yml
 vim harbor.yml
 hostname: www.fxitalk.com
 harbor_admin_password: 123456  # 默认: Harbor12345
-默认是https协议, 必须注释掉https配置 
+默认是https协议, 必须注释掉https相关配置 
 安装 
-sh install.sh
+./install.sh
+启动成功标志打印:　Harbor has been installed and started successfully.
+登录地址:　http://www.fxitalk.com:9980
+输入用户名 admin 密码: Harbor12345
+
 
