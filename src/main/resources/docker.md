@@ -417,3 +417,23 @@ systemctl start etcd
 systemctl start kube-apiserver
 systemctl start kube-controller-manager
 systemctl start kube-scheduler
+
+Kuboard 
+https://kuboard.cn/install/install-k8s.html#kuboard-spray
+https://blog.51cto.com/u_890909/2540060
+
+###安装Harbor 依赖docker-compose
+curl -L https://get.daocloud.io/docker/compose/releases/download/1.25.5/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose  # 添加权限
+docker-compose -v 命令查看安装情况
+下载Harbor安装包:　https://github.com/goharbor/harbor/releases
+tar xvf harbor-offline-installer-v2.3.2.tgz
+修改配置文件 地址,端口和密码
+cp harbor.yml.tmpl harbor.yml
+vim harbor.yml
+hostname: www.fxitalk.com
+harbor_admin_password: 123456  # 默认: Harbor12345
+默认是https协议, 必须注释掉https配置 
+安装 
+sh install.sh
+
