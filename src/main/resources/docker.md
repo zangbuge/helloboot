@@ -441,4 +441,31 @@ harbor_admin_password: 123456  # 默认: Harbor12345
 登录地址:　http://www.fxitalk.com:9980
 输入用户名 admin 密码: Harbor12345
 
+解压后的harbor目录执行命令
+# 启动Harbor容器
+docker-compose start
+# 停止Harbor容器
+docker-compose stop
+# 重启Harbor容器
+docker-compose restart
+# 停止并删除Harbor容器，加上-v参数可以同时移除挂载在容器上的目录
+docker-compose down
+# 创建并启动Harbo容器，参数“-d”表示后台运行命令
+docker-compose up -d
 
+设置docker私服 docker login 支持http
+vim /etc/docker/daemon.json
+{
+"registry-mirrors": ["https://alzgoonw.mirror.aliyuncs.com"]
+,"insecure-registries": ["http://www.fxitalk.com:9980"]
+,"live-restore": true
+}
+配置完成以后使用命令刷新生效
+systemctl daemon-reload
+systemctl restart docker
+docker-compose start
+
+先在harbor上创建fxitalkservice项目
+docker login http://www.fxitalk.com:9980 -u zangbuge -p Harbor.123
+docker tag fxitalkservice:0.0.1 www.fxitalk.com:9980/fxitalkservice/fxitalkservice:0.01
+docker push www.fxitalk.com:9980/fxitalkservice/fxitalkservice:0.01
