@@ -21,9 +21,8 @@ pipeline {
 
         // SSH Servers 多台服务器逗号分割, 值为jenkins中配置服务器name
         SIT_SERVERS_ADDR = "testhellogradle";
-        UAT_SERVERS_ADDR = "testhellogradle";
-        PROD_SERVERS_ADDR = "testhellogradle";
-        SERVERS_USERNAME = "root";
+        UAT_SERVERS_ADDR = "addr";
+        PROD_SERVERS_ADDR = "addr1,addr2,addr3";
 
     }
 
@@ -45,8 +44,7 @@ pipeline {
 
     // 包含一个或多个stage的序列，Pipeline的大部分工作在此执行
     stages {
-        // 获取git当前commit版本号
-        stage('get_commit_version') {
+        stage('获取当前commit版本号') {
         	steps {
         		script {
         		    // 获取commit前7位版本号
@@ -77,28 +75,29 @@ pipeline {
         stage ('ssh拉取harbor镜像') {
             steps {
                 script {
-                    echo "开始拉取远程镜像, 发布环境: ${params.ENV_TYPE}"
-                    // 遍历所有服务器，分别部署
+                    echo "当前发布环境: ${params.ENV_TYPE}"
+                    // 遍历所有服务器
                     def publish_ssh_server_select = "$SIT_SERVERS_ADDR".split(",")
                     for (int j = 0; j < publish_ssh_server_select.length; j++) {
                         def currentServerName = publish_ssh_server_select[j]
-                        echo "发布成功server:　$currentServerName"
+                        echo "准备发布的ServerName:　$currentServerName"
                         sshPublisher(publishers: [sshPublisherDesc(configName: "${currentServerName}",
                                                 transfers: [sshTransfer(cleanRemote: false, excludes: '',
                                                         execCommand: """
-                                                            // 远程服务器下依次执行如下命令
-                                                            // 删除旧容器
+                                                            // 远程服务器 TODO
                                                             // 删除旧镜像
                                                             // 拉取新镜像
-                                                            touch jenkins.log
-                                                            echo "部署完成 ${currentServerName}"
+                                                            // 重启新容器
+                                                            cd /app
+                                                            touch test_jenkins.log
+                                                            echo "该机器已部署完成ServerName: ${currentServerName}"
                                                         """,
                                                         execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false,
-                                                        patternSeparator: '[, ]+', remoteDirectory: '/app', remoteDirectorySDF: false, removePrefix: '',
+                                                        patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '',
                                                         sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
 
                     }
-                    echo "所有服务部署完成"
+                    echo "所有机器已部署完成"
 
                 }
             }
