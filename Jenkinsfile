@@ -19,10 +19,10 @@ pipeline {
         HARBOR_PROJECT_NAME = "helloboot";
         APP_NAME = "helloboot";
 
-        // 多台服务器逗号分割
-        SIT_SERVERS_ADDR = "www.fxitalk.com";
-        UAT_SERVERS_ADDR = "www.fxitalk.com";
-        PROD_SERVERS_ADDR = "www.fxitalk.com";
+        // SSH Servers 多台服务器逗号分割, 值为jenkins中配置服务器name
+        SIT_SERVERS_ADDR = "testhellogradle";
+        UAT_SERVERS_ADDR = "testhellogradle";
+        PROD_SERVERS_ADDR = "testhellogradle";
         SERVERS_USERNAME = "root";
 
     }
@@ -83,8 +83,21 @@ pipeline {
                     for (int j = 0; j < publish_ssh_server_select.length; j++) {
                         def currentServerName = publish_ssh_server_select[j]
                         echo "发布成功server:　$currentServerName"
-                    }
+                        sshPublisher(publishers: [sshPublisherDesc(configName: "${currentServerName}",
+                                                transfers: [sshTransfer(cleanRemote: false, excludes: '',
+                                                        execCommand: """
+                                                            // 远程服务器下依次执行如下命令
+                                                            // 删除旧容器
+                                                            // 删除旧镜像
+                                                            // 拉取新镜像
+                                                            touch jenkins.log
+                                                        """,
+                                                        execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false,
+                                                        patternSeparator: '[, ]+', remoteDirectory: '/app', remoteDirectorySDF: false, removePrefix: '',
+                                                        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
 
+                    }
+                    echo "所有服务部署完成"
 
                 }
             }
