@@ -95,7 +95,7 @@ pipeline {
                                                         """,
                                                         execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false,
                                                         patternSeparator: '[, ]+', remoteDirectory: '/app', remoteDirectorySDF: false, removePrefix: '',
-                                                        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+                                                        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
 
                     }
                     echo "所有服务部署完成"
