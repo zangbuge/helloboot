@@ -77,7 +77,7 @@ pipeline {
         stage ('ssh拉取harbor镜像') {
             steps {
                 script {
-                    echo '开始拉取远程镜像, 发布环境: $ENV_TYPE'
+                    echo "开始拉取远程镜像, 发布环境: ${params.ENV_TYPE}"
                     // 遍历所有服务器，分别部署
                     def publish_ssh_server_select = "$SIT_SERVERS_ADDR".split(",")
                     for (int j = 0; j < publish_ssh_server_select.length; j++) {
