@@ -91,6 +91,7 @@ pipeline {
                                                             // 删除旧镜像
                                                             // 拉取新镜像
                                                             touch jenkins.log
+                                                            echo "部署完成 ${currentServerName}"
                                                         """,
                                                         execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false,
                                                         patternSeparator: '[, ]+', remoteDirectory: '/app', remoteDirectorySDF: false, removePrefix: '',
