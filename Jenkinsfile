@@ -5,7 +5,9 @@ pipeline {
 
     // 设置参数
     parameters {
-        string(name: 'branch', defaultValue: 'master', description: 'the branch')
+        choice(name: 'ENV_TYPE', choices: ['test', 'uat', 'prod'], description: '构建环境: test, sit, uat, prod')
+        string(name: 'GIT_BRANCH', defaultValue: 'master', description: '选择构建分支')
+        string(name: 'GIT_COMMIT_VERSION', defaultValue: '', description: '选择发布的版本,git提交的版本号,只取前7位')
     }
 
     // 设置运行时的环境变量
@@ -16,6 +18,12 @@ pipeline {
         HARBOR_PASSWORD = "Harbor.123";
         HARBOR_PROJECT_NAME = "helloboot";
         APP_NAME = "helloboot";
+
+        // 多台服务器逗号分割
+        SIT_SERVERS_ADDR = "www.fxitalk.com";
+        UAT_SERVERS_ADDR = "www.fxitalk.com";
+        PROD_SERVERS_ADDR = "www.fxitalk.com";
+        SERVERS_USERNAME = "root";
 
     }
 
@@ -63,8 +71,23 @@ pipeline {
                     '''
                 }
             }
+        }
+
+        // 须安装 Publish over SSH 插件
+        stage ('ssh拉取harbor镜像') {
+            steps {
+                script {
+                    echo '开始拉取远程镜像, 发布环境: $ENV_TYPE'
+                    // 遍历所有服务器，分别部署
+                    def publish_ssh_server_select = "$SIT_SERVERS_ADDR".split(",")
+                    for (int j = 0; j < publish_ssh_server_select.length; j++) {
+                        def currentServerName = publish_ssh_server_select[j]
+                        echo "发布成功server:　$currentServerName"
+                    }
 
 
+                }
+            }
         }
 
 
