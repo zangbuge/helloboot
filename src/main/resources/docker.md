@@ -187,7 +187,7 @@ docker logout 退出登录
 mkdir -p /var/jenkins_mount  #先创建一个jenkins工作目录 
 sudo chmod -R 777 /var/jenkins_mount  #设置权限 -R 指级联应用到目录里的所有子目录和文件, 777 是所有用户都拥有最高权限
 sudo chmod 777 /var/run/docker.sock   #在容器内构建docker权限
-docker run -u 1000:1000 --privileged=true  --name myjenkins -d -p 18080:8080 -p 50000:50000 -v /var/jenkins_mount:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker jenkins/jenkins
+docker run -u 1000:1000 --privileged=true  --name myjenkins -d -p 18080:8080 -p 50000:50000 -e TZ="Asia/Shanghai" -v /var/jenkins_mount:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker jenkins/jenkins:2.340
 访问jenkins地址 18080
 vi /var/jenkins_mount/secrets/initialAdminPassword  #Jenkins密码位置
 docker logs myjenkins  #查看docker容器日志
@@ -469,3 +469,12 @@ docker-compose start
 docker login http://www.fxitalk.com:9980 -u zangbuge -p Harbor.123
 docker tag fxitalkservice:0.0.1 www.fxitalk.com:9980/fxitalkservice/fxitalkservice:0.01
 docker push www.fxitalk.com:9980/fxitalkservice/fxitalkservice:0.01
+
+
+### 安装 flowable-ui  https://blog.csdn.net/agonie201218/article/details/122451371
+docker run -d --name myflowableui -p 28080:8080 flowable/flowable-ui:6.7.2
+默认账号:admin 密码：test  选择建模器应用程序绘制流程图
+
+
+
+
