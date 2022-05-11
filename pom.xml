@@ -413,6 +413,12 @@
                         <version>5.1.47</version>
                         <scope>runtime</scope>
                     </dependency>
+                    <dependency>
+                        <!-- driverClassName=org.postgresql.Driver -->
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.2.25</version>
+                    </dependency>
                 </dependencies>
                 <configuration>
                     <verbose>true</verbose>
