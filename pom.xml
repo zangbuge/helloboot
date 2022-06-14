@@ -359,7 +359,17 @@
             <artifactId>guava</artifactId>
             <version>23.0</version>
         </dependency>
-
+        <!-- 性能测试纳秒级, 注意jdk9开始相关jar包就是jdk自带了不需要引入 -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.32</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.32</version>
+        </dependency>
     </dependencies>
 
     <build>
