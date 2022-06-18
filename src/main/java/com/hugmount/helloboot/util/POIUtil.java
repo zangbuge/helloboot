@@ -63,8 +63,7 @@ public class POIUtil {
         // 锁定表头
         sheet.createFreezePane(0, 1, 0, 1);
         int headSize = headMap.size();
-
-        // 创建表头
+        // 创建表头并设置顺序
         Map<String, String> headOrder = new HashMap<>();
         SXSSFRow headRow = sheet.createRow(0);
         headRow.setHeight((short) 360); // 像素
@@ -129,18 +128,18 @@ public class POIUtil {
                 throw new RuntimeException("该文件中没有excel数据");
             }
             List<Map<String, Object>> rowList = new ArrayList<>();
+            // 获取的lastRowNum比实际行数少一行,表头
             int lastRowNum = sheetAt.getLastRowNum();
             for (int i = 0; i <= lastRowNum; i++) {
                 XSSFRow row = sheetAt.getRow(i);
                 if (row == null) {
                     continue;
                 }
-
                 // 创建保存一行数据map
                 Map<String, Object> rowData = new LinkedHashMap<>();
                 boolean isSkip = true;
                 short lastCellNum = row.getLastCellNum();
-                for (short j = 0; j <= lastCellNum; j++) {
+                for (short j = 0; j < lastCellNum; j++) {
                     XSSFCell cell = row.getCell(j);
                     String cellValueStr = getCellValueStr(cell);
                     rowData.put(String.valueOf(j), cellValueStr);
@@ -172,8 +171,7 @@ public class POIUtil {
             case FORMULA: // 读取公式
                 cellStr = cell.getCellFormula();
                 break;
-            // 日期或数字
-            case NUMERIC:
+            case NUMERIC: // 日期或数字
                 // 读取日期
                 if (DateUtil.isCellDateFormatted(cell)) {
                     Date dateCellValue = cell.getDateCellValue();
@@ -187,15 +185,13 @@ public class POIUtil {
                     BigDecimal bigDecimal2 = new BigDecimal((long) number);
                     // 整数
                     if (bigDecimal1.compareTo(bigDecimal2) == 0) {
-                        cellStr = String.valueOf((long) number);
+                        cellStr = bigDecimal2.toString();
                     }
                     // 包含小数的double
                     else {
                         DecimalFormat df = new DecimalFormat("0.00");
                         // 设置diuble类型不转为"科学计数法"
                         cellStr = df.format(cell.getNumericCellValue());
-                        // 此方式会将过度过长的数字转为"科学计数法" 显示
-//						cellStr = String.valueOf(cell.getNumericCellValue());
                     }
                 }
                 break;

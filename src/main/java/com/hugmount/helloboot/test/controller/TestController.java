@@ -104,19 +104,19 @@ public class TestController {
         log.info("begin");
         LinkedHashMap linkedHashMap = new LinkedHashMap();
         linkedHashMap.put("name", "姓名");
-        linkedHashMap.put("age", "年龄");
-        linkedHashMap.put("sex", "性别");
+        linkedHashMap.put("idCard", "身份证");
+        linkedHashMap.put("amount", "金额");
 
         List<Map<String, Object>> list = new ArrayList<>();
         LinkedHashMap<String, Object> linkedHashMap1 = new LinkedHashMap();
         linkedHashMap1.put("name", "李");
-        linkedHashMap1.put("sex", "男");
-        linkedHashMap1.put("age", "12");
+        linkedHashMap1.put("idCard", "420622199601011235");
+        linkedHashMap1.put("amount", "123456789.1234");
         list.add(linkedHashMap1);
         LinkedHashMap<String, Object> linkedHashMap2 = new LinkedHashMap();
         linkedHashMap2.put("name", "张");
-        linkedHashMap2.put("age", "23");
-        linkedHashMap2.put("sex", "女");
+        linkedHashMap2.put("idCard", "420622199601011236");
+        linkedHashMap2.put("amount", "123456789.1234");
         list.add(linkedHashMap2);
 
         SXSSFWorkbook workbook = POIUtil.exportExcel(linkedHashMap, list);
