@@ -6,6 +6,7 @@ import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -94,6 +95,7 @@ public class HttpClientUtil {
             }
             HttpEntity entity = builder.build();
             HttpPost httpPost = new HttpPost(url);
+            httpPost.setConfig(createConfig());
             if (MapUtils.isNotEmpty(header)) {
                 for (Map.Entry<String, Object> map : header.entrySet()) {
                     httpPost.addHeader(map.getKey(), map.getValue().toString());
@@ -107,6 +109,23 @@ public class HttpClientUtil {
             return res;
         } catch (Exception e) {
             throw new RuntimeException("httpClient上传文件异常", e);
+        }
+    }
+
+    public static String doGet(String url, Map<String, Object> header) {
+        HttpGet httpGet = new HttpGet(url);
+        httpGet.setConfig(createConfig());
+        if (MapUtils.isNotEmpty(header)) {
+            for (Map.Entry<String, Object> map : header.entrySet()) {
+                httpGet.addHeader(map.getKey(), map.getValue().toString());
+            }
+        }
+        try {
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            String res = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+            return res;
+        } catch (Exception e) {
+            throw new RuntimeException("httpClient发送get请求异常", e);
         }
     }
 
@@ -127,8 +146,8 @@ public class HttpClientUtil {
 
     private static RequestConfig createConfig() {
         RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(1000 * 6)
-                .setConnectionRequestTimeout(1000 * 2)
+                .setConnectTimeout(1000 * 2)
+                .setConnectionRequestTimeout(1000 * 6)
                 .setSocketTimeout(1000 * 30)
                 .build();
         return config;

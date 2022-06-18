@@ -31,6 +31,9 @@ public class TestHttpUtil {
         String file1 = HttpClientUtil.doPostForm(testFile, file, "file", map, header);
         System.out.println("testFile返回: " + file1);
 
+        String testGet = "http://127.0.0.1:8001/testGet?nickname=lhm";
+        String s = HttpClientUtil.doGet(testGet, header);
+        System.out.println(s);
     }
 
 }
