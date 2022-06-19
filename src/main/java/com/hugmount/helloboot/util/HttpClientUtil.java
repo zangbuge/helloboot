@@ -46,23 +46,11 @@ public class HttpClientUtil {
      */
     public static String doPostJson(String url, String json, Map<String, Object> header) {
         try {
-            // 创建Http Post请求
             HttpPost httpPost = new HttpPost(url);
             // 创建请求内容
             StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
             httpPost.setEntity(entity);
-            RequestConfig config = createConfig();
-            httpPost.setConfig(config);
-            if (MapUtils.isNotEmpty(header)) {
-                for (Map.Entry<String, Object> map : header.entrySet()) {
-                    httpPost.addHeader(map.getKey(), map.getValue().toString());
-                }
-            }
-            // 执行http请求
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            // EntityUtils.toString()会关闭流且释放连接
-            String result = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
-            return result;
+            return doPost(httpPost, header);
         } catch (Exception e) {
             throw new RuntimeException("httpClient请求异常", e);
         }
@@ -95,21 +83,26 @@ public class HttpClientUtil {
             }
             HttpEntity entity = builder.build();
             HttpPost httpPost = new HttpPost(url);
-            httpPost.setConfig(createConfig());
-            if (MapUtils.isNotEmpty(header)) {
-                for (Map.Entry<String, Object> map : header.entrySet()) {
-                    httpPost.addHeader(map.getKey(), map.getValue().toString());
-                }
-            }
             httpPost.setEntity(entity);
-            // 发起请求 并返回请求的响应
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            // 获取响应对象
-            String res = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
-            return res;
+            return doPost(httpPost, header);
         } catch (Exception e) {
             throw new RuntimeException("httpClient上传文件异常", e);
         }
+    }
+
+    private static String doPost(HttpPost httpPost, Map<String, Object> header) throws Exception {
+        RequestConfig config = createConfig();
+        httpPost.setConfig(config);
+        if (header != null) {
+            for (Map.Entry<String, Object> map : header.entrySet()) {
+                httpPost.addHeader(map.getKey(), map.getValue().toString());
+            }
+        }
+        // 执行http请求
+        CloseableHttpResponse response = httpClient.execute(httpPost);
+        // 获取响应对象 EntityUtils.toString()会关闭流且释放连接
+        String result = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+        return result;
     }
 
     public static String doGet(String url, Map<String, Object> header) {
