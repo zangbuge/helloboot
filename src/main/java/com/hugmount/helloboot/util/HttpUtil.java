@@ -1,6 +1,5 @@
 package com.hugmount.helloboot.util;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -55,10 +54,14 @@ public class HttpUtil {
         return str.substring(0, str.length() - 1);
     }
 
-    @SneakyThrows
     private static String sendPost(String url, String jsonParam, Map<String, Object> header, String type, String downloadFile) {
-        URL callUrl = new URL(url);
-        URLConnection urlConnection = callUrl.openConnection();
+        URLConnection urlConnection;
+        try {
+            URL callUrl = new URL(url);
+            urlConnection = callUrl.openConnection();
+        } catch (IOException e) {
+            throw new RuntimeException("获取URLConnection对象异常", e);
+        }
         if (null != header) {
             Iterator<Entry<String, Object>> iterator = header.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -80,7 +83,7 @@ public class HttpUtil {
                 out.write(jsonParam.getBytes(UTF_8));
                 out.flush();
             } catch (Exception e) {
-                throw new RuntimeException("URLConnection设置参数异常", e);
+                throw new RuntimeException("URLConnection建立连接并设置参数异常", e);
             }
         }
 
@@ -101,8 +104,8 @@ public class HttpUtil {
             }
         }
 
+        // 获取请求响应数据
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), UTF_8))) {
-            //reader获取请求响应数据
             StringBuilder builder = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
