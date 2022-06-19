@@ -7,6 +7,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +45,13 @@ public class ListStream {
         list.stream().forEach(item -> {
             System.out.println(JSON.toJSONString(item));
         });
+
+        Map<String, List<Student>> collect2 = list.stream().collect(Collectors.groupingBy(Student::getSex));
+        System.out.println("分组");
+        System.out.println(JSON.toJSONString(collect2));
+
+        Map<String, Set<String>> collect3 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.mapping(Student::getName, Collectors.toSet())));
+        System.out.println(JSON.toJSONString(collect3));
 
     }
 
