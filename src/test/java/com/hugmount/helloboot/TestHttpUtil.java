@@ -28,7 +28,7 @@ public class TestHttpUtil {
 
         String testFile = "http://127.0.0.1:8001/testFile";
         File file = new File("d:/wx.png");
-        String file1 = HttpClientUtil.doPostForm(testFile, file, "file", map, header);
+        String file1 = HttpClientUtil.doPostForm(testFile, map, header, file, "file");
         System.out.println("testFile返回: " + file1);
 
         String testGet = "http://127.0.0.1:8001/testGet?nickname=lhm";
