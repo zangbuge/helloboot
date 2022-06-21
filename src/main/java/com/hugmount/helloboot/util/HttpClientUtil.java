@@ -2,24 +2,27 @@ package com.hugmount.helloboot.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
-import org.apache.http.Consts;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.entity.mime.StringBody;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.core5.util.Timeout;
+
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -68,11 +71,12 @@ public class HttpClientUtil {
      */
     public static String doPostForm(String url, Map<String, Object> fromData, Map<String, Object> header, File file, String name) {
         try {
+            Charset uft8 = Charset.forName("UTF-8");
             // 相当于<input type="file" name="file"/>
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.setCharset(Consts.UTF_8);
+            builder.setCharset(uft8);
             // 以浏览器兼容模式运行，防止文件名乱码。必须
-            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            builder.setMode(HttpMultipartMode.EXTENDED);
             if (file != null) {
                 builder.addBinaryBody(name, new FileInputStream(file), ContentType.DEFAULT_BINARY, file.getName());
             }
@@ -80,7 +84,7 @@ public class HttpClientUtil {
                 String key = entry.getKey();
                 String obj = entry.getValue().toString();
                 // 相当于<input type="text" name="userName" value=userName>
-                StringBody value = new StringBody(obj, ContentType.create("text/plain", Consts.UTF_8));
+                StringBody value = new StringBody(obj, ContentType.create("text/plain", uft8));
                 builder.addPart(key, value);
             }
             HttpEntity entity = builder.build();
@@ -101,7 +105,7 @@ public class HttpClientUtil {
         // 执行http请求
         CloseableHttpResponse response = httpClient.execute(httpPost);
         // 获取响应对象 EntityUtils.toString()会关闭流且释放连接
-        String result = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+        String result = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
         return result;
     }
 
@@ -114,7 +118,7 @@ public class HttpClientUtil {
         }
         try {
             CloseableHttpResponse response = httpClient.execute(httpGet);
-            String res = EntityUtils.toString(response.getEntity(), Consts.UTF_8);
+            String res = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
             return res;
         } catch (Exception e) {
             throw new RuntimeException("httpClient发送get请求异常", e);
@@ -124,7 +128,7 @@ public class HttpClientUtil {
     public static CloseableHttpClient getClient() {
         PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager();
         //检测有效链接的间隔
-        manager.setValidateAfterInactivity(9000);
+        manager.setValidateAfterInactivity(TimeValue.ofSeconds(90));
         //设定链接池最大数量
         manager.setMaxTotal(500);
         //设定默认单个路由的最大链接数（因为本处只使用一个路由地址因此设定为链接池大小）
@@ -139,9 +143,8 @@ public class HttpClientUtil {
 
     private static RequestConfig createConfig() {
         RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(1000 * 2)
-                .setConnectionRequestTimeout(1000 * 6)
-                .setSocketTimeout(1000 * 30)
+                .setConnectTimeout(Timeout.ofSeconds(6))
+                .setConnectionRequestTimeout(Timeout.ofSeconds(6))
                 .build();
         return config;
     }
