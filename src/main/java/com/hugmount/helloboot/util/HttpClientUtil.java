@@ -88,13 +88,11 @@ public class HttpClientUtil {
             httpPost.setEntity(entity);
             return doPost(httpPost, header);
         } catch (Exception e) {
-            throw new RuntimeException("httpClient上传文件异常", e);
+            throw new RuntimeException("httpClient异常", e);
         }
     }
 
     private static String doPost(HttpPost httpPost, Map<String, Object> header) throws Exception {
-        RequestConfig config = createConfig();
-        httpPost.setConfig(config);
         if (header != null) {
             for (Map.Entry<String, Object> map : header.entrySet()) {
                 httpPost.addHeader(map.getKey(), map.getValue().toString());
@@ -109,7 +107,6 @@ public class HttpClientUtil {
 
     public static String doGet(String url, Map<String, Object> header) {
         HttpGet httpGet = new HttpGet(url);
-        httpGet.setConfig(createConfig());
         if (MapUtils.isNotEmpty(header)) {
             for (Map.Entry<String, Object> map : header.entrySet()) {
                 httpGet.addHeader(map.getKey(), map.getValue().toString());
@@ -135,6 +132,7 @@ public class HttpClientUtil {
         CloseableHttpClient httpClient = HttpClients.custom()
                 .disableAutomaticRetries()
                 .setConnectionManager(manager)
+                .setDefaultRequestConfig(createConfig())
                 .build();
         return httpClient;
     }
