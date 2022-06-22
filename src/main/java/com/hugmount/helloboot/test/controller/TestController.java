@@ -2,16 +2,12 @@ package com.hugmount.helloboot.test.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.hugmount.helloboot.core.Result;
-import com.hugmount.helloboot.mongo.MongoService;
-import com.hugmount.helloboot.mongo.User;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
 import com.hugmount.helloboot.util.POIUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.redisson.api.*;
-import org.redisson.client.codec.IntegerCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -20,11 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Li Huiming
@@ -44,7 +39,7 @@ public class TestController {
 
     @PostMapping("/getTestList")
     @ResponseBody
-    public String getTestList(Test test) {
+    public String getTestList(@RequestBody @Valid Test test) {
         log.info("getTestList: {}", JSON.toJSONString(test));
         List<Test> testList = testService.getTestList(test);
         String listStr = JSON.toJSONString(testList);
