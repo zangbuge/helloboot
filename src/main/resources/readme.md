@@ -1,4 +1,4 @@
-##### windows安装mongo
+##### 一. windows安装mongo
 1.下载
 http://dl.mongodb.org/dl/win32/x86_64
 选择版本: win32/mongodb-win32-x86_64-2012plus-v4.2-latest.zip
@@ -24,3 +24,7 @@ mongod.exe --config "D:\work\tool\mongo\mongodb-win32-x86_64-2012plus-4.2.11\mon
 db.createUser({user:'admin',pwd:'123456',customData:{"desc":"administrators"},roles:[{role:'userAdminAnyDatabase',db:'admin'}]})
 
 ```
+
+##### 二. maven查看某个jar是被谁引入进来的 
+mvn dependency:tree -Dincludes=org.apache.httpcomponents
+
