@@ -12,7 +12,7 @@ docker stop $container_id
 docker rmi $image_id
 
 docker image build ./ -t $image_name:0.0.1
-docker container run -d --rm --name $image_name -p 8086:8086 -v /usr/share/maven/repo:/usr/share/maven/repo -v /app/logs:/app/logs $image_name:0.0.1
+docker container run -d --rm --name $image_name -p 8086:8086 -v /app/logs:/app/logs $image_name:0.0.1
 echo "启动中..."
 sleep 300
 health=`curl 'http://www.fxitalk.com:8086/helloboot/health'`

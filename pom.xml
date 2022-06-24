@@ -82,6 +82,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.3.6</version>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
@@ -421,7 +426,7 @@
                         <!-- driverClassName=org.postgresql.Driver -->
                         <groupId>org.postgresql</groupId>
                         <artifactId>postgresql</artifactId>
-                        <version>42.2.25</version>
+                        <version>42.3.6</version>
                     </dependency>
                 </dependencies>
                 <configuration>
