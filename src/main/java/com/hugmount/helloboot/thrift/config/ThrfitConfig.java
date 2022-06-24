@@ -13,6 +13,7 @@ public class ThrfitConfig {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
+    @Deprecated
     public ServletListenerRegistrationBean listenerRegist() {
         ServletListenerRegistrationBean bean = new ServletListenerRegistrationBean();
         bean.setListener(new ThriftServerStartListener());

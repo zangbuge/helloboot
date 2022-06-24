@@ -28,7 +28,7 @@ import java.util.Properties;
  * @Date: 2019/3/13
  */
 @Configuration
-@MapperScan(basePackages = "com.hugmount.helloboot.product.mapper", sqlSessionTemplateRef  = "masterSqlSessionTemplate")
+@MapperScan(basePackages = "com.hugmount.helloboot.product.mapper", sqlSessionTemplateRef = "masterSqlSessionTemplate")
 public class MasterDataSourceConfiguration {
 
     @Value("${spring.datasource.master.driver-class-name}")
@@ -47,7 +47,7 @@ public class MasterDataSourceConfiguration {
     @Primary
     public DataSource dataSource() {
         AtomikosDataSourceBean atomikosDataSourceBean = new AtomikosDataSourceBean();
-        DruidXADataSource dataSource = new DruidXADataSource ();
+        DruidXADataSource dataSource = new DruidXADataSource();
         dataSource.setDriverClassName(this.driverClassName);
         dataSource.setUrl(this.url);
         dataSource.setUsername(this.username);
@@ -95,7 +95,7 @@ public class MasterDataSourceConfiguration {
         //是否分页合理化
         properties.setProperty("reasonable", "false");
         interceptor.setProperties(properties);
-        bean.setPlugins(new Interceptor[] {interceptor});
+        bean.setPlugins(new Interceptor[]{interceptor});
 
         return bean.getObject();
     }
@@ -108,6 +108,7 @@ public class MasterDataSourceConfiguration {
 
     /**
      * 访问sql监控页面: http://localhost:8086/helloboot/druid/sql.html
+     *
      * @return
      * @throws Exception
      */
@@ -115,11 +116,14 @@ public class MasterDataSourceConfiguration {
     public ServletRegistrationBean druidServlet() throws Exception {
         ServletRegistrationBean reg = new ServletRegistrationBean();
         reg.setServlet(new StatViewServlet());
-        reg.addUrlMappings("/druid/*");//配置访问URL
-        reg.addInitParameter("loginUsername", "admin");  //配置用户名，这里使用数据库账号。
-//        reg.addInitParameter("loginPassword", ConfigTools.decrypt(publicKey,password));  //配置用户密码，这里使用数据库密码
-        reg.addInitParameter("loginPassword", "123");
-        reg.addInitParameter("logSlowSql", "true");   //是否启用慢sql
+        //配置访问URL
+        reg.addUrlMappings("/druid/*");
+        //配置用户名，这里使用数据库账号。
+        reg.addInitParameter("loginUsername", "admin");
+        //配置用户密码，这里使用数据库密码 也可密码加密 ConfigTools.decrypt(publicKey,password)
+        reg.addInitParameter("loginPassword", "123456");
+        //是否启用慢sql
+        reg.addInitParameter("logSlowSql", "true");
 
         return reg;
     }
@@ -127,10 +131,11 @@ public class MasterDataSourceConfiguration {
 
     /**
      * sql监控, 注册一个：filterRegistrationBean
+     *
      * @return
      */
     @Bean
-    public FilterRegistrationBean druidStatFilter(){
+    public FilterRegistrationBean druidStatFilter() {
 
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());
 
@@ -138,7 +143,7 @@ public class MasterDataSourceConfiguration {
         filterRegistrationBean.addUrlPatterns("/*");
 
         //添加不需要忽略的格式信息.
-        filterRegistrationBean.addInitParameter("exclusions","*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
+        filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;
     }
 
