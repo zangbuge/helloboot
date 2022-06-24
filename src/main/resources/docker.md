@@ -203,6 +203,8 @@ id jenkins
 #添加用户
 groupadd jenkins
 useradd jenkins -g jenkins
+# 查看端口占用情况 
+netstat -tunlp |grep 18080
 
 
 #### centos安装jenkins

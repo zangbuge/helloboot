@@ -1,10 +1,11 @@
 FROM maven:3.5.2-jdk-8-alpine AS MAVEN_BUILD
-MAINTAINER Brian Hannaway
+MAINTAINER lhm
 COPY pom.xml /build/
 COPY src /build/src/
 COPY settings.xml /usr/share/maven/conf/settings.xml
 WORKDIR /build/
-RUN mvn -s /usr/share/maven/conf/settings.xml clean package -Pprod
+RUN mvn dependency:go-offline -B
+RUN mvn -o -s /usr/share/maven/conf/settings.xml clean package -Ptest
 FROM openjdk:8-jre-alpine
 WORKDIR /app
 COPY --from=MAVEN_BUILD /build/target/helloboot-0.0.1-SNAPSHOT.jar /app/
