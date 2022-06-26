@@ -1,18 +1,18 @@
 package com.hugmount.helloboot.util;
 
 import org.springframework.util.StringUtils;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 /**
  * 基于java原生Cipher实现的加密解密工具类
  * ******** key至少8字节 ********
+ *
  * @Author Li Huiming
  * @Date 2019/10/26
  */
@@ -20,7 +20,9 @@ import java.security.SecureRandom;
 
 public class EnCoderCipherUtil {
 
-    // 加密解密模式(目前使用广泛的对称加密算法有: DES, IDEA, AES 等, AES 即将成为美国国家提倡的标准取代DES )
+    /**
+     * 加密解密模式(目前使用广泛的对称加密算法有: DES, IDEA, AES 等, AES 即将成为美国国家提倡的标准取代DES )
+     */
     private final static String CIPHER_MODE = "DES";
 
 
@@ -28,7 +30,7 @@ public class EnCoderCipherUtil {
      * function 加密通用方法
      *
      * @param originalContent:明文
-     * @param key  加密秘钥 key至少8字节
+     * @param key                加密秘钥 key至少8字节
      * @return 密文
      */
     public static String encrypt(String originalContent, String key) {
@@ -40,7 +42,7 @@ public class EnCoderCipherUtil {
         // 明文或加密秘钥不为空时
         try {
             byte[] byteContent = encrypt(originalContent.getBytes(), key.getBytes());
-            return new BASE64Encoder().encode(byteContent);
+            return new String(Base64.getEncoder().encode(byteContent));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,8 +65,8 @@ public class EnCoderCipherUtil {
 
         // 密文或加密秘钥不为空时
         try {
-            BASE64Decoder decoder = new BASE64Decoder();
-            byte[] bufCiphertext = decoder.decodeBuffer(ciphertext);
+            Base64.Decoder decoder = Base64.getDecoder();
+            byte[] bufCiphertext = decoder.decode(ciphertext);
             byte[] contentByte = decrypt(bufCiphertext, key.getBytes());
             return new String(contentByte);
         } catch (Exception e) {
