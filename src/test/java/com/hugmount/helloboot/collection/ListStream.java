@@ -1,6 +1,7 @@
 package com.hugmount.helloboot.collection;
 
 import com.alibaba.fastjson.JSON;
+import com.hugmount.helloboot.test.pojo.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -53,6 +54,14 @@ public class ListStream {
         Map<String, Set<String>> collect3 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.mapping(Student::getName, Collectors.toSet())));
         System.out.println(JSON.toJSONString(collect3));
 
+        Map<String, Set<User>> collect4 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.mapping(item -> {
+            String name = item.getName();
+            User user = new User();
+            user.setUsername(name);
+            return user;
+        }, Collectors.toSet())));
+        System.out.println("分组并转换类型");
+        System.out.println(JSON.toJSONString(collect4));
     }
 
 
