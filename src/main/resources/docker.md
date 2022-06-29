@@ -41,6 +41,7 @@ docker stop xxx  停止容器 xxx为运行容器ID
 docker image history boot-docker-intro  查看镜像构建历史
 docker rm 删除容器 
 docker rmi 删除镜像 
+docker rmi jenkins/jenkins:2.340  删除镜像根据 repository:tag
 docker search 在Docker Hub中查找镜像 
 -d: 后台运行容器，并返回容器ID； 
 -name=”nginx-lb”: 为容器指定一个名称； 
@@ -188,7 +189,7 @@ mkdir -p /var/jenkins_mount  #先创建一个jenkins工作目录
 sudo chmod -R 777 /var/jenkins_mount  #设置权限 -R 指级联应用到目录里的所有子目录和文件, 777 是所有用户都拥有最高权限
 sudo chmod 777 /var/run/docker.sock   #在容器内构建docker权限仅一次有效, 机器重启后失效. 
 # --privileged=true使docker容器内拥有真正的root权限,允许在docker容器之中再启动docker容器,--user=root 以root权限启动容器
-docker run --user=root --privileged=true  --name myjenkins -d -p 18080:8080 -p 50000:50000 -e TZ="Asia/Shanghai" -v /var/jenkins_mount:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker jenkins/jenkins:2.340
+docker run --user=root --privileged=true  --name myjenkins -d -p 18080:8080 -p 50000:50000 -e TZ="Asia/Shanghai" -v /var/jenkins_mount:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker jenkins/jenkins:2.357
 访问jenkins地址 18080
 vi /var/jenkins_mount/secrets/initialAdminPassword  #Jenkins密码位置
 docker logs myjenkins  #查看docker容器日志
