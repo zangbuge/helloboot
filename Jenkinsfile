@@ -71,7 +71,7 @@ pipeline {
             }
         }
 
-        // 须安装 Publish over SSH 插件
+        // 须安装 Publish over SSH 插件, 系统配置添加相关信息
         stage ('ssh拉取harbor镜像') {
             steps {
                 script {
@@ -81,7 +81,11 @@ pipeline {
                     for (int j = 0; j < publish_ssh_server_select.length; j++) {
                         def currentServerName = publish_ssh_server_select[j]
                         echo "准备发布的ServerName:　$currentServerName"
-                        sshPublisher(publishers: [sshPublisherDesc(configName: "${currentServerName}",
+                        sshPublisher(publishers: [sshPublisherDesc(
+                                                configName: "${currentServerName}",
+                                                usePromotionTimestamp: false,
+                                                useWorkspaceInPromotion: false,
+                                                verbose: true,
                                                 transfers: [sshTransfer(cleanRemote: false, excludes: '',
                                                         execCommand: """
                                                             // 远程服务器 TODO
@@ -92,9 +96,17 @@ pipeline {
                                                             touch test_jenkins.log
                                                             echo "该机器已部署完成ServerName: ${currentServerName}"
                                                         """,
-                                                        execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false,
-                                                        patternSeparator: '[, ]+', remoteDirectory: '/app/', remoteDirectorySDF: false, removePrefix: '',
-                                                        sourceFiles: 'pom.xml')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+                                                        execTimeout: 120000,
+                                                        flatten: false,
+                                                        makeEmptyDirs: false,
+                                                        noDefaultExcludes: false,
+                                                        patternSeparator: '[, ]+',
+                                                        remoteDirectory: '/jars/',
+                                                        remoteDirectorySDF: false,
+                                                        removePrefix: '',
+                                                        sourceFiles: 'pom.xml'
+                                                )]
+                        )])
 
                     }
                     echo "所有机器已部署完成"
