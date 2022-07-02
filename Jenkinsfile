@@ -94,7 +94,7 @@ pipeline {
                                                         """,
                                                         execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false,
                                                         patternSeparator: '[, ]+', remoteDirectory: '/app/', remoteDirectorySDF: false, removePrefix: '',
-                                                        sourceFiles: 'target/*.jar')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+                                                        sourceFiles: 'pom.xml')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
 
                     }
                     echo "所有机器已部署完成"
