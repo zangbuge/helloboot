@@ -93,8 +93,8 @@ pipeline {
                                                             echo "该机器已部署完成ServerName: ${currentServerName}"
                                                         """,
                                                         execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false,
-                                                        patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '',
-                                                        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+                                                        patternSeparator: '[, ]+', remoteDirectory: '/app/', remoteDirectorySDF: false, removePrefix: '',
+                                                        sourceFiles: 'target/*.jar')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
 
                     }
                     echo "所有机器已部署完成"
