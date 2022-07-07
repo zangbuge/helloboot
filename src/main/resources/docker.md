@@ -1,6 +1,5 @@
 参考资料
 http://c.biancheng.net/view/3118.html
-https://zhuanlan.zhihu.com/p/83309276
 https://docs.docker.com/engine/reference/commandline/run/
 
 环境
@@ -309,119 +308,6 @@ java -jar apollo-portal-1.9.2.jar ./config/application-github.properties
 登录默认账号：apollo
 登录默认密码：admin
 
-#### k8s
-安装epel-release源
-yum -y install epel-release
-关闭防火墙
-systemctl stop firewalld
-systemctl disable firewalld
-setenforce 0
-查看防火墙状态
-firewall-cmd --state
-关闭swap
-swapoff -a
-
-安装Kubeadm, 配置yum源 执行如下命令：
-cat <<EOF > /etc/yum.repos.d/kubernetes.repo 
-[kubernetes] 
-name=Kubernetes 
-baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64 
-enabled=1 
-gpgcheck=0 
-repo_gpgcheck=0
-gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
-EOF
-
-#查看支持k8s版本
-yum list kubelet --showduplicates | sort -r 
-#安装docker
-yum install docker-ce-18.09.6 docker-ce-cli-18.09.6
-# 首先查看已安装Docker
-yum list installed |grep docker
-# 执行卸载
-yum -y remove docker-ce.x86_64
-
-#安装etcd
-yum install etcd -y
-#启动etcd
-systemctl start etcd
-systemctl enable etcd
-#输入如下命令查看 etcd 健康状况
-etcdctl -C http://localhost:2379 cluster-health
-
-#### 安装 Kubernetes 
-如果出现冲突,使用命令卸载
-yum remove  kubernetes-client-1.5.2-0.7.git269f928.el7.x86_64
-
-##### k8s会自动安装docker, 必须卸载已安装的docker 否则冲突
-yum install kubernetes -y
-cd /etc/kubernetes
-ls #成功会有以下文件
-apiserver  apiserver.rpmnew  apiserver.rpmsave  config  controller-manager  manifests  scheduler
-
-#查看k8s版本
-kubectl version
-docker --version
-etcd --version 
-cat /etc/redhat-release
-#### 启动etcd、kube-apiserver、kube-controller-manager、kube-scheduler等服务，并设置开机启动。
-for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler; do systemctl restart $SERVICES;systemctl enable $SERVICES;systemctl status $SERVICES ; done
-
-#安装 flannel 网络管理组件
-yum install flannel -y
-#在etcd中定义flannel网络
-etcdctl mk /atomic.io/network/config '{"Network":"172.17.0.0/16"}'
-
-#安装node组件
-yum -y install flannel kubernetes-node
-
-#启动修改后的 flannel ，并依次重启 docker、kubernete
-service docker restart
-systemctl restart kube-apiserver
-systemctl restart kube-controller-manager
-systemctl restart kube-scheduler
-systemctl enable flanneld
-systemctl start flanneld
-systemctl restart kubelet
-systemctl restart kube-proxy
-
-#node节点机上启动kube-proxy,kubelet,docker,flanneld等服务，并设置开机启动
-for SERVICES in kube-proxy kubelet docker flanneld;do systemctl restart $SERVICES;systemctl enable $SERVICES;systemctl status $SERVICES; done
-
-#查看k8s集群状态
-kubectl get no 
-#查看运行的node节点机器
-kubectl get nodes
-
--------------------------------------------------------
-Warning: RPMDB altered outside of yum
-【解决办法】删除 yum 的历史记录
-rm -rf /var/lib/yum/history/*.sqlite 
-
-Kubernetes集群组件
-etcd 一个高可用的K/V键值对存储和服务发现系统
-flannel 实现夸主机的容器网络的通信
-kube-apiserver 提供kubernetes集群的API调用
-kube-controller-manager 确保集群服务
-kube-scheduler 调度容器，分配到Node
-kubelet 在Node节点上按照配置文件中定义的容器规格启动容器
-kube-proxy 提供网络代理服务
-
-kubeadm  启动 k8s 集群的命令工具
-kubelet  集群容器内的命令工具
-kubectl  操作集群的命令工具
-yum install docker-ce kubeadm kubelet kubectl -y
-
-启动
-systemctl enable etcd
-systemctl enable kube-apiserver
-systemctl enable kube-controller-manager
-systemctl enable kube-scheduler
-
-systemctl start etcd
-systemctl start kube-apiserver
-systemctl start kube-controller-manager
-systemctl start kube-scheduler
 
 Kuboard 
 https://kuboard.cn/install/install-k8s.html#kuboard-spray
