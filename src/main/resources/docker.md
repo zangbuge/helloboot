@@ -227,8 +227,17 @@ systemctl status jenkins.service
 #查看admin密码
 vi /var/lib/jenkins/secrets/initialAdminPassword
 
-#安装git  然后jenkins中git配置选择自动安装
+#配置maven环境
+vi /etc/profile
+export M2_HOME=/home/maven/apache-maven-3.8.6
+export PATH=$PATH:$M2_HOME/bin
+#刷新配置
+source /etc/profile
+
+#安装git  然后jenkins中配置git
 sudo yum install -y git
+git version
+whereis git
 
 ### 设置docker权限
 #否则可能出现错误: dial unix /var/run/docker.sock: connect: permission denied
