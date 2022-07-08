@@ -224,6 +224,13 @@ vi /etc/profile
 export JAVA=/home/jdk/jdk1.8.0_331
 export PATH=$PATH:$JAVA/bin
 
+#配置maven环境
+vi /etc/profile
+export M2_HOME=/home/maven/apache-maven-3.8.6
+export PATH=$PATH:$M2_HOME/bin
+#刷新配置
+source /etc/profile
+
 #下载源文件(官网极慢) 使用阿里镜像
 wget https://mirrors.aliyun.com/jenkins/redhat/jenkins-2.355-1.1.noarch.rpm
 #安装
@@ -241,12 +248,7 @@ systemctl status jenkins.service
 #查看admin密码
 vi /var/lib/jenkins/secrets/initialAdminPassword
 
-#配置maven环境
-vi /etc/profile
-export M2_HOME=/home/maven/apache-maven-3.8.6
-export PATH=$PATH:$M2_HOME/bin
-#刷新配置
-source /etc/profile
+#jenkins启动方式二, 也可在官网下载jenkins.war放在tomcat中运行
 
 #安装git  然后jenkins中配置git
 sudo yum install -y git
