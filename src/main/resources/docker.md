@@ -208,8 +208,22 @@ netstat -tunlp |grep 18080
 
 
 #### centos安装jenkins
-#先安装jdk, jenkins是基于java环境的, 查看安装的路径 which java
+#先安装jdk(方式一), jenkins是基于java环境的, 查看安装的路径 which java
 yum -y install java-1.8.0-openjdk
+卸载jdk
+yum list installed | grep java
+yum -y remove java-1.8.0*
+yum -y remove javapackages-tools.noarch
+yum -y remove python-javapackages.noarch
+yum -y remove tzdata-java.noarch
+
+#先配置jdk环境变量(方式二推荐),
+国内镜像地址
+http://www.codebaoku.com/jdk/jdk-oracle-jdk1-8.html
+vi /etc/profile
+export JAVA=/home/jdk/jdk1.8.0_331
+export PATH=$PATH:$JAVA/bin
+
 #下载源文件(官网极慢) 使用阿里镜像
 wget https://mirrors.aliyun.com/jenkins/redhat/jenkins-2.355-1.1.noarch.rpm
 #安装
