@@ -210,10 +210,10 @@ netstat -tunlp |grep 18080
 #### centos安装jenkins
 #先安装jdk, jenkins是基于java环境的, 查看安装的路径 which java
 yum -y install java-1.8.0-openjdk
-#下载源文件(官网极慢)
-wget https://pkg.jenkins.io/redhat/jenkins-2.156-1.1.noarch.rpm
+#下载源文件(官网极慢) 使用阿里镜像
+wget https://mirrors.aliyun.com/jenkins/redhat/jenkins-2.355-1.1.noarch.rpm
 #安装
-rpm -ivh jenkins-2.156-1.1.noarch.rpm
+rpm -ivh jenkins-2.355-1.1.noarch.rpm
 #修改端口 JENKINS_PORT="8080"
 vi /etc/sysconfig/jenkins 
 设置jenkins和系统时间一致, 新增配置
