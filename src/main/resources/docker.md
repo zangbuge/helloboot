@@ -249,6 +249,9 @@ systemctl status jenkins.service
 vi /var/lib/jenkins/secrets/initialAdminPassword
 
 #jenkins启动方式二, 也可在官网下载jenkins.war放在tomcat中运行
+#配置tomcat时区 
+vi catalina.sh
+JAVA_OPTS = "-Duser.timezone=GMT+08"
 
 #安装git  然后jenkins中配置git
 sudo yum install -y git
