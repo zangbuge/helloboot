@@ -221,8 +221,8 @@ yum -y remove tzdata-java.noarch
 国内镜像地址
 http://www.codebaoku.com/jdk/jdk-oracle-jdk1-8.html
 vi /etc/profile
-export JAVA=/home/jdk/jdk1.8.0_331
-export PATH=$PATH:$JAVA/bin
+export JAVA_HOME=/home/jdk/jdk1.8.0_331
+export PATH=$PATH:$JAVA_HOME/bin
 
 #配置maven环境
 vi /etc/profile
