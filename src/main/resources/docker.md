@@ -252,6 +252,9 @@ vi /var/lib/jenkins/secrets/initialAdminPassword
 #配置tomcat时区 
 vi catalina.sh
 JAVA_OPTS = "-Duser.timezone=GMT+08"
+#设置系统时间与网络时间同步
+yum -y install ntp ntpdate
+ntpdate cn.pool.ntp.org
 
 #安装git  然后jenkins中配置git
 sudo yum install -y git
