@@ -255,6 +255,8 @@ JAVA_OPTS = "-Duser.timezone=GMT+08"
 #设置系统时间与网络时间同步
 yum -y install ntp ntpdate
 ntpdate cn.pool.ntp.org
+#写入硬件, 防止重启后失效
+hwclock --systohc 
 
 #安装git  然后jenkins中配置git
 sudo yum install -y git
