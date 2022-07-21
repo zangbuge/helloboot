@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -42,5 +44,15 @@ public class Test implements Serializable {
 
     @Min(value = 6, message = "最小长度6位")
     private String password;
+
+
+    private String phone;
+
+    private String tel;
+
+    @AssertTrue(message = "手机号和电话不能同时为空")
+    public boolean isValid() {
+        return StringUtils.isNotEmpty(phone) || StringUtils.isNotEmpty(tel);
+    }
 
 }
