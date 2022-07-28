@@ -35,6 +35,8 @@ public class HttpClientUtil {
 
     private static CloseableHttpClient httpClient;
 
+    private static final String UTF_8 = "UTF-8";
+
     static {
         httpClient = getClient();
     }
@@ -51,7 +53,7 @@ public class HttpClientUtil {
         try {
             HttpPost httpPost = new HttpPost(url);
             // 创建请求内容
-            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
+            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON, UTF_8, false);
             httpPost.setEntity(entity);
             return doPost(httpPost, header);
         } catch (Exception e) {
@@ -71,7 +73,7 @@ public class HttpClientUtil {
      */
     public static String doPostForm(String url, Map<String, Object> fromData, Map<String, Object> header, File file, String name) {
         try {
-            Charset uft8 = Charset.forName("UTF-8");
+            Charset uft8 = Charset.forName(UTF_8);
             // 相当于<input type="file" name="file"/>
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setCharset(uft8);
@@ -105,7 +107,7 @@ public class HttpClientUtil {
         // 执行http请求
         CloseableHttpResponse response = httpClient.execute(httpPost);
         // 获取响应对象 EntityUtils.toString()会关闭流且释放连接
-        String result = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+        String result = EntityUtils.toString(response.getEntity(), Charset.forName(UTF_8));
         return result;
     }
 
@@ -118,7 +120,7 @@ public class HttpClientUtil {
         }
         try {
             CloseableHttpResponse response = httpClient.execute(httpGet);
-            String res = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
+            String res = EntityUtils.toString(response.getEntity(), Charset.forName(UTF_8));
             return res;
         } catch (Exception e) {
             throw new RuntimeException("httpClient发送get请求异常", e);
