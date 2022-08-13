@@ -290,7 +290,8 @@ docker network ls
 --restart=always 设置重启docker时也重启nacos 
 docker update –restart = no <container_id> 更新容器的–restart标志.关闭
 -itd 设置nacos一直运行, nacos在docker容器运行必须有一个前台进程， 如果没有前台进程执行，容器认为空闲，就会自行退出
-docker run -itd --name nacos --restart=always --network common-network --env MODE=standalone -p 8848:8848 nacos/nacos-server 
+docker run -itd --name nacos --restart=always --network common-network --env MODE=standalone \
+-p 8848:8848 -p 9848:9848 -p 9849:9849 nacos/nacos-server:2.0.3 
 #管理界面 默认端口号是：8848
 http://127.0.0.1:8848/nacos/
 #默认账号密码：nacos/nacos
@@ -306,6 +307,8 @@ docker run -d \
 -e MYSQL_SERVICE_PASSWORD=123456 \
 -e MYSQL_SERVICE_DB_NAME=nacos_config \
 -p 8848:8848 \
+-p 9848:9848 \
+-p 9849:9849 \
 --restart=always \
 --name mynacos \
 -v /root/nacos/standalone-logs/:/home/nacos/logs \
