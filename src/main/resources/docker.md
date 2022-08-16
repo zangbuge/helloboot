@@ -140,6 +140,17 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
 查看用户
 select user, host from mysql.user;
 
+运行mysql8
+docker run --name mysql8 -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v /home/mysql/logs:/logs -v /home/mysql/data:/var/lib/mysql mysql:8
+docker exec -it mysql8 /bin/bash
+mysql -uroot -p123456
+	use mysql;
+	ALTER USER 'root'@'%' IDENTIFIED BY '123456' PASSWORD EXPIRE NEVER;
+	ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+	FLUSH PRIVILEGES;
+
+重启容器
+
 #### 打包springboot应用
 Dockerfile文件如下
 
@@ -296,7 +307,7 @@ docker run -itd --name nacos --restart=always --network common-network --env MOD
 http://127.0.0.1:8848/nacos/
 #默认账号密码：nacos/nacos
 
-### 指定mysql配置集群启动  MODE 默认cluster 集群模式
+### 指定mysql配置集群启动  MODE 默认cluster 集群模式, 容器内访问宿主机不能用 127.0.0.1
 ```aidl
 docker run -d \
 -e MODE=cluster \
