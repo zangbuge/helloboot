@@ -296,10 +296,11 @@ docker run -itd --name nacos --restart=always --network common-network --env MOD
 http://127.0.0.1:8848/nacos/
 #默认账号密码：nacos/nacos
 
-### 指定mysql配置  MODE 默认cluster 集群模式
+### 指定mysql配置集群启动  MODE 默认cluster 集群模式
 ```aidl
 docker run -d \
--e MODE=standalone \
+-e MODE=cluster \
+-e NACOS_SERVERS="192.168.184.6:8848 192.168.184.7:8848" \
 -e SPRING_DATASOURCE_PLATFORM=mysql \
 -e MYSQL_SERVICE_HOST=www.fxitalk.com \
 -e MYSQL_SERVICE_PORT=3306 \
@@ -311,7 +312,7 @@ docker run -d \
 -p 9849:9849 \
 --restart=always \
 --name mynacos \
--v /root/nacos/standalone-logs/:/home/nacos/logs \
+-v /root/nacos/logs/:/home/nacos/logs \
 nacos/nacos-server:2.0.3
 ```
 
