@@ -151,6 +151,12 @@ mysql -uroot -p123456
 
 重启容器
 
+mysql -h 192.168.184.6 -u root -P3306 -p
+show databases; 查看数据库
+use databases; 进入数据库
+show tables; 查看当前所在数据库下面的所有表
+select * from test; #必须加分号;
+
 #### 打包springboot应用
 Dockerfile文件如下
 
