@@ -313,11 +313,10 @@ docker run -itd --name nacos --restart=always --network common-network --env MOD
 http://127.0.0.1:8848/nacos/
 #默认账号密码：nacos/nacos
 
-### 指定mysql配置集群启动  MODE 默认cluster 集群模式, 容器内访问宿主机不能用 127.0.0.1
+### 指定mysql配置单机启动  MODE 默认cluster 集群模式, 容器内访问宿主机不能用 127.0.0.1, 集群启动需指定网段和宿主机一致
 ```aidl
 docker run -d \
--e MODE=cluster \
--e NACOS_SERVERS="192.168.184.6:8848 192.168.184.7:8848" \
+-e MODE=standalone \
 -e SPRING_DATASOURCE_PLATFORM=mysql \
 -e MYSQL_SERVICE_HOST=www.fxitalk.com \
 -e MYSQL_SERVICE_PORT=3306 \
