@@ -3,11 +3,13 @@ jasypt:
     password: 123456
 
 server:
-    port: 8086
-    servlet:
-        context-path: /helloboot
+  port: 8086
+  servlet:
+    context-path: /helloboot
 
 spring:
+  profiles:
+    active: @prop.name@
   datasource:
     master:
       driver-class-name: com.mysql.jdbc.Driver
@@ -106,3 +108,15 @@ redis:
   address: redis://www.fxitalk.com:6379
   password: 123456
   database: 0
+
+# jvm参数配置环境 -Denv=dev ,meta地址为config地址非登录地址
+apollo:
+  meta: http://localhost:8080
+  cacheDir: /opt/data/
+  bootstrap:
+    enabled: true
+    namespaces: application
+app:
+  id: helloboot
+
+env: local
