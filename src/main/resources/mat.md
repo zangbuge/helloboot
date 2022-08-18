@@ -82,3 +82,9 @@ top -Hp pid
 printf "%x" 1700
 导出线程快照, 用十六进制在jstack_info.txt中查找 nid=十六进制
 jstack pid > jstack_info.txt 
+
+查看磁盘使用情况
+df -h
+
+查看内存使用情况
+free -h
