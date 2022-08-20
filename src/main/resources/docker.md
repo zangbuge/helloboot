@@ -346,6 +346,13 @@ redis:6.2.7 \
 redis-server /etc/redis/conf/redis.conf
 # redis-server 指定启动加载容器内的配置文件,项目中的配置redis.conf 是基于官方v6.06 
 
+docker exec -it redis bash 【进入容器】
+redis-cli 【连接,默认本地】
+auth 123456 【登录】
+select 1 【不执行,默认选择数据库0】
+set hello world
+get hello
+
 ### 安装apollo　文档：　https://www.apolloconfig.com/#/zh/deployment/quick-start　
 1. 下载官方压缩包: https://github.com/apolloconfig/apollo/releases/tag/v1.9.2
 　　下载２个DB脚本:　　https://github.com/apolloconfig/apollo-build-scripts/tree/master/sql
