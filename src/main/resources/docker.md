@@ -333,12 +333,13 @@ nacos/nacos-server:2.0.3
 ```
 
 ### 安装redis
+windows版 https://github.com/tporadowski/redis/releases
 #快捷启动
-docker run -d --name redis-test -p 6379:6379 redis
+docker run -d --name redis-test -p 6379:6379 redis:6.2.7
 #制定配置启动
 #宿主机下添加配置文件 /data/redis/conf/redis.conf
-docker run -d -p 6379:6379 --rm --name myredis -v /data/redis/conf:/etc/redis/conf -v /data/redis/db:/data redis redis-server /etc/redis/conf/redis.conf
-
+docker run -d -p 6379:6379 --rm --name myredis -v /data/redis/conf:/etc/redis/conf -v /data/redis/db:/data redis:6.2.7 redis-server /etc/redis/conf/redis.conf
+# redis-server 指定启动加载配置文件, 可以不加
 
 ### 安装apollo　文档：　https://www.apolloconfig.com/#/zh/deployment/quick-start　
 1. 下载官方压缩包: https://github.com/apolloconfig/apollo/releases/tag/v1.9.2
