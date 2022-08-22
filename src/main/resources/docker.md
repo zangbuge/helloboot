@@ -352,6 +352,8 @@ auth 123456 【登录】
 select 1 【不执行,默认选择数据库0】
 set hello world
 get hello
+#默认安装目录/usr/local/bin, --raw 支持中文
+redis-cli -h www.fxitalk.com -p 6379 -a 123456 --raw 
 
 ### 安装apollo　文档：　https://www.apolloconfig.com/#/zh/deployment/quick-start　
 1. 下载官方压缩包: https://github.com/apolloconfig/apollo/releases/tag/v1.9.2
