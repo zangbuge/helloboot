@@ -5,6 +5,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.entity.mime.StringBody;
@@ -16,6 +17,7 @@ import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
@@ -23,7 +25,10 @@ import org.apache.hc.core5.util.Timeout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author Li Huiming
@@ -95,6 +100,29 @@ public class HttpClientUtil {
             return doPost(httpPost, header);
         } catch (Exception e) {
             throw new RuntimeException("httpClient异常", e);
+        }
+    }
+
+    /**
+     * 发送post请求 表单数据
+     *
+     * @param url
+     * @param param
+     * @param header
+     * @return
+     */
+    public static String doPostForm(String url, Map<String, Object> param, Map<String, Object> header) {
+        try {
+            HttpPost httpPost = new HttpPost(url);
+            if (param != null) {
+                List<BasicNameValuePair> pairs = param.entrySet().stream()
+                        .map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue().toString()))
+                        .collect(Collectors.toList());
+                httpPost.setEntity(new UrlEncodedFormEntity(pairs, StandardCharsets.UTF_8));
+            }
+            return doPost(httpPost, header);
+        } catch (Exception e) {
+            throw new RuntimeException("发送post请求异常", e);
         }
     }
 
