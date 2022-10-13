@@ -21,7 +21,6 @@ import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
@@ -166,15 +165,24 @@ public class HttpClientUtil {
         CloseableHttpClient httpClient = HttpClients.custom()
                 .disableAutomaticRetries()
                 .setConnectionManager(manager)
-                .setDefaultRequestConfig(createConfig())
+                .setDefaultRequestConfig(createConfig(3))
                 .build();
         return httpClient;
     }
 
-    private static RequestConfig createConfig() {
+    /**
+     * 请求配置
+     *
+     * @param timeoutSeconds
+     * @return
+     */
+    private static RequestConfig createConfig(int timeoutSeconds) {
+        // 必须设置响应超时时间
+        Timeout timeout = Timeout.ofSeconds(timeoutSeconds);
         RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(Timeout.ofSeconds(6))
-                .setConnectionRequestTimeout(Timeout.ofSeconds(6))
+                .setConnectTimeout(timeout)
+                .setConnectionRequestTimeout(timeout)
+                .setResponseTimeout(timeout)
                 .build();
         return config;
     }
