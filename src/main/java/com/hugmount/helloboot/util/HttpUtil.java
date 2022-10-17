@@ -1,6 +1,9 @@
 package com.hugmount.helloboot.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 
 import java.io.*;
 import java.net.URL;
@@ -36,19 +39,23 @@ public class HttpUtil {
         return sendPost(url, data, header, FORM_TYPE, downloadFile);
     }
 
-    private static String assembleFormData(Map<String, Object> formData) {
-        if (formData == null) {
+    public static String assembleFormData(Object object) {
+        Map<String, Object> map = JSON.parseObject(JSON.toJSONString(object), new TypeReference<Map<String, Object>>() {
+        });
+        return assembleFormData(map);
+    }
+
+    public static String assembleFormData(Map<String, Object> formData) {
+        if (CollectionUtils.isEmpty(formData)) {
             return null;
         }
         // 构建请求参数
         StringBuffer param = new StringBuffer();
-        if (formData != null && formData.size() > 0) {
-            for (Entry<String, Object> entry : formData.entrySet()) {
-                param.append(entry.getKey());
-                param.append("=");
-                param.append(entry.getValue());
-                param.append("&");
-            }
+        for (Entry<String, Object> entry : formData.entrySet()) {
+            param.append(entry.getKey());
+            param.append("=");
+            param.append(entry.getValue());
+            param.append("&");
         }
         String str = param.toString();
         return str.substring(0, str.length() - 1);
