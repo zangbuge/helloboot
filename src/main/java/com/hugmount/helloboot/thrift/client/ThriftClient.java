@@ -4,12 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
+import org.apache.thrift.transport.layered.TFramedTransport;
 
 /**
+ * 该类可以配置注入到spring中使用
+ *
  * @Author: Li Huiming
  * @Date: 2020/8/12
  */

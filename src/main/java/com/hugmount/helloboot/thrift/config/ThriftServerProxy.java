@@ -8,8 +8,8 @@ import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
-import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TServerSocket;
+import org.apache.thrift.transport.layered.TFramedTransport;
 
 import java.net.InetSocketAddress;
 import java.util.*;
