@@ -89,7 +89,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <version>8.0.29</version>
         </dependency>
         <dependency>
             <groupId>com.jslsolucoes</groupId>
@@ -125,7 +125,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.9</version>
+            <version>1.2.13</version>
         </dependency>
 
         <!--api在线文档-->
@@ -167,6 +167,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+            <version>2.7.3</version>
         </dependency>
 
         <!-- 读取yml文件 -->
@@ -422,8 +423,7 @@
                     <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
-                        <version>5.1.47</version>
-                        <scope>runtime</scope>
+                        <version>8.0.29</version>
                     </dependency>
                     <dependency>
                         <!-- driverClassName=org.postgresql.Driver -->

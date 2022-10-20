@@ -43,6 +43,13 @@ public class MasterDataSourceConfiguration {
     @Value("${spring.datasource.master.password}")
     private String password;
 
+    /**
+     * mysql8出现XA该错误: com.mysql.cj.jdbc.MysqlXAException: XAER_RMERR:
+     * Fatal error occurred in the transaction branch - check your data for consistency
+     * 当前访问mysql的账号root缺少系统权限，执行以下sql语句即可:
+     * GRANT XA_RECOVER_ADMIN ON *.* TO root@'%';
+     * @return
+     */
     @Bean(name = "masterDataSource")
     @Primary
     public DataSource dataSource() {
