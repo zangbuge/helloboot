@@ -16,7 +16,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         HttpSession session = request.getSession();
-        log.info("进入拦截器...");
+//        log.info("进入拦截器...");
         // 跳转登录
 //        String url = "/login";
 //        response.sendRedirect(url);
