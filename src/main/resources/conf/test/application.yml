@@ -12,8 +12,8 @@ spring:
     active: @prop.name@
   datasource:
     master:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://www.fxitalk.com:3306/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useSSL=false
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3308/catering?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC&useSSL=false
       username: root
       password: 123456
 
