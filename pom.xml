@@ -27,13 +27,19 @@
 
     <profiles>
         <profile>
-            <id>test</id>
+            <id>local</id>
             <properties>
-                <prop.name>test</prop.name>
+                <prop.name>local</prop.name>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <prop.name>test</prop.name>
+            </properties>
         </profile>
         <profile>
             <id>prod</id>
