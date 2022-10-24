@@ -45,6 +45,19 @@ public class HttpClientUtil {
         httpClient = getClient();
     }
 
+
+    public static String doGet(String url, Map<String, Object> header) {
+        return doGet(url, header, null);
+    }
+
+    public static String doPostJson(String url, String json, Map<String, Object> header) {
+        return doPostJson(url, json, header, null);
+    }
+
+    public static String doPostForm(String url, Map<String, Object> param, Map<String, Object> header) {
+        return doPostForm(url, param, header, null);
+    }
+
     /**
      * 发送post请求 json数据格式
      *
@@ -53,9 +66,12 @@ public class HttpClientUtil {
      * @param header
      * @return
      */
-    public static String doPostJson(String url, String json, Map<String, Object> header) {
+    public static String doPostJson(String url, String json, Map<String, Object> header, Integer timeoutSeconds) {
         try {
             HttpPost httpPost = new HttpPost(url);
+            if (timeoutSeconds != null) {
+                httpPost.setConfig(createConfig(timeoutSeconds));
+            }
             // 创建请求内容
             StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON, UTF_8, false);
             httpPost.setEntity(entity);
@@ -71,11 +87,11 @@ public class HttpClientUtil {
      * @param url
      * @param file
      * @param name
-     * @param fromData
+     * @param formData
      * @param header
      * @return
      */
-    public static String doPostForm(String url, Map<String, Object> fromData, Map<String, Object> header, File file, String name) {
+    public static String doPostForm(String url, Map<String, Object> formData, Map<String, Object> header, File file, String name) {
         try {
             Charset uft8 = Charset.forName(UTF_8);
             // 相当于<input type="file" name="file"/>
@@ -86,7 +102,7 @@ public class HttpClientUtil {
             if (file != null) {
                 builder.addBinaryBody(name, new FileInputStream(file), ContentType.DEFAULT_BINARY, file.getName());
             }
-            for (Map.Entry<String, Object> entry : fromData.entrySet()) {
+            for (Map.Entry<String, Object> entry : formData.entrySet()) {
                 String key = entry.getKey();
                 String obj = entry.getValue().toString();
                 // 相当于<input type="text" name="userName" value=userName>
@@ -110,9 +126,12 @@ public class HttpClientUtil {
      * @param header
      * @return
      */
-    public static String doPostForm(String url, Map<String, Object> param, Map<String, Object> header) {
+    public static String doPostForm(String url, Map<String, Object> param, Map<String, Object> header, Integer timeoutSeconds) {
         try {
             HttpPost httpPost = new HttpPost(url);
+            if (timeoutSeconds != null) {
+                httpPost.setConfig(createConfig(timeoutSeconds));
+            }
             if (param != null) {
                 List<BasicNameValuePair> pairs = param.entrySet().stream()
                         .map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue().toString()))
@@ -138,8 +157,11 @@ public class HttpClientUtil {
         return result;
     }
 
-    public static String doGet(String url, Map<String, Object> header) {
+    public static String doGet(String url, Map<String, Object> header, Integer timeoutSeconds) {
         HttpGet httpGet = new HttpGet(url);
+        if (timeoutSeconds != null) {
+            httpGet.setConfig(createConfig(timeoutSeconds));
+        }
         if (MapUtils.isNotEmpty(header)) {
             for (Map.Entry<String, Object> map : header.entrySet()) {
                 httpGet.addHeader(map.getKey(), map.getValue().toString());
