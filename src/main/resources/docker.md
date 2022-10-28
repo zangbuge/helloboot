@@ -434,5 +434,40 @@ docker run -d --name myflowableui -p 28080:8080 flowable/flowable-ui:6.7.2
 默认账号:admin 密码：test  选择建模器应用程序绘制流程图
 
 
+### Docker搭建maven私服
+1. 运行
+docker run -d -p 8081:8081 --name mynexus --restart=always -v /usr/local/docker/nexus-data:/var/nexus-data sonatype/nexus3
 
+2. 点击右上角 sign in 根据提示修改密码
+http://192.168.184.6:8081/
 
+3. 设置仓库Deployment Policy配置为Allow Redeploy
+repository/repositories:maven-releases>Hosted>选择Allow redeploy
+
+4. 配置maven配置文件settings.xml
+<server> 
+  <id>maven-releases</id>
+  <username>admin</username>
+  <password>123456</password>
+</server>
+<server>
+  <id>maven-snapshots</id>
+  <username>admin</username>
+  <password>123456</password>
+</server>
+
+5. 配置项目的pom.xml文件
+<distributionManagement>
+    <repository>
+        <id>maven-releases</id>
+        <name>maven releases</name>
+        <url>http://192.168.184.6:8081/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>
+        <id>maven-snapshots</id>
+        <name>maven snapshots</name>
+        <url>http://192.168.184.6:8081/repository/maven-snapshots/</url>
+    </snapshotRepository>
+</distributionManagement>
+
+6. 推送类库
