@@ -47,9 +47,19 @@
                 <prop.name>prod</prop.name>
             </properties>
         </profile>
-
     </profiles>
 
+    <distributionManagement>
+        <repository>
+            <id>maven-releases</id>
+            <url>http://192.168.10.128:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <url>http://192.168.10.128:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
