@@ -59,7 +59,7 @@
             <url>http://192.168.10.128:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -384,6 +384,8 @@
     </dependencies>
 
     <build>
+        <!-- maven所有工作都由插件完成,官方插件地址: https://maven.apache.org/plugins/index.html -->
+        <!-- 它默认支持的插件可不用再显示引入, Supported By The Maven Project -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
