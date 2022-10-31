@@ -13,6 +13,11 @@ public class TestStr {
         String str = String.format("%04d", youNumber);
         System.out.println(str); // 0001
 
+        // 字符串左侧补0
+        String name = "lhm";
+        name = String.format("%6s", name);
+        System.out.println(name.replace(" ", "0"));
+
 
     }
 }
