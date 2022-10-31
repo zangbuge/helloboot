@@ -435,8 +435,12 @@ docker run -d --name myflowableui -p 28080:8080 flowable/flowable-ui:6.7.2
 
 
 ### Docker搭建maven私服
+0. 准备
+mkdir -p /usr/local/work/maven
+chmod 777 /usr/local/work/maven
+
 1. 运行
-docker run -d -p 8081:8081 --name mynexus --restart=always -v /usr/local/docker/nexus-data:/var/nexus-data sonatype/nexus3
+docker run -d -p 8081:8081 --name nexus3 -v /usr/local/work/maven:/var/nexus-data -e INSTALL4J_ADD_VM_PARAMS="-Xms256M -Xmx512M -XX:MaxDirectMemorySize=512M" sonatype/nexus3
 
 2. 点击右上角 sign in 根据提示修改密码
 http://192.168.184.6:8081/
@@ -446,6 +450,7 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 
 4. 配置maven配置文件settings.xml
 <server> 
+  <!-- id随意定义 -->
   <id>maven-releases</id>
   <username>admin</username>
   <password>123456</password>
@@ -459,15 +464,14 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 5. 配置项目的pom.xml文件
 <distributionManagement>
     <repository>
+        <!-- 这里的id要和setting里配置的id对应-->
         <id>maven-releases</id>
-        <name>maven releases</name>
         <url>http://192.168.184.6:8081/repository/maven-releases/</url>
     </repository>
     <snapshotRepository>
         <id>maven-snapshots</id>
-        <name>maven snapshots</name>
         <url>http://192.168.184.6:8081/repository/maven-snapshots/</url>
     </snapshotRepository>
 </distributionManagement>
 
-6. 推送类库
+6. deploy推送类库到远程 
