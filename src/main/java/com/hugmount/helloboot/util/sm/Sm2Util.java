@@ -60,4 +60,23 @@ public class Sm2Util {
         return StrUtil.utf8Str(sm2.decryptFromBcd(cipherData, KeyType.PrivateKey));
     }
 
+
+    /**
+     * 签名, 使用SM2曲线点构建SM2, 入参都是16进制
+     * 文档: https://www.hutool.cn/docs/#/crypto/国密算法工具-SmUtil
+     *
+     * @param privateKeyHex
+     * @param x
+     * @param y
+     * @param id
+     * @param data
+     * @return
+     */
+    public static String signHex(String privateKeyHex, String x, String y, String id, String data) {
+        SM2 sm2 = new SM2(privateKeyHex, x, y);
+        // 生成的签名是64位
+        sm2.usePlainEncoding();
+        return sm2.signHex(data, id);
+    }
+
 }
