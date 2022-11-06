@@ -1,5 +1,7 @@
 package com.hugmount.helloboot;
 
+import com.google.common.base.Strings;
+
 /**
  * @author Li Huiming
  * @date 2022/4/20
@@ -18,6 +20,29 @@ public class TestStr {
         name = String.format("%6s", name);
         System.out.println(name.replace(" ", "0"));
 
+        String tm = "1号机组增加外置式";
+        String desensitize = desensitize(tm, 0.45);
+        System.out.println(desensitize);
 
     }
+
+    /**
+     * 脱敏
+     *
+     * @param text
+     * @param showScale
+     * @return
+     */
+    public static String desensitize(String text, double showScale) {
+        int length = text.length();
+        if (length > 12) {
+            String sub = text.substring(0, 6);
+            String repeat = Strings.repeat("*", length - 6);
+            return sub + repeat;
+        }
+        int show = (int) (length * showScale);
+        String substring = text.substring(0, show);
+        return substring + Strings.repeat("*", length - show);
+    }
+
 }
