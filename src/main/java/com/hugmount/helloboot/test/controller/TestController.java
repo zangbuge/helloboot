@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.test.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.hugmount.helloboot.core.Result;
 import com.hugmount.helloboot.test.pojo.Test;
@@ -88,7 +89,8 @@ public class TestController {
     @ApiOperation("获取当前时间")
     @RequestMapping("/getCurDate")
     @ResponseBody
-    public Result<Date> getCurDate() {
+    public Result<Date> getCurDate(Date curDate) {
+        log.info(DateUtil.format(curDate, "yyyy-MM-dd HH:mm:ss"));
         log.info("测试apollo: {}", testApollo);
         return Result.createBySuccess("成功", new Date());
     }

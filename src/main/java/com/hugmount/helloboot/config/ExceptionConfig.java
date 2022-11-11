@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +35,10 @@ public class ExceptionConfig {
             return Result.createByError(e.getMessage());
         }
         log.error("系统异常", e);
+        // 参数类型错误
+        if (e instanceof MethodArgumentTypeMismatchException) {
+            return Result.createByError("请求参数类型错误,请检查入参");
+        }
         return Result.createByException("系统繁忙,请稍后重试");
     }
 
