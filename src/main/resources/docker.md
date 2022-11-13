@@ -118,6 +118,12 @@ $http_referer：       用来记录从那个页面链接访问过来的;
 $http_user_agent：    记录客户浏览器的相关信息,对应的是 "Mozilla/5.0 (iPhone; CPU iPhone...";
 $http_x_forwarded_for:代理IP,记录经过的所有服务器的IP地址;
 
+#nginx获取请求url中的参数, 在nginx配置中，通过$arg_PARAMETER 即可获得请求PARAMETER的内容
+如: http://localhost/test?call_url=http://127.0.0.1:8030/test/callbackTest
+取值, 转到配置地址
+proxy_pass "$arg_call_url";
+
+
 #### docker安装mysql
 docker pull mysql:5.7  #拉取docker mysql官方镜像 或 docker pull mysql:latest  最新的
 docker images          
