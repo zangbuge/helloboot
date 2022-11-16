@@ -481,3 +481,20 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 </distributionManagement>
 
 6. deploy推送类库到远程 
+
+7. maven配置阿里云镜像加速,setting配置找到标签,添加如下:
+<mirrors>
+    <mirror>
+        <id>alimaven</id>
+        <name>aliyun maven</name>
+        <url>http://maven.aliyun.com/nexus/content/repositories/central/</url>
+        <mirrorOf>central</mirrorOf>
+    </mirror>
+    <mirror>
+        <id>alimaven</id>
+        <name>aliyun maven</name>
+        <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        <mirrorOf>central</mirrorOf>
+    </mirror>
+</mirrors>
+
