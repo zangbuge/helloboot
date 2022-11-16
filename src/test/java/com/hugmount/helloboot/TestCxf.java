@@ -1,7 +1,9 @@
 package com.hugmount.helloboot;
 
+import com.hugmount.helloboot.cxf.client.CxfClientProxyFactory;
 import com.hugmount.helloboot.cxf.client.HelloService;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.junit.Test;
 
 /**
  * @author Li Huiming
@@ -35,6 +37,17 @@ public class TestCxf {
         HelloService userService = (HelloService) jaxWsProxyFactoryBean.create();
         String res = userService.sayHello("lhm");
         System.out.println("调用webservice返回" + res);
+    }
+
+    @Test
+    public void test() {
+        CxfClientProxyFactory cxfClientProxyFactory = new CxfClientProxyFactory();
+        cxfClientProxyFactory.setUrl("http://localhost:8086/helloboot/ws/helloService?wsdl");
+        cxfClientProxyFactory.setUsername("lhm");
+        cxfClientProxyFactory.setPassword("123456");
+        HelloService object = cxfClientProxyFactory.createObject(HelloService.class);
+        String lhm = object.sayHello("lhm");
+        System.out.println("请求ws返回: " + lhm);
     }
 
 }
