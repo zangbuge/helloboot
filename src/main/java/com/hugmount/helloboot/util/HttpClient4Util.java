@@ -10,18 +10,19 @@ import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -112,7 +113,6 @@ public class HttpClient4Util {
             }
         });
         CloseableHttpResponse response = httpClient.execute(httpPost);
-        // 获取响应对象 EntityUtils.toString()会关闭流且释放连接
         return EntityUtils.toString(response.getEntity(), Charset.forName(UTF_8));
     }
 
@@ -134,19 +134,24 @@ public class HttpClient4Util {
     }
 
     public static CloseableHttpClient getClient() {
-        Registry ignoreVerifySSL = createIgnoreVerifySSL();
-        PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager(ignoreVerifySSL);
+        SSLConnectionSocketFactory sslConnectionFactory = createSSLConnectionFactory();
+        Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", sslConnectionFactory)
+                .build();
+        PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager(registry);
         //检测有效链接的间隔
         manager.setValidateAfterInactivity(90 * 1000);
         //设定链接池最大数量
         manager.setMaxTotal(500);
-        //设定默认单个路由的最大链接数（因为本处只使用一个路由地址因此设定为链接池大小）
+        //设定默认单个路由的最大链接数
         manager.setDefaultMaxPerRoute(1000);
         CloseableHttpClient httpClient = HttpClients.custom()
                 .disableAutomaticRetries()
                 .setConnectionManager(manager)
                 .setDefaultRequestConfig(createConfig(3))
                 .build();
+
         return httpClient;
     }
 
@@ -166,40 +171,17 @@ public class HttpClient4Util {
         return config;
     }
 
-
-    public static Registry createIgnoreVerifySSL() {
-
-        // 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法
-        X509TrustManager trustManager = new X509TrustManager() {
-            @Override
-            public void checkClientTrusted(
-                    java.security.cert.X509Certificate[] paramArrayOfX509Certificate,
-                    String paramString) {
-            }
-
-            @Override
-            public void checkServerTrusted(
-                    java.security.cert.X509Certificate[] paramArrayOfX509Certificate,
-                    String paramString) {
-            }
-
-            @Override
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-        };
-
+    /**
+     * 忽略https证书的连接
+     *
+     * @return
+     */
+    public static SSLConnectionSocketFactory createSSLConnectionFactory() {
         try {
-            SSLContext sslcontext = SSLContext.getInstance("SSL");
-            sslcontext.init(null, new TrustManager[]{trustManager}, null);
-            // 设置协议http和https对应的处理socket链接工厂的对象
-            Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
-                    .register("http", PlainConnectionSocketFactory.INSTANCE)
-                    .register("https", new SSLConnectionSocketFactory(sslcontext))
-                    .build();
-            return registry;
+            SSLContext context = SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build();
+            return new SSLConnectionSocketFactory(context, NoopHostnameVerifier.INSTANCE);
         } catch (Exception e) {
-            throw new RuntimeException("SSLContext失败", e);
+            throw new RuntimeException(e);
         }
     }
 
