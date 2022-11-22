@@ -498,3 +498,7 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
     </mirror>
 </mirrors>
 
+### 运行ClickHouse 
+docker run -d -p 8123:8123 -p 9000:9000 --name clickhouse yandex/clickhouse-server
+使用dbevear登录,默认用户名密码: default/空
+
