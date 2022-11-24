@@ -1,6 +1,7 @@
 package com.hugmount.helloboot;
 
 import com.google.common.base.Strings;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * @author Li Huiming
@@ -23,6 +24,8 @@ public class TestStr {
         String tm = "1号机组增加外置式";
         String desensitize = desensitize(tm, 0.45);
         System.out.println(desensitize);
+
+        System.out.println("随机数: " + RandomStringUtils.randomNumeric(6));
 
     }
 
