@@ -338,7 +338,7 @@ docker run -d \
 nacos/nacos-server:2.0.3
 ```
 
-### 安装redis
+### 安装redis  命令中心:  http://www.redis.cn/commands.html
 windows版 https://github.com/tporadowski/redis/releases
 客户端:   https://github.com/caoxinyu/RedisClient/releases
 #快捷启动
