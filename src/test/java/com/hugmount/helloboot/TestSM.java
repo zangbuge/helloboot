@@ -7,6 +7,7 @@ import cn.hutool.crypto.digest.SM3;
 import cn.hutool.crypto.symmetric.SM4;
 import com.hugmount.helloboot.util.sm.Sm2Util;
 import com.hugmount.helloboot.util.sm.SmKeyPair;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -75,6 +76,20 @@ public class TestSM {
         String lhmHex = HexUtil.encodeHexStr("lhm");
         System.out.println("字符转16进制: " + lhmHex);
         System.out.println("16进制转字符: " + HexUtil.decodeHexStr(lhmHex));
+
+        String s = HexUtil.encodeHexStr(RandomStringUtils.randomNumeric(16));
+        byte[] b = HexUtil.decodeHex(s);
+        String b64 = Base64.getUrlEncoder().encodeToString(b);
+        System.out.println("随机16位秘钥(16进制base64编码的key): " + b64);
+
+        // 16进制base64编码的key
+        String str = "lhm";
+        String k = "NjE0Mzc3Nzk3NzMwMjY0Mg==";
+        String v = "NzM1ODc1NzkyMjM0MDE0MQ==";
+        SM4 sm = new SM4(Mode.CBC, Padding.PKCS5Padding, Base64.getDecoder().decode(k), Base64.getDecoder().decode(v));
+        String s1 = sm.encryptBase64(str);
+        System.out.println("加密: " + s1);
+        System.out.println("解密: " + sm.decryptStr(s1));
     }
 
 }
