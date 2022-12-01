@@ -62,7 +62,9 @@ public class TestSM {
         String data = "434477813974bf58f94bcf760833c2b40f77a5fc360485b0b9ed1bd9682edb45";
         String id = "31323334353637383132333435363738";
         String sign = Sm2Util.signHex(privateKeyHex, x, y, id, data);
-        System.out.println("sm2签名16进制: " + sign);
+        System.out.println("sm2签名16进制(每次签名都不一样): " + sign);
+        boolean verifyHex = Sm2Util.verifyHex(privateKeyHex, x, y, id, data, sign);
+        System.out.println("验签结果: " + verifyHex);
 
         // 16进制转byte数组
         byte[] bytes = HexUtil.decodeHex(sign);

@@ -12,6 +12,8 @@ import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import java.security.PublicKey;
 
 /**
+ * SM2签名用的随机数,SM2国密算法的签名结果每次都不一样,每次SM2加密结果也都不一样
+ *
  * @author: lhm
  * @date: 2022/9/16
  */
@@ -77,6 +79,12 @@ public class Sm2Util {
         // 生成的签名是64位
         sm2.usePlainEncoding();
         return sm2.signHex(data, id);
+    }
+
+    public static boolean verifyHex(String privateKeyHex, String x, String y, String id, String data, String sign) {
+        SM2 sm2 = new SM2(privateKeyHex, x, y);
+        sm2.usePlainEncoding();
+        return sm2.verifyHex(data, sign, id);
     }
 
 }
