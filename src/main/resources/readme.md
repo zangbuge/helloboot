@@ -26,5 +26,8 @@ db.createUser({user:'admin',pwd:'123456',customData:{"desc":"administrators"},ro
 ```
 
 ##### 二. maven查看某个jar是被谁引入进来的 
+方式一
 mvn dependency:tree -Dincludes=org.apache.httpcomponents
 
+方式二
+安装 Maven Helper 插件,点击pom.xml,左下边显示多了个“Dependency Analyzer”Tab选项, 选择 "all as list" 搜索
