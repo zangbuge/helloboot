@@ -1,6 +1,7 @@
 参考资料
 http://c.biancheng.net/view/3118.html
 https://docs.docker.com/engine/reference/commandline/run/
+docker官方仓库: https://hub.docker.com/
 
 环境
 腾讯云 centos v7.6
@@ -501,4 +502,25 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 ### 运行ClickHouse 
 docker run -d -p 8123:8123 -p 9000:9000 --name clickhouse yandex/clickhouse-server
 使用dbevear登录,默认用户名密码: default/空
+
+
+### centos基础镜像
+1. 编写Dockerfile文件
+vim Dockerfile
+FROM centos:centos7.9.2009
+MAINTAINER lhm
+ENV MYPATH /home
+WORKDIR $MYPATH
+RUN yum -y install vim
+RUN yum install -y telnet
+EXPOSE 80
+CMD ["/bin/bash"]
+
+2. 打包镜像
+docker image build ./ -t centos7:0.0.1
+
+3. 运行
+docker container run -p 8011:80 centos7:0.0.1
+
+4. 推送到仓库
 
