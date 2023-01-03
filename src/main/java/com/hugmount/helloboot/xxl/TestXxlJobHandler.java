@@ -1,6 +1,7 @@
 package com.hugmount.helloboot.xxl;
 
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,9 @@ import java.util.Date;
 public class TestXxlJobHandler {
 
     @XxlJob("testJobHandler")
-    public ReturnT<String> demoJobHandler(String param) {
-        System.out.println(new Date() + "xxl-job触发参数: " + param);
+    public ReturnT<String> demoJobHandler() {
+        String jobParam = XxlJobHelper.getJobParam();
+        System.out.println(new Date() + "xxl-job触发参数: " + jobParam);
         return ReturnT.SUCCESS;
     }
 
