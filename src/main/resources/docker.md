@@ -524,3 +524,9 @@ docker container run -p 8011:80 centos7:0.0.1
 
 4. 推送到仓库
 
+### xxl-job
+1. github下载源码: https://github.com/xuxueli/xxl-job
+2. 创建数据库表格, 修改 xxl-job-admin 项目数据库配置, 启动项目. 调度中心访问地址：http://localhost:8080/xxl-job-admin
+3. 执行器项目 pom.xml 添加依赖 xxl-job-core
+4. 在执行器项目添加java配置类, 再新建一个demo job
+5. 登录调度中心,添加执行器, 再添加任务(运行模式选择 BEAN)
