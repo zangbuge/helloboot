@@ -481,7 +481,7 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
     </snapshotRepository>
 </distributionManagement>
 
-6. deploy推送类库到远程 
+6. deploy命令推送类库到远程 
 
 7. maven配置阿里云镜像加速,setting配置找到标签,添加如下:
 <mirrors>
@@ -498,6 +498,43 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
         <mirrorOf>central</mirrorOf>
     </mirror>
 </mirrors>
+
+8. 缓存开源三方依赖到私服
+在setting文件中找到mirrors标签中添加Nexus库,id和server标签的id对应
+<mirror>
+    <id>maven-releases</id>
+    <name>Nexus</name>
+    <mirrorOf>central</mirrorOf>
+    <url>http://192.168.67.6:8081/repository/maven-public/</url>
+</mirror>
+
+然后在maven项目中执行 mvn clean compile 命令，下载依赖后，Nexus服务器就有jar包
+
+9. 引用私服中的jar, pom.xml中添加
+<repositories>
+    <repository>
+        <id>maven-snapshots</id>
+        <url>http://192.168.67.6:8081/repository/maven-snapshots/</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+    </repository>
+    
+    <repository>
+        <id>maven-releases</id>
+        <url>http://192.168.67.6:8081/repository/maven-releases/</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+    </repository>
+</repositories>
+
 
 ### 运行ClickHouse 
 docker run -d -p 8123:8123 -p 9000:9000 --name clickhouse yandex/clickhouse-server
