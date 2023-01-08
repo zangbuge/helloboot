@@ -362,6 +362,16 @@ get hello
 #默认安装目录/usr/local/bin, --raw 支持中文
 redis-cli -h www.fxitalk.com -p 6379 -a 123456 --raw 
 
+hash操作
+hset lhm age 20
+hget lhm age
+查看map数量: hlen myhash
+查看map所有值: hgetall lhm
+
+set操作
+sadd hello lhm
+查看set数量: scard myset
+
 ### 安装apollo　文档：　https://www.apolloconfig.com/#/zh/deployment/quick-start　
 1. 下载官方压缩包: https://github.com/apolloconfig/apollo/releases/tag/v1.9.2
 　　下载２个DB脚本:　　https://github.com/apolloconfig/apollo-build-scripts/tree/master/sql
