@@ -523,19 +523,8 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 9. 引用私服中的jar, pom.xml中添加
 <repositories>
     <repository>
-        <id>maven-snapshots</id>
-        <url>http://192.168.67.6:8081/repository/maven-snapshots/</url>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-    </repository>
-    
-    <repository>
         <id>maven-releases</id>
-        <url>http://192.168.67.6:8081/repository/maven-releases/</url>
+        <url>http://192.168.67.6:8081/repository/maven-public/</url>
         <snapshots>
             <enabled>true</enabled>
         </snapshots>

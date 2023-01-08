@@ -425,6 +425,10 @@
                     <!-- spring-boot:run 方式debug启动, 需在jvmArguments加上一下参数, 并新增一个remote配置
                     -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005  -->
                     <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+                    <!-- 打包跳过单元测试, 本应用作为jar推送到私服,必须加skip标签.
+                    否则引用方maven可正常引入,但java中无法使用其中的类
+                    若skip为false, 则打出的jar包源码路径会多一层BOOT-INF目录导致使用方无法引入 -->
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <!--跳过测试 -->
