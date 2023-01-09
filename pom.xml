@@ -532,6 +532,15 @@
                 <!-- filtering 作用是打通maven和spring两者的连接,让井水犯河水,即让Spring的范围内能取到maven的参数 -->
                 <filtering>true</filtering>
             </resource>
+
+            <!-- 打包时包含本地jar -->
+            <resource>
+                <directory>src/main/resources/jar</directory>
+                <targetPath>/BOOT-INF/lib/</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
         </resources>
 
     </build>
