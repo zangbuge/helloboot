@@ -566,3 +566,22 @@ docker container run -p 8011:80 centos7:0.0.1
 3. 执行器项目 pom.xml 添加依赖 xxl-job-core
 4. 在执行器项目添加java配置类, 再新建一个demo job
 5. 登录调度中心,添加执行器, 再添加任务(运行模式选择 BEAN)
+
+
+### 搭建gitlib
+docker pull gitlab/gitlab-ce:15.1.6-ce.0
+mkdir -p /mnt/gitlab/{etc,log,data}
+sudo chmod -R 777 /mnt/gitlab
+
+docker run -d -p 8443:443 -p 8090:80 -p 8022:22 --name gitlab15 \
+-v /mnt/gitlab/etc:/etc/gitlab \
+-v /mnt/gitlab/logs:/var/log/gitlab \
+-v /mnt/gitlab/data:/var/opt/gitlab \
+--privileged=true \
+gitlab/gitlab-ce:15.1.6-ce.0
+
+进入容器查看密码
+vi /etc/gitlab/initial_root_password
+登录
+http://192.168.67.6:8090/
+root/密码
