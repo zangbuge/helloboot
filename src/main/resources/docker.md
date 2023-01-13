@@ -585,3 +585,34 @@ vi /etc/gitlab/initial_root_password
 登录
 http://192.168.67.6:8090/
 root/密码
+
+
+### Ansibles使用
+yum install epel-release -y
+yum install ansible –y
+
+安装目录如下
+配置文件目录：/etc/ansible/
+执行文件目录：/usr/bin/
+Lib库依赖目录：/usr/lib/pythonX.X/site-packages/ansible/
+Help文档目录：/usr/share/doc/ansible-X.X.X/
+Man文档目录：/usr/share/man/man1/
+
+ansible默认host文件, 添加一组服务器, 指定用户密码
+vi /etc/ansible/hosts
+[testname]
+192.168.67.6 ansible_user=root ansible_ssh_pass=LHM@1111
+
+验证某一组清单
+-i 指定hosts文件路径，可以不使用/etc/ansible/hosts
+-m 指定使用shell模块
+-a "" 为参数设置
+
+发请求
+ansible testname -m shell -a "curl http://127.0.0.1:8080/"
+
+查日志
+ansible testname -m shell -a "grep 注册thrift处理器 /app/logs/prod/helloboot/helloboot.log"
+
+
+
