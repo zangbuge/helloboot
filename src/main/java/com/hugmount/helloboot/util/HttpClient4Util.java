@@ -145,7 +145,7 @@ public class HttpClient4Util {
         //设定链接池最大数量
         manager.setMaxTotal(500);
         //设定默认单个路由的最大链接数
-        manager.setDefaultMaxPerRoute(1000);
+        manager.setDefaultMaxPerRoute(500);
         CloseableHttpClient httpClient = HttpClients.custom()
                 .disableAutomaticRetries()
                 .setConnectionManager(manager)

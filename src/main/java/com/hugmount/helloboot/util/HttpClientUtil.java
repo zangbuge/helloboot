@@ -13,14 +13,23 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.TrustSelfSignedStrategy;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
 
+import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
@@ -177,19 +186,41 @@ public class HttpClientUtil {
     }
 
     public static CloseableHttpClient getClient() {
-        PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager();
+        PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager(createRegistry());
         //检测有效链接的间隔
         manager.setValidateAfterInactivity(TimeValue.ofSeconds(90));
         //设定链接池最大数量
-        manager.setMaxTotal(500);
-        //设定默认单个路由的最大链接数（因为本处只使用一个路由地址因此设定为链接池大小）
-        manager.setDefaultMaxPerRoute(1000);
+        manager.setMaxTotal(1000);
+        //设定默认单个路由的最大链接数
+        manager.setDefaultMaxPerRoute(800);
         CloseableHttpClient httpClient = HttpClients.custom()
                 .disableAutomaticRetries()
                 .setConnectionManager(manager)
                 .setDefaultRequestConfig(createConfig(3))
                 .build();
         return httpClient;
+    }
+
+    /**
+     * 忽略https证书校验
+     *
+     * @return
+     */
+    public static Registry<ConnectionSocketFactory> createRegistry() {
+        Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", createSSLConnectionFactory())
+                .build();
+        return registry;
+    }
+
+    public static SSLConnectionSocketFactory createSSLConnectionFactory() {
+        try {
+            SSLContext context = SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build();
+            return new SSLConnectionSocketFactory(context, NoopHostnameVerifier.INSTANCE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
