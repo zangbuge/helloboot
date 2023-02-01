@@ -30,7 +30,17 @@ public class TestSupplier {
 
         // 多个入参有返回值
         Supplier2<SXSSFWorkbook, LinkedHashMap<String, String>, List<Map<String, Object>>> exportExcel = POIUtil::exportExcel;
+
+        // 调用A方法, 将A方法内的变量传到外部使用
+        TestSupplier testSupplier = new TestSupplier();
+        String str = testSupplier.testFunction(arg -> arg + "lhm");
+        System.out.println(str);
+
     }
 
+
+    public String testFunction(Function<String, String> function) {
+        return function.apply("hello");
+    }
 
 }
