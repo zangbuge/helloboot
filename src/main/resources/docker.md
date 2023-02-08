@@ -539,6 +539,32 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 docker run -d -p 8123:8123 -p 9000:9000 --name clickhouse yandex/clickhouse-server
 使用dbevear登录,默认用户名密码: default/空
 
+## 搭建zk集群
+关闭防火墙
+mkdir -p /home/zookeeper_data/{data,conf}
+sudo chmod -R 777 /home/zookeeper_data
+搭建zookeeper集群3台,另外两台一样zk02, zk03, 仅修改 ZOO_MY_ID=1
+
+docker run -d --name zk01 --privileged=true --network host --rm \
+-e ZOO_MY_ID=1 \
+-e "ZOO_SERVERS=server.1=192.168.67.6:2888:3888 server.2=192.168.67.128:2888:3888 server.3=192.168.67.3:2888:3888" \
+-p 2181:2181 -p 2888:2888 -p 3888:3888 \
+-v /home/zookeeper_data/data:/data \
+docker.io/zookeeper:3.4.12
+
+修改配置添加集群ip, data中的myid文件为 "1" 对应 server.1 (可以ZOO_SERVERS方式参数替代,不用配置)
+vim /home/zookeeper_data/conf/zoo.cfg
+server.1=192.168.67.6:2888:3888
+server.2=192.168.67.128:2888:3888
+server.3=192.168.67.3:2888:3888
+
+必须分别启动3个节点后, 再查看集群状态 leader 表示主节点
+docker exec -it 44488e07dd80 /bin/bash
+./bin/zkServer.sh status
+3台分别显示
+Mode: follower
+Mode: leader
+Mode: follower
 
 ### centos基础镜像
 1. 编写Dockerfile文件
