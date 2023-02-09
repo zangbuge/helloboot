@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -36,6 +37,11 @@ public class TestSupplier {
         String str = testSupplier.testFunction(arg -> arg + "lhm");
         System.out.println(str);
 
+        // A方法处理后的结果, 提供表达式给外部使用
+        testSupplier.testConsumer(msg -> {
+            String s = msg + "lhm";
+            System.out.println(s);
+        });
     }
 
 
@@ -43,4 +49,8 @@ public class TestSupplier {
         return function.apply("hello");
     }
 
+    public void testConsumer(Consumer<String> consumer) {
+        String msg = "msg";
+        consumer.accept(msg);
+    }
 }
