@@ -8,10 +8,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -44,6 +41,13 @@ public class TestSupplier {
             String s = msg + "lhm";
             System.out.println(s);
         });
+
+        // 方法引用简洁代码
+        List<String> arr = new ArrayList<>();
+        User user1 = new User();
+        user1.setUsername("lhm");
+        Optional.ofNullable(user1).map(User::getUsername).ifPresent(arr::add);
+        System.out.println(arr);
 
         User user = null;
         String s = Optional.ofNullable(user).map(User::getUsername).orElse("1");
