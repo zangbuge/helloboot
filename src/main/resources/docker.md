@@ -535,9 +535,16 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 </repositories>
 
 
+ClickHouse官方文档: https://clickhouse.com/docs/zh/getting-started/install
 ### 运行ClickHouse 
-docker run -d -p 8123:8123 -p 9000:9000 --name clickhouse yandex/clickhouse-server
 使用dbevear登录,默认用户名密码: default/空
+docker run --rm -d --name ck23 -p 8123:8123 -p 9000:9000 \
+-e CLICKHOUSE_DB=my_db \
+-e CLICKHOUSE_USER=ck_user \
+-e CLICKHOUSE_PASSWORD=123456 \
+-e CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1 \
+clickhouse/clickhouse-server:23.1.3.5
+
 
 ## 搭建zk集群
 关闭防火墙
