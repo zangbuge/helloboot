@@ -535,9 +535,52 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 </repositories>
 
 
-### 运行ClickHouse 
+### 运行ClickHouse 使用dbevear登录,默认用户名密码: default/空
+运行临时容器
 docker run -d -p 8123:8123 -p 9000:9000 --name clickhouse yandex/clickhouse-server
-使用dbevear登录,默认用户名密码: default/空
+
+创建目录
+mkdir /home/clickhouse/{conf,data,log}
+chmod 777 /home/clickhouse
+
+拷贝配置文件
+docker cp ed0717df35b3:/etc/clickhouse-server/users.xml /home/clickhouse/conf/users.xml
+docker cp ed0717df35b3:/etc/clickhouse-server/config.xml /home/clickhouse/conf/config.xml
+
+vi users.xml
+<users>
+	<zhai>			
+		<password_sha256_hex>3b75903cd12c5e8ad59f73feb4baa526ed3fe234f2d77d421d7b9d73fefb3f61</password_sha256_hex>
+       	<networks incl="networks" replace="replace">
+           <ip>::/0</ip>
+        </networks>
+        <profile>zhai</profile>
+        <quota>zhai</quota>
+    </zhai>
+</users>
+
+vi config.xml 修改监听host
+<listen_host>0.0.0.0</listen_host>
+
+运行
+docker run -d --name=ch -p 8123:8123 -p 9000:9000 -p 9009:9009 \
+--ulimit nofile=262144:262144 \
+--volume /home/clickhouse/data:/var/lib/clickhouse:rw \
+--volume /home/clickhouse/conf:/etc/clickhouse-server:rw \
+--volume /home/clickhouse/log:/var/log/clickhouse-server:rw \
+yandex/clickhouse-server
+
+建表, 必须指定引擎类型，否则就会报Expected one of: storage definition, ENGINE, AS错误。
+CREATE TABLE test1
+(
+    id int,
+    name varchar(100),
+    birthday date
+)
+ENGINE = MergeTree
+PRIMARY KEY id;
+
+
 
 ## 搭建zk集群
 关闭防火墙
