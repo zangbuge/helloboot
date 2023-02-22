@@ -536,14 +536,64 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 
 
 ClickHouse官方文档: https://clickhouse.com/docs/zh/getting-started/install
-### 运行ClickHouse 
-使用dbevear登录,默认用户名密码: default/空
-docker run --rm -d --name ck23 -p 8123:8123 -p 9000:9000 \
--e CLICKHOUSE_DB=my_db \
--e CLICKHOUSE_USER=ck_user \
--e CLICKHOUSE_PASSWORD=123456 \
--e CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1 \
-clickhouse/clickhouse-server:23.1.3.5
+### 运行ClickHouse 使用dbevear登录,默认用户名密码: default/空
+运行临时容器
+docker run -d -p 8123:8123 -p 9000:9000 --name clickhouse yandex/clickhouse-server:21.3.20
+
+创建目录
+mkdir -p /home/clickhouse/{conf,data,log}
+chmod 777 /home/clickhouse
+
+拷贝配置文件
+docker cp a99c91164080:/etc/clickhouse-server/users.xml /home/clickhouse/conf/users.xml
+docker cp a99c91164080:/etc/clickhouse-server/config.xml /home/clickhouse/conf/config.xml
+
+vi users.xml  设置密码
+<users>
+   <!-- 添加账号,账号名: ck_user, 密码 root,.123 -->
+   <ck_user> 
+       <!--密码-->
+       <!--
+       <password>root,.123</password>
+       -->
+       <!--加密密码-->
+       <password_sha256_hex>a14c4c9d228e0cc32814050fea0f1df49dad0e1857615f5c7900bcb8d33b55a1</password_sha256_hex>
+       <!--用户可以从中连接到ClickHouse服务器的网络列表-->
+       <networks>
+           <ip>::/0</ip>
+       </networks>
+       <!--可以配读写,只读,写等 不一一列举,自行查阅-->
+       <profile>default</profile>
+       <!--限制用户使用资源,自行查阅-->
+       <quota>default</quota>
+       <!--(超级权限)用户可以创建其他用户，并赋予其他用户权限 ,0关闭,1开启-->
+       <access_management>1</access_management>
+   </ck_user>
+</users> 
+
+vi config.xml 修改监听host
+<listen_host>0.0.0.0</listen_host>
+
+运行
+docker run -d --rm --name=ck -p 8123:8123 -p 9000:9000 -p 9009:9009 \
+--ulimit nofile=262144:262144 \
+--volume /home/clickhouse/data:/var/lib/clickhouse:rw \
+--volume /home/clickhouse/conf:/etc/clickhouse-server:rw \
+--volume /home/clickhouse/log:/var/log/clickhouse-server:rw \
+yandex/clickhouse-server:21.3.20
+
+dbeaver驱动 ru.yandex.clickhouse-jdbc 0.2.6
+
+建表, 必须指定引擎类型，否则就会报Expected one of: storage definition, ENGINE, AS错误。
+CREATE TABLE test1
+(
+    id int,
+    name varchar(100),
+    birthday date
+)
+ENGINE = MergeTree
+PRIMARY KEY id;
+
 
 
 ## 搭建zk集群
