@@ -598,6 +598,9 @@ PRIMARY KEY id;
 
 ## 搭建zk集群
 关闭防火墙
+systemctl stop firewalld.service
+systemctl status firewalld.service
+创建目录
 mkdir -p /home/zookeeper_data/{data,conf}
 sudo chmod -R 777 /home/zookeeper_data
 搭建zookeeper集群3台,另外两台一样zk02, zk03, 仅修改 ZOO_MY_ID=1
