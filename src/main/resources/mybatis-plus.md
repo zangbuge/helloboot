@@ -38,3 +38,10 @@ spring:
 
 4 开启事务
 @DSTransactional
+
+
+5 count()函数
+count(*)：统计记录总数，包含重复的记录，以及为NULL或空的记录。
+count(1)：根据第一列统计记录总数，包含重复的记录，包含为NULL或空的值。也可以使用count(2)、count(3)等等。
+count(列名)：根据指定的列统计记录总数，包含重复的记录，不包括NULL或空的值。
+count(distinct 列名)：根据指定的列统计记录总数，不包含重复的记录，不包括NULL或空的值。
