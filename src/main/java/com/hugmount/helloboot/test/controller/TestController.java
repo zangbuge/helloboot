@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -46,6 +47,13 @@ public class TestController {
         String listStr = JSON.toJSONString(testList);
         System.out.println(listStr);
         return listStr;
+    }
+
+    @PostMapping("/testValid")
+    @ResponseBody
+    public String testValid(@RequestBody @Validated(Test.QueryGroup.class) Test test) {
+        log.info("testValid: {}", JSON.toJSONString(test));
+        return "success";
     }
 
     /**
