@@ -1,4 +1,4 @@
-部署ck 3分片1副本
+部署ck 3分片1副本, 共6个ck服务, 3个zk节点
 节点
 192.168.10.128
 192.168.10.130
@@ -25,10 +25,16 @@ conf下添加配置metrika.xml
                 <internal_replication>true</internal_replication>
                 <!-- 分片副本信息，这里指定的用户名密码只能是明文 -->
                 <replica>
-                    <host>192.168.10.128</host>
+                    <host>192.168.67.6</host>
                     <port>9000</port>
                     <user>ck_user</user>
                     <!--不能使用加密密码-->
+                    <password>root,.123</password>
+                </replica>
+                <replica>
+                    <host>192.168.67.128</host>
+                    <port>19000</port>
+                    <user>ck_user</user>
                     <password>root,.123</password>
                 </replica>
             </shard>
@@ -36,8 +42,30 @@ conf下添加配置metrika.xml
                 <weight>1</weight>
                 <internal_replication>true</internal_replication>
                 <replica>
-                    <host>192.168.10.132</host>
+                    <host>192.168.67.128</host>
                     <port>9000</port>
+                    <user>ck_user</user>
+                    <password>root,.123</password>
+                </replica>
+                <replica>
+                    <host>192.168.67.3</host>
+                    <port>19000</port>
+                    <user>ck_user</user>
+                    <password>root,.123</password>
+                </replica>
+            </shard>
+            <shard>
+                <weight>1</weight>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>192.168.67.3</host>
+                    <port>9000</port>
+                    <user>ck_user</user>
+                    <password>root,.123</password>
+                </replica>
+                <replica>
+                    <host>192.168.67.6</host>
+                    <port>19000</port>
                     <user>ck_user</user>
                     <password>root,.123</password>
                 </replica>
@@ -47,15 +75,15 @@ conf下添加配置metrika.xml
     <!-- ReplicatedMergeTree引擎依赖zk,有数据写入或者修改时,借助zk的分布式协同能力,实现多个副本之间的同步 -->
     <zookeeper-servers>
         <node index="1">
-            <host>192.168.10.128</host>
+            <host>192.168.67.6</host>
             <port>2181</port>
         </node>
         <node index="2">
-            <host>192.168.10.130</host>
+            <host>192.168.67.128</host>
             <port>2181</port>
         </node>
         <node index="3">
-            <host>192.168.10.132</host>
+            <host>192.168.67.3</host>
             <port>2181</port>
         </node>
     </zookeeper-servers>
@@ -63,10 +91,10 @@ conf下添加配置metrika.xml
     <macros>
       <!--集群名称-->
       <layer>ck_cluster</layer>
-      <!--分片-->
+      <!--分片主从节点相同-->
       <shard>shard01</shard>
-      <!--副本-->
-      <replica>replica01</replica>
+      <!--该节点属于哪个分片的哪个副本-->
+      <replica>node01_shard01_replica01</replica>
     </macros>
     <!-- 监听网络-->
     <networks>
