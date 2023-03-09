@@ -541,12 +541,12 @@ ClickHouse官方文档: https://clickhouse.com/docs/zh/getting-started/install
 docker run -d -p 8123:8123 -p 9000:9000 --name clickhouse yandex/clickhouse-server:21.3.20
 
 创建目录
-mkdir -p /home/clickhouse/{conf,data,log}
+mkdir -p /home/clickhouse/main/{conf,data,log}
 chmod 777 /home/clickhouse
 
 拷贝配置文件
-docker cp a99c91164080:/etc/clickhouse-server/users.xml /home/clickhouse/conf/users.xml
-docker cp a99c91164080:/etc/clickhouse-server/config.xml /home/clickhouse/conf/config.xml
+docker cp 0b88ed38fa4f:/etc/clickhouse-server/users.xml /home/clickhouse/main/conf/users.xml
+docker cp 0b88ed38fa4f:/etc/clickhouse-server/config.xml /home/clickhouse/main/conf/config.xml
 
 vi users.xml  设置密码
 <users>
@@ -574,12 +574,26 @@ vi users.xml  设置密码
 vi config.xml 修改监听host
 <listen_host>0.0.0.0</listen_host>
 
-运行
+修改配置后创建从库目录
+cp -r main sub
+拷贝到其他节点
+chmod 777 /home/clickhouse
+scp -r /home/clickhouse root@192.168.67.128:/home/
+
+运行主库
 docker run -d --rm --name=ck -p 8123:8123 -p 9000:9000 -p 9009:9009 \
 --ulimit nofile=262144:262144 \
---volume /home/clickhouse/data:/var/lib/clickhouse:rw \
---volume /home/clickhouse/conf:/etc/clickhouse-server:rw \
---volume /home/clickhouse/log:/var/log/clickhouse-server:rw \
+--volume /home/clickhouse/main/data:/var/lib/clickhouse:rw \
+--volume /home/clickhouse/main/conf:/etc/clickhouse-server:rw \
+--volume /home/clickhouse/main/log:/var/log/clickhouse-server:rw \
+yandex/clickhouse-server:21.3.20
+
+运行从库
+docker run -d --rm --name=ck_sub -p 18123:8123 -p 19000:9000 -p 19009:9009 \
+--ulimit nofile=262144:262144 \
+--volume /home/clickhouse/sub/data:/var/lib/clickhouse:rw \
+--volume /home/clickhouse/sub/conf:/etc/clickhouse-server:rw \
+--volume /home/clickhouse/sub/log:/var/log/clickhouse-server:rw \
 yandex/clickhouse-server:21.3.20
 
 dbeaver驱动 ru.yandex.clickhouse-jdbc 0.2.6
