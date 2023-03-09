@@ -442,6 +442,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <!-- 设置junit测试类启动jvm参数 -->
+                    <argLine>-Dnacos.server.grpc.port.offset=188</argLine>
                     <!--跳过测试 -->
                     <skipTests>false</skipTests>
                     <includes>
