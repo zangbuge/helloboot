@@ -137,6 +137,9 @@ PRIMARY KEY id;
 -- 分布表（Distributed）本身不存储数据，相当于路由，需要指定集群名、数据库名、数据表名、分片KEY.
 CREATE TABLE test_db.test_user_all AS test_db.test_user ENGINE = Distributed(ck_cluster, test_db, test_user, rand());
 
+-- 创建分布式表,只用执行一次,目前有问题
+CREATE TABLE test_db.test_user_all ON CLUSTER ck_cluster AS test_db.test_user ENGINE = Distributed(ck_cluster, test_db, test_user, rand());
+
 登录clickhouse
 clickhouse-client -h 192.168.10.128 --port 9000 -u default --password snt2020
 
