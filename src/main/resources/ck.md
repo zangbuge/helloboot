@@ -1,4 +1,4 @@
-部署ck 3分片1副本, 共6个ck服务, 3个zk节点
+部署ck 3分片2副本, 共6个ck服务, 3个zk节点
 节点
 192.168.10.128
 192.168.10.130
@@ -91,8 +91,8 @@ conf下添加配置metrika.xml
     <macros>
       <!--集群名称-->
       <layer>ck_cluster</layer>
-      <!--分片主从节点相同-->
-      <shard>shard01</shard>
+      <!--分片主从节点相同,整数-->
+      <shard>01</shard>
       <!--该节点属于哪个分片的哪个副本-->
       <replica>node01_shard01_replica01</replica>
     </macros>
