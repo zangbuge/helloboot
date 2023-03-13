@@ -140,8 +140,8 @@ CREATE TABLE test_db.test_user_all AS test_db.test_user ENGINE = Distributed(ck_
 -- 创建分布式表,只用执行一次,目前有问题
 CREATE TABLE test_db.test_user_all ON CLUSTER ck_cluster AS test_db.test_user ENGINE = Distributed(ck_cluster, test_db, test_user, rand());
 
-登录clickhouse
-clickhouse-client -h 192.168.10.128 --port 9000 -u default --password snt2020
+登录clickhouse 端口使用9000
+clickhouse-client -h 192.168.67.6 --port 19000 -u 'ck_user' --password 'root,.123'
 
 分布式表清空数据
 TRUNCATE table test_user_all on cluster ck_cluster;
