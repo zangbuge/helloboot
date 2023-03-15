@@ -56,6 +56,13 @@ public class TestController {
         return "success";
     }
 
+    @PostMapping("/batchTest")
+    @ResponseBody
+    public String batchTest() {
+        testService.batch();
+        return "success";
+    }
+
     /**
      * 默认主页
      *

@@ -12,4 +12,8 @@
         </if>
 
     </select>
+
+    <insert id="insert" parameterType="com.hugmount.helloboot.test.pojo.Test">
+        insert into t_test(user_name) values ( #{userName})
+    </insert>
 </mapper>

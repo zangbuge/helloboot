@@ -10,4 +10,7 @@ import java.util.List;
  */
 public interface TestService {
     List<Test> getTestList(Test test);
+
+    void batch();
+
 }

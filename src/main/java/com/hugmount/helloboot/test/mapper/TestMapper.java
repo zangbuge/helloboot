@@ -10,4 +10,5 @@ public interface TestMapper {
 
     List<Test> getTestList(Test test);
 
+    Integer insert(Test test);
 }
