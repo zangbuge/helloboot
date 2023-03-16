@@ -32,14 +32,17 @@ public class SqlSessionFactoryUtil {
             String clazzPath = implClass.replace("/", ".");
             Class<?> aClass = Class.forName(clazzPath);
             String implMethodName = action.getSerializedLambda().getImplMethodName();
-            sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+            // false 是否自动提交事务, 必须同时开启事务@Transactional,才会交给spring管理, 否则效率不会提升
+            sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
             Object mapper = sqlSession.getMapper(aClass);
             for (T item : list) {
                 Method method = aClass.getDeclaredMethod(implMethodName, item.getClass());
                 method.invoke(mapper, item);
             }
             sqlSession.commit();
+            sqlSession.clearCache();
         } catch (Exception e) {
+            sqlSession.rollback();
             throw new RuntimeException("批量操作报错", e);
         } finally {
             sqlSession.close();

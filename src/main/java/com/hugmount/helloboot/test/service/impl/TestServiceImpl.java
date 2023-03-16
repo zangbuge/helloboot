@@ -8,6 +8,7 @@ import com.hugmount.helloboot.util.SqlSessionFactoryUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,10 @@ public class TestServiceImpl implements TestService {
         return testMapper.getTestList(test);
     }
 
+    @Transactional
     public void batch() {
         List<Test> list = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100000; i++) {
             Test test = new Test();
             test.setUsername("lhm" + i);
             list.add(test);
