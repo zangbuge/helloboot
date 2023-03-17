@@ -35,24 +35,34 @@ public class TestServiceImpl implements TestService {
     }
 
     @Transactional
-    public void batch() {
+    public Long batch() {
+        List<Test> list = getList();
+        long start = System.currentTimeMillis();
+        log.info("批量执行开始: {}", start);
+        sqlSessionFactoryUtil.batch(list, testMapper::insertTest);
+        long use = System.currentTimeMillis() - start;
+        log.info("批量执行完成耗时ms: {}", use);
+        return use;
+    }
+
+    @Transactional
+    public void insertTest() {
+        List<Test> list = getList();
+        long start = System.currentTimeMillis();
+        log.info("单条执行开始: {}", start);
+        for (Test test : list) {
+            testMapper.insertTest(test);
+        }
+        log.info("单条执行完成耗时ms: {}", System.currentTimeMillis() - start);
+    }
+
+    List<Test> getList() {
         List<Test> list = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 10000; i++) {
             Test test = new Test();
             test.setUsername("lhm" + i);
             list.add(test);
         }
-        long start = System.currentTimeMillis();
-        log.info("开始执行: {}", start);
-        sqlSessionFactoryUtil.batch(list, testMapper::insert);
-        long use = System.currentTimeMillis() - start;
-
-        start = System.currentTimeMillis();
-        log.info("开始执行: {}", start);
-        for (Test test : list) {
-            testMapper.insert(test);
-        }
-        log.info("单条执行完成耗时ms: {}", System.currentTimeMillis() - start);
-        log.info("批量执行完成耗时ms: {}", use);
+        return list;
     }
 }

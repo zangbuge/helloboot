@@ -13,7 +13,7 @@
 
     </select>
 
-    <insert id="insert" parameterType="com.hugmount.helloboot.test.pojo.Test">
+    <insert id="insertTest" parameterType="com.hugmount.helloboot.test.pojo.Test">
         insert into t_test(username) values ( #{username})
     </insert>
 </mapper>

@@ -59,7 +59,9 @@ public class TestController {
     @PostMapping("/batchTest")
     @ResponseBody
     public String batchTest() {
-        testService.batch();
+        Long batch = testService.batch();
+        testService.insertTest();
+        log.info("批量执行耗时ms: {}", batch);
         return "success";
     }
 
