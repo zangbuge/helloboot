@@ -51,7 +51,7 @@ public class TestServiceImpl implements TestService {
         long start = System.currentTimeMillis();
         log.info("单条执行开始: {}", start);
         for (Test test : list) {
-            testMapper.insertTest(test);
+            testMapper.insert(test);
         }
         log.info("单条执行完成耗时ms: {}", System.currentTimeMillis() - start);
     }

@@ -28,7 +28,7 @@ import java.util.Properties;
  * @Date: 2019/3/13
  */
 @Configuration
-@MapperScan(basePackages = "com.hugmount.helloboot.product.mapper", sqlSessionTemplateRef = "masterSqlSessionTemplate")
+//@MapperScan(basePackages = "com.hugmount.helloboot.product.mapper", sqlSessionTemplateRef = "masterSqlSessionTemplate")
 public class MasterDataSourceConfiguration {
 
     @Value("${spring.datasource.master.driver-class-name}")

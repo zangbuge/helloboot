@@ -24,7 +24,7 @@ import java.util.Properties;
  */
 @Profile("db_oracle")
 @Configuration
-@MapperScan(basePackages = "com.hugmount.helloboot.test.mapper", sqlSessionTemplateRef  = "slaverSqlSessionTemplate")
+//@MapperScan(basePackages = "com.hugmount.helloboot.test.mapper", sqlSessionTemplateRef  = "slaverSqlSessionTemplate")
 public class SlaverDataSourceConfiguration {
 
     @Value("${spring.datasource.slaver.driver-class-name}")

@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.test.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
  * @Date: 2019/3/11
  */
 @Data
+@TableName("t_test")
 public class Test implements Serializable {
 
     private static final long serialVersionUID = 2588923803229666442L;
