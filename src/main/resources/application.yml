@@ -131,3 +131,8 @@ xxl:
       logretentiondays: 30
     admin:
       addresses: http://127.0.0.1:8080/xxl-job-admin
+
+pay:
+  channel:
+    - 'zfb'
+    - 'wx'

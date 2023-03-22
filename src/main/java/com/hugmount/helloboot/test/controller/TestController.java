@@ -3,6 +3,7 @@ package com.hugmount.helloboot.test.controller;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.hugmount.helloboot.core.Result;
+import com.hugmount.helloboot.test.ChannelConfig;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
 import com.hugmount.helloboot.util.POIUtil;
@@ -38,6 +39,9 @@ public class TestController {
 
     @Autowired
     TestService testService;
+
+    @Autowired
+    private ChannelConfig channelConfig;
 
     @PostMapping("/getTestList")
     @ResponseBody
@@ -109,6 +113,8 @@ public class TestController {
     public Result<Date> getCurDate(Date curDate) {
         log.info(DateUtil.format(curDate, "yyyy-MM-dd HH:mm:ss"));
         log.info("测试apollo: {}", testApollo);
+        Set<String> channel = channelConfig.getChannel();
+        log.info("获取配置: {}", JSON.toJSONString(channel));
         return Result.createBySuccess("成功", new Date());
     }
 
