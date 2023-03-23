@@ -1,6 +1,7 @@
 package com.hugmount.helloboot.test.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hugmount.helloboot.test.service.TestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.List;
 public class TestServiceImplTest {
 
     @Autowired
-    private TestServiceImpl testService;
+    private TestService testService;
 
     @Test
     public void getTestList() {
