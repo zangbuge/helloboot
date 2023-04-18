@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -126,6 +127,10 @@ public class POIUtil {
 
 
     public static List<Map<String, Object>> importExcel(InputStream inputStream) {
+        return importExcel(inputStream, 0, false);
+    }
+
+    public static List<Map<String, Object>> importExcel(InputStream inputStream, int startRow, boolean useHeadName) {
         try {
             XSSFWorkbook wb = new XSSFWorkbook(inputStream);
             SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(wb);
@@ -134,10 +139,11 @@ public class POIUtil {
             if (sheetAt == null) {
                 throw new RuntimeException("该文件中没有excel数据");
             }
+            Map<String, Object> headerMap = new HashMap<>();
             List<Map<String, Object>> rowList = new ArrayList<>();
             // 获取的lastRowNum比实际行数少一行,表头
             int lastRowNum = sheetAt.getLastRowNum();
-            for (int i = 0; i <= lastRowNum; i++) {
+            for (int i = startRow; i <= lastRowNum; i++) {
                 XSSFRow row = sheetAt.getRow(i);
                 if (row == null) {
                     continue;
@@ -149,7 +155,17 @@ public class POIUtil {
                 for (short j = 0; j < lastCellNum; j++) {
                     XSSFCell cell = row.getCell(j);
                     String cellValueStr = getCellValueStr(cell);
-                    rowData.put(String.valueOf(j), cellValueStr);
+                    // 使用表头为key
+                    String key;
+                    if (useHeadName) {
+                        key = headerMap.getOrDefault(String.valueOf(j), "").toString();
+                        if (StringUtils.isEmpty(key)) {
+                            key = String.valueOf(j);
+                        }
+                    } else {
+                        key = String.valueOf(j);
+                    }
+                    rowData.put(key, cellValueStr);
                     if (!"".equals(cellValueStr)) {
                         isSkip = false;
                     }
@@ -159,6 +175,9 @@ public class POIUtil {
                     continue;
                 }
                 rowList.add(rowData);
+                if (i == startRow) {
+                    headerMap = rowData;
+                }
             }
             return rowList;
         } catch (Exception e) {
