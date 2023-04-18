@@ -31,7 +31,14 @@ public class POIUtil {
     //日期格式
     private static String formatStr = "yyyy-MM-dd HH:mm:ss";
 
+    private static String defaultSheetName = "Sheet1";
+
     public static SXSSFWorkbook exportExcel(LinkedHashMap<String, String> headMap, List<Map<String, Object>> dataList) {
+        return exportExcel(headMap, dataList, defaultSheetName, 0);
+    }
+
+    public static SXSSFWorkbook exportExcel(LinkedHashMap<String, String> headMap, List<Map<String, Object>> dataList
+            , String sheetName, int startRowNo) {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook();
         // 打开压缩功能 防止占用过多磁盘
@@ -59,13 +66,13 @@ public class POIUtil {
         cellStyle.setDataFormat(dataFormat.getFormat("@"));
 
         // 创建一个sheet
-        SXSSFSheet sheet = workbook.createSheet("Sheet1");
+        SXSSFSheet sheet = workbook.createSheet(sheetName);
         // 锁定表头
         sheet.createFreezePane(0, 1, 0, 1);
         int headSize = headMap.size();
         // 创建表头并设置顺序
         Map<String, String> headOrder = new HashMap<>();
-        SXSSFRow headRow = sheet.createRow(0);
+        SXSSFRow headRow = sheet.createRow(startRowNo);
         headRow.setHeight((short) 360); // 像素
         Iterator<Map.Entry<String, String>> iterator = headMap.entrySet().iterator();
         int ci = 0;
@@ -82,7 +89,7 @@ public class POIUtil {
         int dataSize = dataList.size();
         for (int i = 0; i < dataSize; i++) {
             Map<String, Object> map = dataList.get(i);
-            SXSSFRow dataRow = sheet.createRow(i + 1);
+            SXSSFRow dataRow = sheet.createRow(i + 1 + startRowNo);
             for (int j = 0; j < headSize; j++) {
                 String dataKey = headOrder.get(String.valueOf(j));
                 Object value = map.get(dataKey);
