@@ -533,6 +533,37 @@
                     </dynamicDependencies>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <!-- get git commit version use  ${buildNumber} -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>generate-timestamp</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create-timestamp</goal>
+                        </goals>
+                        <configuration>
+                            <timestampFormat>yyyyMMddHHmmss</timestampFormat>
+                            <timestampPropertyName>buildTime</timestampPropertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-buildNumber</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                        <configuration>
+                            <scmConnectionUrl>scm:git:</scmConnectionUrl>
+                            <shortRevisionLength>8</shortRevisionLength>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
         <resources>
