@@ -77,7 +77,7 @@ public class EsController {
         IndexRequest request = new IndexRequest("lhm");
         //规则 put /caw_index/_doc/1
         //设置文档id，不指定ES会随机产生
-        request.id("3");
+        request.id(userInfo.getId());
         request.timeout(TimeValue.timeValueSeconds(1));
         request.source(JSON.toJSONString(userInfo), XContentType.JSON);
         IndexResponse response = highLevelClient.index(request, RequestOptions.DEFAULT);
@@ -87,7 +87,7 @@ public class EsController {
 
     @PostMapping("/get")
     public Result<Object> sava(@RequestBody UserInfo userInfo) throws IOException {
-        GetRequest request = new GetRequest("lhm", "3");
+        GetRequest request = new GetRequest("lhm", userInfo.getId());
         GetResponse response = highLevelClient.get(request, RequestOptions.DEFAULT);
         return Result.createBySuccess("成功", response);
     }
