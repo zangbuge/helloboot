@@ -6,6 +6,7 @@ import com.hugmount.helloboot.core.Result;
 import com.hugmount.helloboot.test.ChannelConfig;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
+import com.hugmount.helloboot.util.ImageUtil;
 import com.hugmount.helloboot.util.POIUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -140,6 +141,7 @@ public class TestController {
         list.add(linkedHashMap2);
 
         SXSSFWorkbook workbook = POIUtil.exportExcel(linkedHashMap, list);
+        ImageUtil.insertWaterMarkTextToXlsx(workbook, "测试excel水印");
         POIUtil.downloadExcel(workbook, response, "test.xlsx");
     }
 
