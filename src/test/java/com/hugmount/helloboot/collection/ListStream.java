@@ -30,8 +30,11 @@ public class ListStream {
         System.out.println(JSON.toJSONString(list1));
 
         Map<Integer, Student> map = list.stream().collect(Collectors.toMap(Student::getId, v -> v, (v1, v2) -> v1));
+        Map<Integer, String> mapStr = list.stream().collect(Collectors.toMap(Student::getId, v -> v.getName(), (v1, v2) -> v1));
         System.out.println("list转map");
         System.out.println(JSON.toJSONString(map));
+        System.out.println(JSON.toJSONString(mapStr));
+
 
         List<Student> collect1 = map.entrySet().stream().map(item -> item.getValue())
                 .collect(Collectors.toList());
