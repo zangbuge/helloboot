@@ -1,6 +1,7 @@
 package com.hugmount.helloboot;
 
 import com.google.common.base.Strings;
+import com.hugmount.helloboot.util.DesensitizeUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
@@ -27,6 +28,10 @@ public class TestStr {
 
         System.out.println("随机数: " + RandomStringUtils.randomNumeric(6));
 
+        System.out.println(DesensitizeUtil.desensitizeName("李会明"));
+        System.out.println(DesensitizeUtil.desensitizeName("上官承诺"));
+        System.out.println(DesensitizeUtil.desensitizePhone("15897998616"));
+        System.out.println(DesensitizeUtil.desensitizeCredentialNo("420622199402136789"));
     }
 
     /**
