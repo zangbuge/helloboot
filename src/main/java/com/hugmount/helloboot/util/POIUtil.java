@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +32,14 @@ public class POIUtil {
     //日期格式
     private static String formatStr = "yyyy-MM-dd HH:mm:ss";
 
+    private static String defaultSheetName = "Sheet1";
+
     public static SXSSFWorkbook exportExcel(LinkedHashMap<String, String> headMap, List<Map<String, Object>> dataList) {
+        return exportExcel(headMap, dataList, defaultSheetName, 0);
+    }
+
+    public static SXSSFWorkbook exportExcel(LinkedHashMap<String, String> headMap, List<Map<String, Object>> dataList
+            , String sheetName, int startRowNo) {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook();
         // 打开压缩功能 防止占用过多磁盘
@@ -59,13 +67,13 @@ public class POIUtil {
         cellStyle.setDataFormat(dataFormat.getFormat("@"));
 
         // 创建一个sheet
-        SXSSFSheet sheet = workbook.createSheet("Sheet1");
+        SXSSFSheet sheet = workbook.createSheet(sheetName);
         // 锁定表头
         sheet.createFreezePane(0, 1, 0, 1);
         int headSize = headMap.size();
         // 创建表头并设置顺序
         Map<String, String> headOrder = new HashMap<>();
-        SXSSFRow headRow = sheet.createRow(0);
+        SXSSFRow headRow = sheet.createRow(startRowNo);
         headRow.setHeight((short) 360); // 像素
         Iterator<Map.Entry<String, String>> iterator = headMap.entrySet().iterator();
         int ci = 0;
@@ -82,7 +90,7 @@ public class POIUtil {
         int dataSize = dataList.size();
         for (int i = 0; i < dataSize; i++) {
             Map<String, Object> map = dataList.get(i);
-            SXSSFRow dataRow = sheet.createRow(i + 1);
+            SXSSFRow dataRow = sheet.createRow(i + 1 + startRowNo);
             for (int j = 0; j < headSize; j++) {
                 String dataKey = headOrder.get(String.valueOf(j));
                 Object value = map.get(dataKey);
@@ -119,6 +127,10 @@ public class POIUtil {
 
 
     public static List<Map<String, Object>> importExcel(InputStream inputStream) {
+        return importExcel(inputStream, 0, false);
+    }
+
+    public static List<Map<String, Object>> importExcel(InputStream inputStream, int startRow, boolean useHeadName) {
         try {
             XSSFWorkbook wb = new XSSFWorkbook(inputStream);
             SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(wb);
@@ -127,10 +139,11 @@ public class POIUtil {
             if (sheetAt == null) {
                 throw new RuntimeException("该文件中没有excel数据");
             }
+            Map<String, Object> headerMap = new HashMap<>();
             List<Map<String, Object>> rowList = new ArrayList<>();
             // 获取的lastRowNum比实际行数少一行,表头
             int lastRowNum = sheetAt.getLastRowNum();
-            for (int i = 0; i <= lastRowNum; i++) {
+            for (int i = startRow; i <= lastRowNum; i++) {
                 XSSFRow row = sheetAt.getRow(i);
                 if (row == null) {
                     continue;
@@ -142,7 +155,17 @@ public class POIUtil {
                 for (short j = 0; j < lastCellNum; j++) {
                     XSSFCell cell = row.getCell(j);
                     String cellValueStr = getCellValueStr(cell);
-                    rowData.put(String.valueOf(j), cellValueStr);
+                    // 使用表头为key
+                    String key;
+                    if (useHeadName) {
+                        key = headerMap.getOrDefault(String.valueOf(j), "").toString();
+                        if (StringUtils.isEmpty(key)) {
+                            key = String.valueOf(j);
+                        }
+                    } else {
+                        key = String.valueOf(j);
+                    }
+                    rowData.put(key, cellValueStr);
                     if (!"".equals(cellValueStr)) {
                         isSkip = false;
                     }
@@ -152,6 +175,9 @@ public class POIUtil {
                     continue;
                 }
                 rowList.add(rowData);
+                if (i == startRow) {
+                    headerMap = rowData;
+                }
             }
             return rowList;
         } catch (Exception e) {

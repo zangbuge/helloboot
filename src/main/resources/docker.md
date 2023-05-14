@@ -57,6 +57,15 @@ docker rmi $(docker images -f "dangling=true" -q)
 检查一下是否还有<none>的镜像
 docker images | grep '<none>'
 
+docker创建虚拟网卡 默认是bridge方式, 会有一个docker0的虚拟网卡
+在日常的生产环境中，docker0已经很少被使用了，因为它不支持使用容器服务名称进行通信，推荐使用自定义网络
+自定义网络
+我们可以通过命令 docker network create --driver bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 mynet 创建自定义网络mynet
+--driver bridge指定使用网络的类型，可以选择none，host，bridge任何一种；
+--subnet 192.168.0.0/16指定子网的范围；
+--gateway 192.168.0.1指定网关的地址；
+
+docker network ls 查看
 
 docker架构3个部分
 client      客户端执行命令

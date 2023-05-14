@@ -1,8 +1,13 @@
+# 设置 git commit version
+buildNumber: @buildTime@_@buildNumber@
 jasypt:
   encryptor:
     password: 123456
 
+# server.tomcat.basedir 设置springboot上传文件临时文件夹
 server:
+  tomcat:
+    basedir: /app/temp
   port: 8086
   servlet:
     context-path: /helloboot
