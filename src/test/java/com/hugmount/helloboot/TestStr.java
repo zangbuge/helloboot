@@ -1,8 +1,11 @@
 package com.hugmount.helloboot;
 
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.IdUtil;
 import com.google.common.base.Strings;
 import com.hugmount.helloboot.util.DesensitizeUtil;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Test;
 
 /**
  * @author Li Huiming
@@ -53,4 +56,14 @@ public class TestStr {
         return substring + Strings.repeat("*", length - show);
     }
 
+    @Test
+    public void testId(){
+/*        return timestamp - this.twepoch << 22   //时间戳部分，占41位 左移22位
+                | this.dataCenterId << 17       //数据中心部分占5位，左移17位
+                | this.workerId << 12          //机器标识部分占5位，左移10位
+                | this.sequence;               //序列号部分占12位*/
+        Snowflake snowflake = IdUtil.getSnowflake(2, 1);
+        String id = snowflake.nextIdStr();
+        System.out.println("雪花id: " + id + " 长度: " + id.length());
+    }
 }
