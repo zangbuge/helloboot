@@ -35,13 +35,15 @@ public class POIUtil {
     private static String defaultSheetName = "Sheet1";
 
     public static SXSSFWorkbook exportExcel(LinkedHashMap<String, String> headMap, List<Map<String, Object>> dataList) {
-        return exportExcel(headMap, dataList, defaultSheetName, 0);
+        return exportExcel(null, headMap, dataList, defaultSheetName, 0);
     }
 
-    public static SXSSFWorkbook exportExcel(LinkedHashMap<String, String> headMap, List<Map<String, Object>> dataList
+    public static SXSSFWorkbook exportExcel(SXSSFWorkbook workbook, LinkedHashMap<String, String> headMap, List<Map<String, Object>> dataList
             , String sheetName, int startRowNo) {
         // 声明一个工作薄
-        SXSSFWorkbook workbook = new SXSSFWorkbook();
+        if (workbook == null) {
+            workbook = new SXSSFWorkbook();
+        }
         // 打开压缩功能 防止占用过多磁盘
         workbook.setCompressTempFiles(true);
 
@@ -118,7 +120,7 @@ public class POIUtil {
             ServletOutputStream outputStream = response.getOutputStream();
             workbook.write(outputStream);
             workbook.close();
-            // 释放workbook所占用的所有windows资源
+            // 释放workbook所占资源
             workbook.dispose();
         } catch (IOException e) {
             throw new RuntimeException("download excel exception", e);
@@ -156,13 +158,12 @@ public class POIUtil {
                     XSSFCell cell = row.getCell(j);
                     String cellValueStr = getCellValueStr(cell);
                     // 使用表头为key
-                    String key;
+                    String key = null;
                     if (useHeadName) {
                         key = headerMap.getOrDefault(String.valueOf(j), "").toString();
-                        if (StringUtils.isEmpty(key)) {
-                            key = String.valueOf(j);
-                        }
-                    } else {
+                    }
+                    // 使用数字为key，或表头为key的第一行数据
+                    if (StringUtils.isEmpty(key)) {
                         key = String.valueOf(j);
                     }
                     rowData.put(key, cellValueStr);

@@ -141,6 +141,7 @@ public class TestController {
         list.add(linkedHashMap2);
 
         SXSSFWorkbook workbook = POIUtil.exportExcel(linkedHashMap, list);
+        POIUtil.exportExcel(workbook, linkedHashMap, list, "sheet2", 0);
         ImageUtil.insertWaterMarkTextToXlsx(workbook, "测试excel水印");
         POIUtil.downloadExcel(workbook, response, "test.xlsx");
     }
