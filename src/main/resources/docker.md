@@ -173,6 +173,29 @@ use databases; 进入数据库
 show tables; 查看当前所在数据库下面的所有表
 select * from test; #必须加分号;
 
+mysql严格模式
+MySQL自身对数据进行严格的校验(格式、长度、类型等)，比如一个整型字段我们写入一个字符串类型的数据，
+在非严格模式下MySQL不会报错, 定义的类型长度超出了也不会报错, 严格模式则会
+
+STRICT_TRANS_TABLES : 严格模式
+NO_ENGINE_SUBSTITUTION : 无引擎提交,create table 时指定的 engine 项不被支持, 这个时候 MySQL 会报错
+PAD_CHAR_TO_FULL_LENGTH : 填补字符到全长度
+
+5.6版本默认没有开启严格模式
+5.7版本及以上或者开启了严格模式, 一旦超出范围立刻报错(Data too long for column ‘name’ at row 1)
+查看当前模式
+select @@sql_mode;
+show variables like "%mode";  # 或者, 匹配含有 mode 字符的变量
+临时设置
+set session sql_mode='[模式]'; : 只对当前连接有效(可以省略 session)
+set global sql_mode='[模式]'; : 对全局有效(所有连接)
+set sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';  # 开启严格模式+无引擎提交
+
+永久设置
+Linux 配置文件 my.cnf
+sql-mode="STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION"  # 将其配置在 [mysqld] 下面
+
+
 #### 打包springboot应用
 Dockerfile文件如下
 
