@@ -195,6 +195,24 @@ set sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';  # 开启严格模式
 Linux 配置文件 my.cnf
 sql-mode="STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION"  # 将其配置在 [mysqld] 下面
 
+查看版本
+select version();
+select uuid();
+字符集
+show VARIABLES LIKE 'character%';
+
+临时设置
+show variables like'%time_zone';
+set global time_zone = '+8:00';
+
+刷新mysql
+FLUSH PRIVILEGES;
+
+永久配置
+修改配置文件my.ini
+default-time_zone = '+8:00'
+default-character-set=utf8mb4
+
 
 #### 打包springboot应用
 Dockerfile文件如下
