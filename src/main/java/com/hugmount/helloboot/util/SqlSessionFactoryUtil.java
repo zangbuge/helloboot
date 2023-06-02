@@ -10,6 +10,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
+ * ExecutorType.BATCH 优于 foreach组装sql
+ * foreach 最佳性能一个批次在10-100条之间, 且表字段>20性能极差
+ *
  * @author: lhm
  * @date: 2023/3/15
  */
@@ -25,6 +28,14 @@ public class SqlSessionFactoryUtil {
         batch(sqlSessionFactory, list, action);
     }
 
+    /**
+     * 批量耗时仅为单条插入耗时的1/3
+     *
+     * @param sqlSessionFactory
+     * @param list
+     * @param action
+     * @param <T>
+     */
     public <T> void batch(SqlSessionFactory sqlSessionFactory, List<T> list, LambdaFun<T, Integer> action) {
         SqlSession sqlSession = null;
         try {
@@ -39,6 +50,7 @@ public class SqlSessionFactoryUtil {
                 Method method = aClass.getDeclaredMethod(implMethodName, item.getClass());
                 method.invoke(mapper, item);
             }
+            // 非事务环境下强制commit, 事务情况下该commit相当于无效
             sqlSession.commit();
             sqlSession.clearCache();
         } catch (Exception e) {
