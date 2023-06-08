@@ -1,5 +1,5 @@
 # 设置 git commit version
-buildNumber: @buildTime@_@buildNumber@
+buildNumber: v_@buildTime@_@buildNumber@
 jasypt:
   encryptor:
     password: 123456
@@ -27,6 +27,10 @@ spring:
       url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
       username: xxx
       password: xxx
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
 
   thymeleaf:
     prefix: classpath:/templates/
