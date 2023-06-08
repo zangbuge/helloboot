@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import com.google.common.base.Strings;
 import com.hugmount.helloboot.util.DesensitizeUtil;
+import com.hugmount.helloboot.util.StrUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -37,6 +38,13 @@ public class TestStr {
         System.out.println(DesensitizeUtil.desensitizeCredentialNo("420622199402136789"));
     }
 
+    @Test
+    public void testGetUrlParam() {
+        String url = "www.baidu.com/test?name=lhm&phone=123";
+        System.out.println(StrUtil.getUrlParam(url, "phone"));
+    }
+
+
     /**
      * 脱敏
      *
@@ -57,7 +65,7 @@ public class TestStr {
     }
 
     @Test
-    public void testId(){
+    public void testId() {
 /*        return timestamp - this.twepoch << 22   //时间戳部分，占41位 左移22位
                 | this.dataCenterId << 17       //数据中心部分占5位，左移17位
                 | this.workerId << 12          //机器标识部分占5位，左移10位
