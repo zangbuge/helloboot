@@ -35,6 +35,10 @@ public class RedismqController {
         log.info("mq消费已启动");
         CompletableFuture.runAsync(() -> {
             for (; ; ) {
+                // opsForList().range(key, 0, -1) 可以查询索引第一个到索引倒数第一个（即所有数据）
+                // opsForList().range(key, -1000, -1) 获取到倒数第一个至倒数第1000个(即一次批量获取1000)
+                // opsForList().trim(key, 0, -1000) 截取集合元素长度，保留长度内的数据
+                // range(), trim() 结合实现批量消费
                 Object obj = redisTemplate.opsForList().rightPop(key);
                 consumer(obj);
             }
