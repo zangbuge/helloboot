@@ -82,8 +82,10 @@ public class HttpClientUtil {
                 httpPost.setConfig(createConfig(timeoutSeconds));
             }
             // 创建请求内容
-            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON, UTF_8, false);
+            // new StringEntity(json, ContentType.APPLICATION_JSON, UTF_8, false); // 该方式可能会有不兼容的问题
+            StringEntity entity = new StringEntity(json, Charset.forName(UTF_8));
             httpPost.setEntity(entity);
+            httpPost.addHeader("Content-Type", "application/json");
             return doPost(httpPost, header);
         } catch (Exception e) {
             throw new RuntimeException("httpClient请求异常", e);
