@@ -23,7 +23,6 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.SSLContext;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +38,6 @@ import java.util.stream.Collectors;
 public class HttpClient4Util {
 
     private static CloseableHttpClient httpClient;
-
-    private static final String UTF_8 = "UTF-8";
 
     static {
         httpClient = getClient();
@@ -113,7 +110,7 @@ public class HttpClient4Util {
             }
         });
         CloseableHttpResponse response = httpClient.execute(httpPost);
-        return EntityUtils.toString(response.getEntity(), Charset.forName(UTF_8));
+        return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
     }
 
     public static String doGet(String url, Map<String, Object> header, Integer timeoutSeconds) {
@@ -126,7 +123,7 @@ public class HttpClient4Util {
         });
         try {
             CloseableHttpResponse response = httpClient.execute(httpGet);
-            String res = EntityUtils.toString(response.getEntity(), Charset.forName(UTF_8));
+            String res = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             return res;
         } catch (Exception e) {
             throw new RuntimeException("httpClient发送get请求异常", e);

@@ -32,7 +32,6 @@ import org.apache.hc.core5.util.Timeout;
 import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +46,6 @@ import java.util.stream.Collectors;
 public class HttpClientUtil {
 
     private static CloseableHttpClient httpClient;
-
-    private static final String UTF_8 = "UTF-8";
 
     static {
         httpClient = getClient();
@@ -83,7 +80,7 @@ public class HttpClientUtil {
             }
             // 创建请求内容
             // new StringEntity(json, ContentType.APPLICATION_JSON, UTF_8, false); // 该方式可能会有不兼容的问题
-            StringEntity entity = new StringEntity(json, Charset.forName(UTF_8));
+            StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
             httpPost.setEntity(entity);
             httpPost.addHeader("Content-Type", "application/json");
             return doPost(httpPost, header);
@@ -104,10 +101,9 @@ public class HttpClientUtil {
      */
     public static String doPostForm(String url, Map<String, Object> formData, Map<String, Object> header, File file, String name) {
         try {
-            Charset uft8 = Charset.forName(UTF_8);
             // 相当于<input type="file" name="file"/>
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.setCharset(uft8);
+            builder.setCharset(StandardCharsets.UTF_8);
             // 以浏览器兼容模式运行，防止文件名乱码。必须
             builder.setMode(HttpMultipartMode.EXTENDED);
             if (file != null) {
@@ -117,7 +113,7 @@ public class HttpClientUtil {
                 String key = entry.getKey();
                 String obj = entry.getValue().toString();
                 // 相当于<input type="text" name="userName" value=userName>
-                StringBody value = new StringBody(obj, ContentType.create("text/plain", uft8));
+                StringBody value = new StringBody(obj, ContentType.create("text/plain", StandardCharsets.UTF_8));
                 builder.addPart(key, value);
             }
             HttpEntity entity = builder.build();
@@ -164,7 +160,7 @@ public class HttpClientUtil {
         // 执行http请求
         CloseableHttpResponse response = httpClient.execute(httpPost);
         // 获取响应对象 EntityUtils.toString()会关闭流且释放连接
-        String result = EntityUtils.toString(response.getEntity(), Charset.forName(UTF_8));
+        String result = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
         return result;
     }
 
@@ -180,7 +176,7 @@ public class HttpClientUtil {
         }
         try {
             CloseableHttpResponse response = httpClient.execute(httpGet);
-            String res = EntityUtils.toString(response.getEntity(), Charset.forName(UTF_8));
+            String res = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             return res;
         } catch (Exception e) {
             throw new RuntimeException("httpClient发送get请求异常", e);
