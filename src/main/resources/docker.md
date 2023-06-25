@@ -418,6 +418,7 @@ hset lhm age 20
 hget lhm age
 查看map数量: hlen myhash
 查看map所有值: hgetall lhm
+查看list数量: llen test_list
 
 set操作
 sadd hello lhm
@@ -763,7 +764,7 @@ vi /etc/ansible/hosts
 ansible testname -m shell -a "curl http://127.0.0.1:8080/"
 
 查日志
-ansible testname -m shell -a "grep 注册thrift处理器 /app/logs/prod/helloboot/helloboot.log"
+ansible kfpt4 -m shell -a "grep 仅生产生产环境开启同步 /opt/localcode_apply/logs/project_back_ssm_localcode_apply.log"
 
 
 
