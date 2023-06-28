@@ -23,6 +23,15 @@ public class TestImg {
         System.out.println(s);
         testImg.base64ToFile(s, "d:/test123.jpg");
         System.out.println("base64转图片成功");
+
+        File file = new File("d:/hello");
+        boolean exists = file.exists();
+        System.out.println("文件是否存在" + exists);
+        if (!exists) {
+            /// file.mkdir(); 只能创建一级文件夹
+            file.mkdirs();
+        }
+
     }
 
     public String img2Base64(InputStream inputStream) {
