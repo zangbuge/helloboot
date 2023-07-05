@@ -29,7 +29,6 @@ import java.util.*;
  */
 public class POIUtil {
 
-    //日期格式
     private static String formatStr = "yyyy-MM-dd HH:mm:ss";
 
     private static String defaultSheetName = "Sheet1";
@@ -216,7 +215,7 @@ public class POIUtil {
                     }
                     // 包含小数的double
                     else {
-                        DecimalFormat df = new DecimalFormat("0.00");
+                        DecimalFormat df = new DecimalFormat("0.0000000");
                         // 设置diuble类型不转为"科学计数法"
                         cellStr = df.format(cell.getNumericCellValue());
                     }
