@@ -766,5 +766,7 @@ ansible testname -m shell -a "curl http://127.0.0.1:8080/"
 查日志
 ansible kfpt4 -m shell -a "grep 仅生产生产环境开启同步 /opt/localcode_apply/logs/project_back_ssm_localcode_apply.log"
 
+统计文本中关键字数量
+grep '关键字' project_back_ssm_verification.log | wc -l
 
 
