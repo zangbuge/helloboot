@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /** 监听注册thrift服务并启动
+ *  条件注入: @ConditionalOnExpression("'${thrift.open}'.equals('true')")
  * @Author: Li Huiming
  * @Date: 2020/8/15
  */
