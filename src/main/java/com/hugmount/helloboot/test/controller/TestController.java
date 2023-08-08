@@ -2,6 +2,7 @@ package com.hugmount.helloboot.test.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
+import com.hugmount.helloboot.annotation.RateLimit;
 import com.hugmount.helloboot.core.Result;
 import com.hugmount.helloboot.test.ChannelConfig;
 import com.hugmount.helloboot.test.pojo.Test;
@@ -111,6 +112,7 @@ public class TestController {
     @ApiOperation("获取当前时间")
     @RequestMapping("/getCurDate")
     @ResponseBody
+    @RateLimit(limitKey = "getCurDate", limitCount = 2)
     public Result<Date> getCurDate(Date curDate) {
         log.info(DateUtil.format(curDate, "yyyy-MM-dd HH:mm:ss"));
         log.info("测试apollo: {}", testApollo);
