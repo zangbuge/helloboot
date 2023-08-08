@@ -6,6 +6,7 @@ import org.redisson.api.*;
 import org.redisson.client.codec.IntegerCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -114,6 +115,18 @@ public class RedisController {
     public Result<String> offerAsync() {
         log.info("redis延迟队列");
         rDelayedQueue.offerAsync("hello redis delayed queue", 5, TimeUnit.SECONDS);
+        return Result.createBySuccess("success");
+    }
+
+    @ResponseBody
+    @GetMapping("/rateLimiter")
+    public Result<String> rateLimiter() {
+        log.info("redisson限流");
+        RRateLimiter rateLimiter = redissonClient.getRateLimiter("myRateLimiter");
+        // 最大流速 = 每1秒钟产生3个令牌, 对同一个redis服务端，只需要设置一次。如果redis重启需要重新设置
+        rateLimiter.trySetRate(RateType.OVERALL, 3, 1, RateIntervalUnit.SECONDS);
+        boolean b = rateLimiter.tryAcquire();
+        Assert.isTrue(b, "redis限流");
         return Result.createBySuccess("success");
     }
 
