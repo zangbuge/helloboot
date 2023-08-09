@@ -1,13 +1,16 @@
 package com.hugmount.helloboot.util;
 
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -27,6 +30,9 @@ public class TransactionManagerUtil {
     public interface Task {
         void handle();
     }
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Autowired
     private PlatformTransactionManager transactionManager;
@@ -92,4 +98,11 @@ public class TransactionManagerUtil {
         }
         return submit.get();
     }
+
+    @PostConstruct
+    public void init() {
+        String[] beanNamesForType = applicationContext.getBeanNamesForType(PlatformTransactionManager.class);
+        log.info("系统当前所有的事务管理器: {}", JSONUtil.toJsonStr(beanNamesForType));
+    }
+
 }
