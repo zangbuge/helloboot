@@ -54,7 +54,15 @@ public class TransactionManagerUtil {
                     subTask.countDown();
                     return;
                 }
-                // 开启事务
+                // 开启编程式事务
+                // transactionManager.getTransaction()
+                // AbstractPlatformTransactionManager.getTransaction >> this.doGetTransaction();
+                // DataSourceTransactionManager.doGetTransaction >> TransactionSynchronizationManager.getResource(this.obtainDataSource()); 会获取数据库连接
+                // ThreadLocal 中获取连接 Object value = map.get(actualKey);
+                // DataSourceTransactionManager.doBegin 初始化绑定关系
+                // 然后调用TransactionSynchronizationManager.bindResource方法
+                // 其中绑定线程和Connection关系放入ThreadLocal<Map<Object, Object>> resources
+                // 代码 Object oldValue = ((Map)map).put(actualKey, value);
                 DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
                 defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
                 TransactionStatus transactionStatus = transactionManager.getTransaction(defaultTransactionDefinition);
