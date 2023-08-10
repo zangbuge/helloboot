@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.test.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.hugmount.helloboot.test.mapper.TestMapper;
 import com.hugmount.helloboot.test.pojo.Test;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Slf4j
 @Service("testService")
-public class TestServiceImpl implements TestService {
+public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements TestService {
 
     @Autowired
     private SqlSessionFactoryUtil sqlSessionFactoryUtil;
@@ -55,6 +56,17 @@ public class TestServiceImpl implements TestService {
         }
         log.info("单条执行完成耗时ms: {}", System.currentTimeMillis() - start);
     }
+
+    @Transactional
+    public long mybatisPlusBatch() {
+        long start = System.currentTimeMillis();
+        log.info("mybatisPlusBatch: {}", start);
+        this.saveBatch(getList());
+        long use = System.currentTimeMillis() - start;
+        log.info("mybatisPlusBatch完成耗时ms: {}", use);
+        return use;
+    }
+
 
     List<Test> getList() {
         List<Test> list = new ArrayList<>();

@@ -66,8 +66,10 @@ public class TestController {
     @ResponseBody
     public String batchTest() {
         Long batch = testService.batch();
+        long plusBatch = testService.mybatisPlusBatch();
         testService.insertTest();
         log.info("批量执行耗时ms: {}", batch);
+        log.info("plusBatch耗时ms: {}", plusBatch);
         return "success";
     }
 
