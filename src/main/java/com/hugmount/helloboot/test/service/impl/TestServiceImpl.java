@@ -1,11 +1,14 @@
 package com.hugmount.helloboot.test.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.hugmount.helloboot.test.mapper.TestMapper;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
 import com.hugmount.helloboot.util.SqlSessionFactoryUtil;
+import com.hugmount.helloboot.util.ThreadUtil;
+import com.hugmount.helloboot.util.TransactionManagerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Li Huiming
@@ -28,6 +33,9 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements Te
 
     @Autowired
     private TestMapper testMapper;
+
+    @Autowired
+    private TransactionManagerUtil transactionManagerUtil;
 
     @Override
     public List<Test> getTestList(Test test) {
@@ -67,6 +75,27 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements Te
         return use;
     }
 
+    /**
+     * 多线程批量执行,1万条数据耗时1.2秒
+     *
+     * @return
+     */
+    @Transactional
+    public Long batchAndThread() {
+        List<Test> list = getList();
+        long start = System.currentTimeMillis();
+        List<TransactionManagerUtil.Task> tasks = new CopyOnWriteArrayList<>();
+        List<List<Test>> split = CollUtil.split(list, 2000);
+        split.forEach(it -> {
+            tasks.add(() -> {
+                sqlSessionFactoryUtil.batch(it, testMapper::insertTest);
+            });
+        });
+        transactionManagerUtil.execute(tasks, ThreadUtil.getExecutorService(), 8, TimeUnit.SECONDS);
+        long use = System.currentTimeMillis() - start;
+        log.info("batchAndThread完成耗时ms: {}", use);
+        return use;
+    }
 
     List<Test> getList() {
         List<Test> list = new ArrayList<>();
