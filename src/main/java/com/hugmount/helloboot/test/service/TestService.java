@@ -18,4 +18,5 @@ public interface TestService extends IService<Test> {
 
     long mybatisPlusBatch();
 
+    Long batchAndThread();
 }

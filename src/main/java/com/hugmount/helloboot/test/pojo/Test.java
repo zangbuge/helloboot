@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.test.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -48,11 +49,14 @@ public class Test implements Serializable {
     @Min(value = 6, message = "最小长度6位")
     private String password;
 
+    @TableField(exist = false)
     @FixedValueValidator(values = {"zfb"}, groups = {QueryGroup.class})
     private String channel;
 
+    @TableField(exist = false)
     private String phone;
 
+    @TableField(exist = false)
     private String tel;
 
     @AssertTrue(message = "手机号和电话不能同时为空")
