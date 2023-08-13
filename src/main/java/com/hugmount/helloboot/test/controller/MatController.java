@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 环境: 设置jvm运行参数, 模拟内存溢出情况：-Xms128m -Xmx256m -XX:MaxPermSize=256m
@@ -31,6 +32,28 @@ public class MatController {
             i++;
         } while (i < 999999999);
         log.info("成功");
+        return Result.createBySuccess("成功");
+    }
+
+    /**
+     * jdk1.5支持,获取所有线程StackTraceElement对象
+     *
+     * @return
+     */
+    @GetMapping("getAllStack")
+    public Result<String> getAllStack() {
+        Set<Map.Entry<Thread, StackTraceElement[]>> entries = Thread.getAllStackTraces().entrySet();
+        for (Map.Entry<Thread, StackTraceElement[]> stackTrace : entries) {
+            Thread thread = stackTrace.getKey();
+            StackTraceElement[] value = stackTrace.getValue();
+            if (thread.equals(Thread.currentThread())) {
+                continue;
+            }
+            log.info("线程: {}", thread.getName());
+            for (StackTraceElement element : value) {
+                log.info(element.toString());
+            }
+        }
         return Result.createBySuccess("成功");
     }
 
