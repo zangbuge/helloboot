@@ -7,10 +7,12 @@
  -XX:+HeapDumpOnOutOfMemoryError    #开启堆快照
  -XX:HeapDumpPath=D:\dump           #保存文件到哪个目录
 ```
-3. jmap命令获取实时jvm情况命令
+3. jmap命令获取实时jvm堆快照,内存映像工具
 ```$xslt
-jmap -dump:format=b,file=D:/dump/oom.hprof pid
+jmap -dump:format=b,file=./dumptest.hprof pid
+# 成功返回: Heap dump file created
 ```
+
 4. OOM一般有以下两种情况
 4.1 年老代堆空间被占满
 说明：这是最典型的内存泄漏方式，简单说就是所有堆空间都被无法回收的垃圾对象占满，
@@ -32,7 +34,7 @@ jps -l 输出主类全名或jar路径
 jps -m 输出JVM启动时传递给main()的参数
 jps -v 输出JVM启动时显示指定的JVM参数
 
-2. jinfo [option] pid  实时查看虚拟机运行参数 
+2. jinfo [option] pid  查看java应用配置参数 
 -flag     输出指定args参数的值
 -flags    不需要args参数，输出所有JVM参数的值
 -sysprops 输出系统属性，等同于System.getProperties()
@@ -73,6 +75,8 @@ jps -v 输出JVM启动时显示指定的JVM参数
 4. jstack 用于生成java虚拟机当前时刻的线程快照
 生成线程快照的主要目的是定位线程出现长时间停顿的原因，
 如线程间死锁,死循环,CPU使用过高,请求外部资源导致的长时间等待等问题
+jstack -l pid  #除堆栈外,显示关于锁的附加信息, 可查看到线程状态 waiting,runnable等
+jstack -F pid  #强制输出线程堆栈 (进程挂起而没有任何响应，那么可以使用 -F 参数)
 
 查看进程下哪些线程占用了高的cpu 
 top
@@ -82,6 +86,8 @@ top -Hp pid
 printf "%x" 1700
 导出线程快照, 用十六进制在jstack_info.txt中查找 nid=十六进制
 jstack pid > jstack_info.txt 
+
+5. bin/jconsole.exe jdk自带监视与管理控制台,可监控远程进程
 
 查看磁盘使用情况
 df -h
