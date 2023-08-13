@@ -3,6 +3,7 @@ package com.hugmount.helloboot;
 import cn.hutool.json.JSONUtil;
 import com.hugmount.helloboot.test.mapper.TestMapper;
 import com.hugmount.helloboot.test.service.impl.TestServiceImpl;
+import lombok.Setter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +39,15 @@ public class HellobootApplicationTests {
     private TestMapper testMapper;
 
     /**
-     * 目标测试类锚点
+     * 目标测试类锚点, 接口注入以下报错, 使用setter注入
+     * org.springframework.beans.factory.UnsatisfiedDependencyException:
+     * Error creating bean with name 'com.hugmount.helloboot.HellobootApplicationTests':
+     * Unsatisfied dependency expressed through field 'testService';
+     * nested exception is org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named 'testService'
+     * is expected to be of type 'com.hugmount.helloboot.test.service.impl.TestServiceImpl' but was actually of type '
+     * com.sun.proxy.$Proxy169'
      */
-    @Autowired
+    @Setter
     @InjectMocks
     private TestServiceImpl testService;
 
