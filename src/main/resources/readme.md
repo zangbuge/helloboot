@@ -31,3 +31,10 @@ mvn dependency:tree -Dincludes=org.apache.httpcomponents
 
 方式二
 安装 Maven Helper 插件,点击pom.xml,左下边显示多了个“Dependency Analyzer”Tab选项, 选择 "all as list" 搜索
+
+
+优秀github项目
+国产 Star 破 10w+ 的开源项目，前端包括管理后台 + 微信小程序，后端支持单体和微服务架构。
+功能涵盖 RBAC 权限、SaaS 多租户、数据权限、商城、支付、工作流、大屏报表、微信公众号等等功能：
+github地址: https://github.com/YunaiV/ruoyi-vue-pro
+视频教程：https://doc.iocoder.cn
