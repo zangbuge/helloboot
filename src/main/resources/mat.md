@@ -88,6 +88,13 @@ printf "%x" 1700
 jstack pid > jstack_info.txt 
 
 5. bin/jconsole.exe jdk自带监视与管理控制台,可监控远程进程
+配置启动参数后支持
+-Djava.rmi.server.hostname=127.0.0.1
+-Dcom.sun.management.jmxremote
+-Dcom.sun.management.jmxremote.port=3214
+-Dcom.sun.management.jmxremote.ssl=false
+-Dcom.sun.management.jmxremote.authenticate=false
+
 
 查看磁盘使用情况
 df -h
