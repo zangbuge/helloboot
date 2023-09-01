@@ -23,6 +23,7 @@ public class ExceptionConfig {
     @ResponseBody
     @ExceptionHandler
     public Result<Object> exceptionHandler(Exception e) {
+        log.error("系统异常", e);
         // 处理@Valid校验
         if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException notValidException = (MethodArgumentNotValidException) e;
@@ -34,7 +35,6 @@ public class ExceptionConfig {
         if (e instanceof IllegalArgumentException) {
             return Result.createByError(e.getMessage());
         }
-        log.error("系统异常", e);
         // 参数类型错误
         if (e instanceof MethodArgumentTypeMismatchException) {
             return Result.createByError("请求参数类型错误,请检查入参");

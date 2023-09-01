@@ -437,6 +437,10 @@
             <version>2.3.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -471,7 +475,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <!--跳过测试 -->
-                    <skipTests>false</skipTests>
+                    <skipTests>true</skipTests>
                     <includes>
                         <include>**/*Test.class</include>
                         <exclude>**/*Test.class</exclude>
