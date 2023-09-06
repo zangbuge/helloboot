@@ -38,3 +38,8 @@ mvn dependency:tree -Dincludes=org.apache.httpcomponents
 功能涵盖 RBAC 权限、SaaS 多租户、数据权限、商城、支付、工作流、大屏报表、微信公众号等等功能：
 github地址: https://github.com/YunaiV/ruoyi-vue-pro
 视频教程：https://doc.iocoder.cn
+
+#### 三. 报错解决: java.net.SocketException: Permission denied: connect
+原因: 高并发访问时有部分链接会选择ipv6的请求方式进行,应用程序不完全支持ipv6,指定jvm参数使用ipv4即可
+-Djava.net.preferIPv4Stack=true
+
