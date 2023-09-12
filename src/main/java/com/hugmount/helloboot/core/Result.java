@@ -42,7 +42,7 @@ public class Result<T> implements Serializable {
     @ApiModelProperty(value = "数据")
     private T data;
 
-    public boolean isSuccess() {
+    public boolean succeed() {
         return SUCCESS.equals(code);
     }
 

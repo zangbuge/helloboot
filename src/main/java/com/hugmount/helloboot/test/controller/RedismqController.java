@@ -49,7 +49,7 @@ public class RedismqController {
         try {
             log.info("消费信息: {}", obj);
             if (ObjectUtils.isEmpty(obj)) {
-                Thread.sleep(1000 * 5);
+                Thread.sleep(1000 * 60);
             }
         } catch (Exception e) {
             log.error("mq消费异常", e);
