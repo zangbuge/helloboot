@@ -36,8 +36,9 @@
             <appender-ref ref="Console"/>
             <appender-ref ref="RollingFile"/>
         </root>
-        <!--这里配置 过滤日志 -->
+        <!-- 配置打印sql,或yml配置 mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl -->
         <logger name="com.hugmount.helloboot" level="DEBUG"></logger>
+        <!--这里配置 过滤日志 -->
         <logger name="org.springframework.web" level="ERROR"/>
     </loggers>
 </configuration>
