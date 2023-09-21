@@ -769,4 +769,7 @@ ansible kfpt4 -m shell -a "grep 仅生产生产环境开启同步 /opt/localcode
 统计文本中关键字数量
 grep '关键字' project_back_ssm_verification.log | wc -l
 
+### chrom忽略https证书校验
+chrom属性>目标中添加参数
+D:\work\tool\Chrome_v87\Chrome\Application\chrome.exe --test-type --ignore-certificate-errors
 
