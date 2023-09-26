@@ -1,9 +1,13 @@
 package com.hugmount.helloboot.test.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
+import com.hugmount.helloboot.test.mapper.TTestMapper;
 import com.hugmount.helloboot.test.mapper.TestMapper;
+import com.hugmount.helloboot.test.pojo.TTest;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
 import com.hugmount.helloboot.util.SqlSessionFactoryUtil;
@@ -37,11 +41,22 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements Te
     @Autowired
     private TransactionManagerUtil transactionManagerUtil;
 
+    @Autowired
+    private TTestMapper tTestMapper;
+
     @Override
     public List<Test> getTestList(Test test) {
         PageHelper.startPage(1, 3);
         return testMapper.getTestList(test);
     }
+
+    @Override
+    public List<TTest> getTTestList(TTest tTest) {
+        List<TTest> tests = tTestMapper.selectList(Wrappers.<TTest>lambdaQuery().eq(TTest::getId, tTest.getId()));
+        log.info("getTTestList数据: {}", JSONUtil.toJsonStr(tests));
+        return tests;
+    }
+
 
     @Transactional
     public Long batch() {

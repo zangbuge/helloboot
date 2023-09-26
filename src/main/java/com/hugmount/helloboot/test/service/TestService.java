@@ -1,6 +1,7 @@
 package com.hugmount.helloboot.test.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hugmount.helloboot.test.pojo.TTest;
 import com.hugmount.helloboot.test.pojo.Test;
 
 import java.util.List;
@@ -19,4 +20,7 @@ public interface TestService extends IService<Test> {
     long mybatisPlusBatch();
 
     Long batchAndThread();
+
+    List<TTest> getTTestList(TTest tTest);
+
 }
