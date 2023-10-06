@@ -5,10 +5,7 @@ import com.hugmount.helloboot.test.pojo.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +21,12 @@ public class ListStream {
         list.add(new Student(3, "测试", "女", 18));
         list.add(new Student(4, "运维", "男", 36));
         list.add(new Student(5, "运营", "男", 40));
+
+        List<Student> sorted = list.stream().sorted(Comparator.comparing(Student::getAge)).collect(Collectors.toList());
+        System.out.println("自定义升序排序 " + JSON.toJSONString(sorted));
+
+        List<Student> reversed = list.stream().sorted(Comparator.comparing(Student::getAge).reversed()).collect(Collectors.toList());
+        System.out.println("自定义倒序排序 " + JSON.toJSONString(reversed));
 
         List<Student> list1 = list.stream().filter(s -> s.sex.equals("男")).collect(Collectors.toList());
         System.out.println("过滤性别男");
