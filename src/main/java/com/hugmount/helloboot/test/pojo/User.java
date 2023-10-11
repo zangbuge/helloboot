@@ -13,8 +13,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "xml")
 public class User {
 
-    private  String username;
+    private String username;
 
     private String password;
+
+    private String remark;
 
 }
