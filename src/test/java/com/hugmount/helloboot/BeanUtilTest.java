@@ -2,6 +2,7 @@ package com.hugmount.helloboot;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.json.JSONUtil;
 import com.hugmount.helloboot.test.pojo.User;
 
 /**
@@ -19,6 +20,6 @@ public class BeanUtilTest {
         // 复制对象属性, 不覆盖原有的值, 设置忽略user1的空值
         BeanUtil.copyProperties(user1, user, CopyOptions.create().setIgnoreNullValue(true));
 //        BeanUtil.copyProperties(user1, user);
-        System.out.println(JsonUtil.toJson(user));
+        System.out.println(JSONUtil.toJsonStr(user));
     }
 }

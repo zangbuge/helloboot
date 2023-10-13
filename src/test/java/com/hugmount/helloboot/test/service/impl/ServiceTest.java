@@ -1,8 +1,8 @@
 package com.hugmount.helloboot.test.service.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.hugmount.helloboot.JsonUtil;
 import com.hugmount.helloboot.test.mapper.TTestMapper;
 import com.hugmount.helloboot.test.pojo.TTest;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -39,16 +39,16 @@ public class ServiceTest {
     }
 
     @Test
-    public void tset1() {
+    public void tes1() {
         TTest t = new TTest();
         t.setUsername("lhm");
 //        Mockito.when(tTestMapper.selectList(Wrappers.<TTest>lambdaQuery().eq(TTest::getId, 1L))).thenReturn(Arrays.asList(t));
         Mockito.when(tTestMapper.selectList(Mockito.any())).thenReturn(Arrays.asList(t));
         List<TTest> testList = testService.getTTestList(t);
-        System.out.println("非mock逻辑" + JsonUtil.toJson(testList));
+        System.out.println("非mock逻辑" + JSONUtil.toJsonStr(testList));
         t.setId(1L);
         List<TTest> list = testService.getTTestList(t);
-        System.out.println("mock结果" + JsonUtil.toJson(list));
+        System.out.println("mock结果" + JSONUtil.toJsonStr(list));
     }
 
 }
