@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -114,8 +115,10 @@ public class POIUtil {
 
     public static void downloadExcel(SXSSFWorkbook workbook, HttpServletResponse response, String fileName) {
         try {
+            // 处理中文乱码
+            fileName = URLEncoder.encode(fileName, "utf-8");
             response.setContentType("application/msexcel;charset=utf-8");
-            response.setHeader("Content-Disposition", "filename=" + new String(fileName.getBytes("utf-8")));
+            response.setHeader("Content-Disposition", "filename=" + fileName);
             ServletOutputStream outputStream = response.getOutputStream();
             workbook.write(outputStream);
             workbook.close();
