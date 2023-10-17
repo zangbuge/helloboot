@@ -215,7 +215,7 @@ public class POIUtil {
                     }
                     // 包含小数的double
                     else {
-                        DecimalFormat df = new DecimalFormat("0.0000000");
+                        DecimalFormat df = new DecimalFormat("0.#############");
                         // 设置diuble类型不转为"科学计数法"
                         cellStr = df.format(cell.getNumericCellValue());
                     }
