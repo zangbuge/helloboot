@@ -58,7 +58,11 @@ public class ListStream {
         System.out.println(JSON.toJSONString(collect2));
 
         Map<String, Set<String>> collect3 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.mapping(Student::getName, Collectors.toSet())));
-        System.out.println(JSON.toJSONString(collect3));
+        System.out.println("分组后结果取对象中的一列转成set: " + JSON.toJSONString(collect3));
+
+        collect3.forEach((key, val) -> {
+            System.out.println("遍历map key" + key + ", val: " + val);
+        });
 
         Map<String, Set<User>> collect4 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.mapping(item -> {
             String name = item.getName();
