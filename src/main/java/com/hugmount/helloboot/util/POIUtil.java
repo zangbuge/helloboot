@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.util;
 
+import lombok.SneakyThrows;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFCell;
 import org.apache.poi.xssf.streaming.SXSSFRow;
@@ -9,11 +10,12 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
@@ -112,125 +114,103 @@ public class POIUtil {
         return workbook;
     }
 
-
+    @SneakyThrows(Exception.class)
     public static void downloadExcel(SXSSFWorkbook workbook, HttpServletResponse response, String fileName) {
-        try {
-            // 处理中文乱码
-            fileName = URLEncoder.encode(fileName, "utf-8");
-            response.setContentType("application/msexcel;charset=utf-8");
-            response.setHeader("Content-Disposition", "filename=" + fileName);
-            ServletOutputStream outputStream = response.getOutputStream();
-            workbook.write(outputStream);
-            workbook.close();
-            // 释放workbook所占资源
-            workbook.dispose();
-        } catch (IOException e) {
-            throw new RuntimeException("download excel exception", e);
-        }
+        // 处理中文乱码
+        fileName = URLEncoder.encode(fileName, "utf-8");
+        response.setContentType("application/msexcel;charset=utf-8");
+        response.setHeader("Content-Disposition", "filename=" + fileName);
+        ServletOutputStream outputStream = response.getOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        // 释放workbook所占资源
+        workbook.dispose();
     }
-
 
     public static List<Map<String, Object>> importExcel(InputStream inputStream) {
         return importExcel(inputStream, 0, false);
     }
 
+    @SneakyThrows(Exception.class)
     public static List<Map<String, Object>> importExcel(InputStream inputStream, int startRow, boolean useHeadName) {
-        try {
-            XSSFWorkbook wb = new XSSFWorkbook(inputStream);
-            SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(wb);
-            XSSFWorkbook xssfWorkbook = sxssfWorkbook.getXSSFWorkbook();
-            XSSFSheet sheetAt = xssfWorkbook.getSheetAt(0);
-            if (sheetAt == null) {
-                throw new RuntimeException("该文件中没有excel数据");
+        XSSFWorkbook wb = new XSSFWorkbook(inputStream);
+        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(wb);
+        XSSFWorkbook xssfWorkbook = sxssfWorkbook.getXSSFWorkbook();
+        XSSFSheet sheetAt = xssfWorkbook.getSheetAt(0);
+        Assert.notNull(sheetAt, "该文件中没有excel数据");
+        Map<String, Object> headerMap = new HashMap<>();
+        List<Map<String, Object>> rowList = new ArrayList<>();
+        // 获取的lastRowNum比实际行数少一行,表头
+        int lastRowNum = sheetAt.getLastRowNum();
+        for (int i = startRow; i <= lastRowNum; i++) {
+            XSSFRow row = sheetAt.getRow(i);
+            if (row == null) {
+                continue;
             }
-            Map<String, Object> headerMap = new HashMap<>();
-            List<Map<String, Object>> rowList = new ArrayList<>();
-            // 获取的lastRowNum比实际行数少一行,表头
-            int lastRowNum = sheetAt.getLastRowNum();
-            for (int i = startRow; i <= lastRowNum; i++) {
-                XSSFRow row = sheetAt.getRow(i);
-                if (row == null) {
-                    continue;
-                }
-                // 创建保存一行数据map
-                Map<String, Object> rowData = new LinkedHashMap<>();
-                boolean isSkip = true;
-                short lastCellNum = row.getLastCellNum();
-                for (short j = 0; j < lastCellNum; j++) {
-                    XSSFCell cell = row.getCell(j);
-                    String cellValueStr = getCellValueStr(cell);
-                    // 使用表头为key
-                    String key = null;
-                    if (useHeadName) {
-                        key = headerMap.getOrDefault(String.valueOf(j), "").toString();
-                    }
-                    // 使用数字为key，或表头为key的第一行数据
-                    if (StringUtils.isEmpty(key)) {
-                        key = String.valueOf(j);
-                    }
-                    rowData.put(key, cellValueStr);
-                    if (!"".equals(cellValueStr)) {
-                        isSkip = false;
-                    }
-                }
-
-                if (isSkip) {
-                    continue;
-                }
-                rowList.add(rowData);
-                if (i == startRow) {
-                    headerMap = rowData;
-                }
+            // 创建保存一行数据map
+            Map<String, Object> rowData = dealRowData(row, headerMap);
+            rowList.add(rowData);
+            // 使用表头为数据的key
+            if (useHeadName && i == startRow) {
+                headerMap = rowData;
             }
-            return rowList;
-        } catch (Exception e) {
-            throw new RuntimeException("解析excel失败", e);
         }
+        return rowList;
+    }
+
+    static Map<String, Object> dealRowData(XSSFRow row, Map<String, Object> headerMap) {
+        short lastCellNum = row.getLastCellNum();
+        Map<String, Object> rowData = new HashMap<>();
+        for (short j = 0; j < lastCellNum; j++) {
+            XSSFCell cell = row.getCell(j);
+            String cellValueStr = getCellValueStr(cell);
+            // 使用表头为key
+            String key = null;
+            if (!ObjectUtils.isEmpty(headerMap)) {
+                key = headerMap.getOrDefault(String.valueOf(j), "").toString();
+            }
+            // 使用列序号为key，或表头为key的第一行数据
+            if (StringUtils.isEmpty(key)) {
+                key = String.valueOf(j);
+            }
+            rowData.put(key, cellValueStr);
+        }
+        return rowData;
     }
 
     static String getCellValueStr(XSSFCell cell) {
-        String cellStr = "";
         if (null == cell) {
-            return cellStr;
+            return null;
         }
         switch (cell.getCellTypeEnum()) {
             case BOOLEAN: // 布尔值
-                cellStr = String.valueOf(cell.getBooleanCellValue());
-                break;
+                return String.valueOf(cell.getBooleanCellValue());
             case FORMULA: // 读取公式
-                cellStr = cell.getCellFormula();
-                break;
+                return cell.getCellFormula();
             case NUMERIC: // 日期或数字
                 // 读取日期
                 if (DateUtil.isCellDateFormatted(cell)) {
                     Date dateCellValue = cell.getDateCellValue();
                     DateFormat dateFormat = new SimpleDateFormat(formatStr);
-                    cellStr = dateFormat.format(dateCellValue);
+                    return dateFormat.format(dateCellValue);
                 }
                 // 读取数字
-                else {
-                    double number = cell.getNumericCellValue();
-                    BigDecimal bigDecimal1 = new BigDecimal(number);
-                    BigDecimal bigDecimal2 = new BigDecimal((long) number);
-                    // 整数
-                    if (bigDecimal1.compareTo(bigDecimal2) == 0) {
-                        cellStr = bigDecimal2.toString();
-                    }
-                    // 包含小数的double
-                    else {
-                        DecimalFormat df = new DecimalFormat("0.#############");
-                        // 设置diuble类型不转为"科学计数法"
-                        cellStr = df.format(cell.getNumericCellValue());
-                    }
+                double number = cell.getNumericCellValue();
+                BigDecimal bigDecimal1 = new BigDecimal(String.valueOf(number));
+                BigDecimal bigDecimal2 = new BigDecimal((long) number);
+                // 整数
+                if (bigDecimal1.compareTo(bigDecimal2) == 0) {
+                    return bigDecimal2.toString();
                 }
-                break;
+                // 包含小数的double, 设置diuble类型不转为"科学计数法"
+                DecimalFormat df = new DecimalFormat("0.#############");
+                return df.format(cell.getNumericCellValue());
 
             // 默认转换成String
             default:
-                cellStr = cell.getStringCellValue();
+                return cell.getStringCellValue();
         }
 
-        return cellStr;
     }
 
 }
