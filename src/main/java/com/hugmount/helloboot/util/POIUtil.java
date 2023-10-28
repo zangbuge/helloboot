@@ -32,6 +32,9 @@ import java.util.*;
  */
 public class POIUtil {
 
+    private POIUtil() {
+    }
+
     private static String formatStr = "yyyy-MM-dd HH:mm:ss";
 
     private static String defaultSheetName = "Sheet1";

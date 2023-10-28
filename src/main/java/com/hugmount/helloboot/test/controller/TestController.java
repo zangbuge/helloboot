@@ -154,7 +154,7 @@ public class TestController {
     @ResponseBody
     @RequestMapping("/importExcel")
     public String importExcel(@RequestParam MultipartFile file) throws IOException {
-        List<Map<String, Object>> maps = POIUtil.importExcel(file.getInputStream());
+        List<Map<String, Object>> maps = POIUtil.importExcel(file.getInputStream(), 0, true);
         log.info(JSON.toJSONString(maps));
         return "success";
     }
