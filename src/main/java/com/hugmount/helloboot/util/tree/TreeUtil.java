@@ -41,7 +41,7 @@ public class TreeUtil {
         Object objId = idField.get(node);
         for (T t : list) {
             Field childrenField = getField(aClass, children);
-            List childrenList = (List) childrenField.get(node);
+            List<T> childrenList = (List) childrenField.get(node);
             Object objPid = getField(aClass, pid).get(t);
             if (!Objects.equals(objId, objPid)) {
                 continue;
@@ -49,7 +49,7 @@ public class TreeUtil {
             if (childrenList == null) {
                 childrenList = new ArrayList();
             }
-            List collect = (List) childrenList.stream().filter(f -> Objects.equals(getVal(idField, f), getVal(idField, t))).collect(Collectors.toList());
+            List<T> collect = childrenList.stream().filter(f -> Objects.equals(getVal(idField, f), getVal(idField, t))).collect(Collectors.toList());
             if (!ObjectUtils.isEmpty(collect)) {
                 continue;
             }
@@ -111,7 +111,7 @@ public class TreeUtil {
     private static <T extends TreeNode> void addChildren(T node, List<T> list) {
         list.stream().forEach(it -> {
             if (node.getId().equals(it.getPid())) {
-                List children = node.getChildren();
+                List<T> children = node.getChildren();
                 if (children == null) {
                     children = new ArrayList();
                 }
