@@ -48,8 +48,14 @@ public class TreeUtilTest {
         demo32.setPid("21");
         list.add(demo32);
 
+        List<Demo> demoList = new ArrayList<>();
+        demoList.addAll(list);
+
         List<Demo> demos = TreeUtil.toTree(list);
         System.out.println(JSONUtil.toJsonStr(demos));
+
+        List<Demo> tree = TreeUtil.tree(demoList, "id", "pid", "children");
+        System.out.println("优化: " + JSONUtil.toJsonStr(tree));
 
     }
 
