@@ -16,7 +16,7 @@ ENTRYPOINT ["nohup", "java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar", " &"]
 # nohup java -Dspring.profiles.active=local -jar helloboot-0.0.1-SNAPSHOT.jar >/dev/null 2>&1 &
 # SpringBoot启动参数【-D】和【--】的区别:【-D】虚拟机参数要放到 -jar 前面,否则无效.【--】参数从main方法参数传入，springboot会对这种参数进行自动解析,参数不能放到前面，否则会报错
 # FROM maven:3.5.2-jdk-8-alpine AS MAVEN_BUILD 告知Docker采用Maven编译器
-# MAINTAINERBrianHannaway非必选项，但是为映像作者提供一个接触点可提高可维护性
+# MAINTAINER lhm 非必选项，但是为映像作者提供一个接触点可提高可维护性
 # COPY pom.xml/build/ 在镜像中创建一个build目录， 并拷入pom.xml文件
 # WORKDIR/build/  设置build为工作目录,后续任何命令都在此目录中运行
 # RUN mvn package 执行mvn包来运行编译和打包应用, 在第一次构建镜像时从公共Maven库拉取依赖，并将它们缓存在镜像的本地
