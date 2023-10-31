@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.util;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -36,6 +37,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class HttpClient4Util {
+
+    private HttpClient4Util() {
+    }
 
     private static CloseableHttpClient httpClient;
 
@@ -75,7 +79,8 @@ public class HttpClient4Util {
             httpPost.setEntity(entity);
             return doPost(httpPost, header);
         } catch (Exception e) {
-            throw new RuntimeException("httpClient请求异常", e);
+            log.error(url, e);
+            return null;
         }
     }
 
@@ -99,11 +104,13 @@ public class HttpClient4Util {
             });
             return doPost(httpPost, header);
         } catch (Exception e) {
-            throw new RuntimeException("发送post请求异常", e);
+            log.error(url, e);
+            return null;
         }
     }
 
-    private static String doPost(HttpPost httpPost, Map<String, Object> header) throws Exception {
+    @SneakyThrows
+    private static String doPost(HttpPost httpPost, Map<String, Object> header) {
         Optional.ofNullable(header).ifPresent(item -> {
             for (Map.Entry<String, Object> map : header.entrySet()) {
                 httpPost.addHeader(map.getKey(), map.getValue().toString());
@@ -126,7 +133,8 @@ public class HttpClient4Util {
             String res = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             return res;
         } catch (Exception e) {
-            throw new RuntimeException("httpClient发送get请求异常", e);
+            log.error(url, e);
+            return null;
         }
     }
 
@@ -173,13 +181,10 @@ public class HttpClient4Util {
      *
      * @return
      */
+    @SneakyThrows
     public static SSLConnectionSocketFactory createSSLConnectionFactory() {
-        try {
-            SSLContext context = SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build();
-            return new SSLConnectionSocketFactory(context, NoopHostnameVerifier.INSTANCE);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        SSLContext context = SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build();
+        return new SSLConnectionSocketFactory(context, NoopHostnameVerifier.INSTANCE);
     }
 
 }
