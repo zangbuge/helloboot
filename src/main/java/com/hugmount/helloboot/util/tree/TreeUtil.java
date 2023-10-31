@@ -16,10 +16,13 @@ import java.util.stream.Collectors;
  */
 public class TreeUtil {
 
+    private TreeUtil() {
+    }
+
     @SneakyThrows
     public static synchronized <T> List<T> tree(List<T> list, String id, String pid, String children) {
         if (ObjectUtils.isEmpty(list)) {
-            return null;
+            return list;
         }
         Class<?> aClass = list.get(0).getClass();
         Field field = getField(aClass, pid);
@@ -41,13 +44,13 @@ public class TreeUtil {
         Object objId = idField.get(node);
         for (T t : list) {
             Field childrenField = getField(aClass, children);
-            List<T> childrenList = (List) childrenField.get(node);
+            List<T> childrenList = (List<T>) childrenField.get(node);
             Object objPid = getField(aClass, pid).get(t);
             if (!Objects.equals(objId, objPid)) {
                 continue;
             }
             if (childrenList == null) {
-                childrenList = new ArrayList();
+                childrenList = new ArrayList<>();
             }
             List<T> collect = childrenList.stream().filter(f -> Objects.equals(getVal(idField, f), getVal(idField, t))).collect(Collectors.toList());
             if (!ObjectUtils.isEmpty(collect)) {
@@ -73,7 +76,7 @@ public class TreeUtil {
                 return field;
             }
         }
-        return null;
+        throw new NullPointerException(clazz.getCanonicalName() + " not find field: " + fieldName);
     }
 
     /**
@@ -95,7 +98,7 @@ public class TreeUtil {
 
     public static synchronized <T extends TreeNode> List<T> toTree(List<T> list) {
         if (ObjectUtils.isEmpty(list)) {
-            return null;
+            return list;
         }
         List<T> rootList = new ArrayList<>();
         list.stream().forEach(it -> {
@@ -113,7 +116,7 @@ public class TreeUtil {
             if (node.getId().equals(it.getPid())) {
                 List<T> children = node.getChildren();
                 if (children == null) {
-                    children = new ArrayList();
+                    children = new ArrayList<>();
                 }
                 children.add(it);
                 node.setChildren(children);
