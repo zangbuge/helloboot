@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.util;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -45,6 +46,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HttpClientUtil {
 
+    private HttpClientUtil() {
+    }
+
     private static CloseableHttpClient httpClient;
 
     static {
@@ -85,7 +89,8 @@ public class HttpClientUtil {
             httpPost.addHeader("Content-Type", "application/json");
             return doPost(httpPost, header);
         } catch (Exception e) {
-            throw new RuntimeException("httpClient请求异常", e);
+            log.error(url, e);
+            return null;
         }
     }
 
@@ -107,7 +112,9 @@ public class HttpClientUtil {
             // 以浏览器兼容模式运行，防止文件名乱码。必须
             builder.setMode(HttpMultipartMode.EXTENDED);
             if (file != null) {
-                builder.addBinaryBody(name, new FileInputStream(file), ContentType.DEFAULT_BINARY, file.getName());
+                try (FileInputStream fileInputStream = new FileInputStream(file)) {
+                    builder.addBinaryBody(name, fileInputStream, ContentType.DEFAULT_BINARY, file.getName());
+                }
             }
             for (Map.Entry<String, Object> entry : formData.entrySet()) {
                 String key = entry.getKey();
@@ -121,7 +128,8 @@ public class HttpClientUtil {
             httpPost.setEntity(entity);
             return doPost(httpPost, header);
         } catch (Exception e) {
-            throw new RuntimeException("httpClient异常", e);
+            log.error(url, e);
+            return null;
         }
     }
 
@@ -147,11 +155,13 @@ public class HttpClientUtil {
             }
             return doPost(httpPost, header);
         } catch (Exception e) {
-            throw new RuntimeException("发送post请求异常", e);
+            log.error(url, e);
+            return null;
         }
     }
 
-    private static String doPost(HttpPost httpPost, Map<String, Object> header) throws Exception {
+    @SneakyThrows
+    private static String doPost(HttpPost httpPost, Map<String, Object> header) {
         if (header != null) {
             for (Map.Entry<String, Object> map : header.entrySet()) {
                 httpPost.addHeader(map.getKey(), map.getValue().toString());
@@ -179,7 +189,8 @@ public class HttpClientUtil {
             String res = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             return res;
         } catch (Exception e) {
-            throw new RuntimeException("httpClient发送get请求异常", e);
+            log.error(url, e);
+            return null;
         }
     }
 
@@ -212,13 +223,10 @@ public class HttpClientUtil {
         return registry;
     }
 
+    @SneakyThrows
     public static SSLConnectionSocketFactory createSSLConnectionFactory() {
-        try {
-            SSLContext context = SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build();
-            return new SSLConnectionSocketFactory(context, NoopHostnameVerifier.INSTANCE);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        SSLContext context = SSLContexts.custom().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build();
+        return new SSLConnectionSocketFactory(context, NoopHostnameVerifier.INSTANCE);
     }
 
     /**
