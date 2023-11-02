@@ -92,6 +92,8 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
 
+        <!-- v2.0.1版本有bug, 注入时有依赖内部类,会报错:
+        The alias '' is already mapped to the value 'com.*InterfaceMethodMapper$3'. -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
