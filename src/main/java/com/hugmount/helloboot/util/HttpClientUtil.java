@@ -29,10 +29,12 @@ import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.util.TimeValue;
 import org.apache.hc.core5.util.Timeout;
+import org.springframework.util.CollectionUtils;
 
 import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +63,7 @@ public class HttpClientUtil {
     }
 
     public static String doPostJson(String url, String json, Map<String, Object> header) {
-        return doPostJson(url, json, header, null);
+        return doPostJson(url, null, json, header, null);
     }
 
     public static String doPostForm(String url, Map<String, Object> param, Map<String, Object> header) {
@@ -72,12 +74,17 @@ public class HttpClientUtil {
      * 发送post请求 json数据格式
      *
      * @param url
+     * @param urlParam
      * @param json
      * @param header
      * @return
      */
-    public static String doPostJson(String url, String json, Map<String, Object> header, Integer timeoutSeconds) {
+    public static String doPostJson(String url, Map<String, Object> urlParam, String json, Map<String, Object> header, Integer timeoutSeconds) {
         try {
+            if (!CollectionUtils.isEmpty(urlParam)) {
+                String param = assembleUrlParam(urlParam);
+                url = url.concat("?").concat(URLEncoder.encode(param, "UTF-8"));
+            }
             HttpPost httpPost = new HttpPost(url);
             if (timeoutSeconds != null) {
                 httpPost.setConfig(createConfig(timeoutSeconds));
@@ -244,4 +251,19 @@ public class HttpClientUtil {
         return config;
     }
 
+    public static String assembleUrlParam(Map<String, Object> formData) {
+        if (CollectionUtils.isEmpty(formData)) {
+            return null;
+        }
+        // 构建请求参数
+        StringBuffer param = new StringBuffer();
+        for (Map.Entry<String, Object> entry : formData.entrySet()) {
+            param.append(entry.getKey());
+            param.append("=");
+            param.append(entry.getValue());
+            param.append("&");
+        }
+        String str = param.toString();
+        return str.substring(0, str.length() - 1);
+    }
 }

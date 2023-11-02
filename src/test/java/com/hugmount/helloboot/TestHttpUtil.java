@@ -42,6 +42,10 @@ public class TestHttpUtil {
         String url = "http://127.0.0.1:8001/testBody";
         String str = HttpClientUtil.doPostJson(url, "12345字符串", null);
         System.out.println("testBody非json字符串返回: " + str);
+
+        String urlParam = HttpClientUtil.doPostJson(testJson, map, JSON.toJSONString(map), null, 1);
+        System.out.println("test urlParam: " + urlParam);
+
     }
 
 }
