@@ -29,7 +29,7 @@ public class TestHttp {
 
         String downloadUrl = "http://127.0.0.1:8001/downloadExcel";
         String s = HttpUtil.downloadFile(downloadUrl, map, header, "d:/excelTest.xlsx");
-        System.out.println(s);
+        System.out.println("下载文件" + s);
 
     }
 

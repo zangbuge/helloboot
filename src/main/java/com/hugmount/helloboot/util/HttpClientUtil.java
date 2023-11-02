@@ -105,16 +105,14 @@ public class HttpClientUtil {
      * @return
      */
     public static String doPostForm(String url, Map<String, Object> formData, Map<String, Object> header, File file, String name) {
-        try {
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
             // 相当于<input type="file" name="file"/>
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setCharset(StandardCharsets.UTF_8);
             // 以浏览器兼容模式运行，防止文件名乱码。必须
             builder.setMode(HttpMultipartMode.EXTENDED);
             if (file != null) {
-                try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                    builder.addBinaryBody(name, fileInputStream, ContentType.DEFAULT_BINARY, file.getName());
-                }
+                builder.addBinaryBody(name, fileInputStream, ContentType.DEFAULT_BINARY, file.getName());
             }
             for (Map.Entry<String, Object> entry : formData.entrySet()) {
                 String key = entry.getKey();

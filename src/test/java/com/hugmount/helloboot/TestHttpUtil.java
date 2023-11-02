@@ -38,6 +38,10 @@ public class TestHttpUtil {
         String testGet = "http://127.0.0.1:8001/testGet?nickname=lhm";
         String s = HttpClientUtil.doGet(testGet, header);
         System.out.println("testGet返回: " + s);
+
+        String url = "http://127.0.0.1:8001/testBody";
+        String str = HttpClientUtil.doPostJson(url, "12345字符串", null);
+        System.out.println("testBody非json字符串返回: " + str);
     }
 
 }
