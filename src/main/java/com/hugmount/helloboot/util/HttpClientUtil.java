@@ -256,7 +256,7 @@ public class HttpClientUtil {
             return null;
         }
         // 构建请求参数
-        StringBuffer param = new StringBuffer();
+        StringBuilder param = new StringBuilder();
         for (Map.Entry<String, Object> entry : formData.entrySet()) {
             param.append(entry.getKey());
             param.append("=");
