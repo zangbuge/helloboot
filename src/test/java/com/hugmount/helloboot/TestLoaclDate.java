@@ -34,7 +34,7 @@ public class TestLoaclDate {
         System.out.println("错误的之间月数 " + months);
         System.out.println("之间年数" + years);
 
-        Date date = DateUtils.parseDate("2000-01-31", "yyyy-MM-mm");
+        Date date = DateUtils.parseDate("2000-01-31", "yyyy-MM-dd");
         long l = DateUtil.betweenMonth(date, new Date(), false);
         System.out.println(l);
 
