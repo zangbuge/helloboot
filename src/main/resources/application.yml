@@ -145,3 +145,5 @@ pay:
   channel:
     - 'zfb'
     - 'wx'
+
+dynamicTableNameList: t_test,user
