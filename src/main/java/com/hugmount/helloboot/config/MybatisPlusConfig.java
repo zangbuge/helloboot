@@ -3,10 +3,18 @@ package com.hugmount.helloboot.config;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ObjectUtils;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
 
 /**
  * @author lhm
@@ -14,12 +22,23 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-//@AutoConfigureAfter(PageHelperAutoConfiguration.class)
+// 这一行很重要，因为interceptor 链的执行与添加是反序的，所以在 PageHelperAutoConfiguration 之后添加，才能先执行
+@AutoConfigureAfter(PageHelperAutoConfiguration.class)
 public class MybatisPlusConfig {
 
     @Value("${dynamicTableNameList:}")
     private String dynamicTableNameList;
 
+    @Autowired
+    private List<SqlSessionFactory> sqlSessionFactoryList;
+
+    @PostConstruct
+    public void addMyInterceptor() {
+        MybatisPlusInterceptor mybatisPlusInterceptor = mybatisPlusInterceptor();
+        for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {
+            sqlSessionFactory.getConfiguration().addInterceptor(mybatisPlusInterceptor);
+        }
+    }
 
     /**
      * 动态传递表名
@@ -52,12 +71,15 @@ public class MybatisPlusConfig {
 
     String dealTableName(String oldTable) {
         String tableName = TableNameHelper.getTableName();
+        if (ObjectUtils.isEmpty(tableName)) {
+            return oldTable;
+        }
         // 全表名
         if (tableName.contains(oldTable)) {
             return tableName;
         }
-        // 后缀
-        return oldTable + "_" + TableNameHelper.getTableName();
+        // tableName为后缀
+        return oldTable + "_" + tableName;
     }
 
 }
