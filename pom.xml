@@ -29,7 +29,7 @@
         <profile>
             <id>local</id>
             <properties>
-                <prop.name>local</prop.name>
+                <prop.name></prop.name>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
