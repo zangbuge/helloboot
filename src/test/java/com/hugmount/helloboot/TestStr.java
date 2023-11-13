@@ -1,6 +1,7 @@
 package com.hugmount.helloboot;
 
 import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.IdUtil;
 import com.google.common.base.Strings;
 import com.hugmount.helloboot.util.DesensitizeUtil;
@@ -42,6 +43,12 @@ public class TestStr {
     public void testGetUrlParam() {
         String url = "www.baidu.com/test?name=lhm&phone=123";
         System.out.println(StrUtil.getUrlParam(url, "phone"));
+
+        String build = UrlBuilder.of("http://127.0.1:8080/helloboot/")
+                .addPath("/user/addUser")
+                .addQuery("username", "lhm")
+                .build();
+        System.out.println(build);
     }
 
 
