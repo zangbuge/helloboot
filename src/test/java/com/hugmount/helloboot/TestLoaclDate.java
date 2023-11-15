@@ -4,8 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateUtils;
 
-import java.time.LocalDate;
-import java.time.Period;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -37,6 +36,18 @@ public class TestLoaclDate {
         Date date = DateUtils.parseDate("2000-01-31", "yyyy-MM-dd");
         long l = DateUtil.betweenMonth(date, new Date(), false);
         System.out.println(l);
+
+        // Date to LocalDateTime
+        Date curDate = new Date();
+        // 将 Instant 转换为 LocalDateTime
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(curDate.toInstant(), ZoneId.systemDefault());
+        System.out.println("Date：" + localDateTime);
+
+        // LocalDateTime to Date
+        LocalDateTime localDateTime2 = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime2.atZone(ZoneId.systemDefault());
+        Date date2 = Date.from(zonedDateTime.toInstant());
+        System.out.println("LocalDateTime：" + date2);
 
     }
 }
