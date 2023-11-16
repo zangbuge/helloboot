@@ -9,6 +9,9 @@ import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
 import com.hugmount.helloboot.util.ImageUtil;
 import com.hugmount.helloboot.util.POIUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -31,6 +34,7 @@ import java.util.*;
  * @Date: 2019/3/11
  */
 
+@Api(tags = "测试接口")
 @Controller
 @RequestMapping
 @Slf4j
@@ -112,6 +116,8 @@ public class TestController {
 
 
     @ApiOperation("获取当前时间")
+    @ApiImplicitParams({@ApiImplicitParam(name = "curDate", value = "时间", paramType = "query", dataType = "String", required = true)
+    })
     @RequestMapping("/getCurDate")
     @ResponseBody
     @RateLimit(limitKey = "getCurDate", limitCount = 2)
