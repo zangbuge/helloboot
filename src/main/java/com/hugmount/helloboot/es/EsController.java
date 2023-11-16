@@ -20,7 +20,6 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -32,8 +31,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Objects;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author: lhm
@@ -116,24 +116,23 @@ public class EsController {
         // 注意 如果查询字段类型为 keyword 则需在字典后添加.keyword
         TermQueryBuilder termQuery = QueryBuilders.termQuery("name.keyword", userInfo.getName());
         boolQuery.must(termQuery);
-        if (!Objects.isNull(userInfo)) {
-            RangeQueryBuilder rangeQuery = QueryBuilders.rangeQuery("date");
-            rangeQuery.gte(userInfo.getDate());
-            boolQuery.must(rangeQuery);
-        }
+        // 比较大小
+        boolQuery.must(QueryBuilders.rangeQuery("date").lte(new Date().getTime()));
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.from(0);
         searchSourceBuilder.size(3);
         searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
-        searchSourceBuilder.sort("id", SortOrder.ASC);
+        // 排序只能用数字类型
+        searchSourceBuilder.sort("date", SortOrder.ASC);
         searchSourceBuilder.query(boolQuery);
         request.source(searchSourceBuilder);
         SearchResponse response = highLevelClient.search(request, RequestOptions.DEFAULT);
         log.info("返回结果: {}", JSON.toJSONString(response));
         SearchHit[] hits = response.getHits().getHits();
         ArrayList<SearchHit> searchHits = new ArrayList<>(Arrays.asList(hits));
-        return Result.createBySuccess("成功", searchHits);
+        List<UserInfo> collect = searchHits.stream().map(it -> JSON.parseObject(it.getSourceAsString(), UserInfo.class)).collect(Collectors.toList());
+        return Result.createBySuccess("成功", collect);
 
     }
 
