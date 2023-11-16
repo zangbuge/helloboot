@@ -3,13 +3,10 @@ package com.hugmount.helloboot.config;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ObjectUtils;
 
@@ -22,8 +19,6 @@ import java.util.List;
  */
 @Slf4j
 @Configuration
-// 这一行很重要，因为interceptor 链的执行与添加是反序的，所以在 PageHelperAutoConfiguration 之后添加，才能先执行
-@AutoConfigureAfter(PageHelperAutoConfiguration.class)
 public class MybatisPlusConfig {
 
     @Value("${dynamicTableNameList:}")
@@ -45,7 +40,6 @@ public class MybatisPlusConfig {
      *
      * @return
      */
-    @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         log.info("动态传递表名配置: {}", dynamicTableNameList);
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
