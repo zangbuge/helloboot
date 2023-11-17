@@ -773,3 +773,5 @@ grep '关键字' project_back_ssm_verification.log | wc -l
 chrom属性>目标中添加参数
 D:\work\tool\Chrome_v87\Chrome\Application\chrome.exe --test-type --ignore-certificate-errors
 
+# ES
+docker run -d --name es74 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:7.4.2
