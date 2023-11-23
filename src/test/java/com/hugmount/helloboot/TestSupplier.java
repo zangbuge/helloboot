@@ -29,7 +29,7 @@ public class TestSupplier {
         Consumer3<SXSSFWorkbook, HttpServletResponse, String> downloadExcel = POIUtil::downloadExcel;
 
         // 多个入参有返回值
-        Supplier2<SXSSFWorkbook, LinkedHashMap<String, String>, List<Map<String, Object>>> exportExcel = POIUtil::exportExcel;
+        Supplier2<SXSSFWorkbook, LinkedHashMap<String, Object>, List<Map<String, Object>>> exportExcel = POIUtil::exportExcel;
 
         // 调用A方法, 将A方法内的变量传到外部使用
         TestSupplier testSupplier = new TestSupplier();

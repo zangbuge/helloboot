@@ -39,11 +39,11 @@ public class POIUtil {
 
     private static String defaultSheetName = "Sheet1";
 
-    public static SXSSFWorkbook exportExcel(LinkedHashMap<String, String> headMap, List<Map<String, Object>> dataList) {
+    public static SXSSFWorkbook exportExcel(Map<String, Object> headMap, List<Map<String, Object>> dataList) {
         return exportExcel(null, headMap, dataList, defaultSheetName, 0);
     }
 
-    public static SXSSFWorkbook exportExcel(SXSSFWorkbook workbook, LinkedHashMap<String, String> headMap, List<Map<String, Object>> dataList
+    public static SXSSFWorkbook exportExcel(SXSSFWorkbook workbook, Map<String, Object> headMap, List<Map<String, Object>> dataList
             , String sheetName, int startRowNo) {
         // 声明一个工作薄
         if (workbook == null) {
@@ -58,7 +58,7 @@ public class POIUtil {
         titleStyle.setVerticalAlignment(VerticalAlignment.CENTER); // 垂直居中
         Font titleFont = workbook.createFont(); // 字体
         titleFont.setBold(true); // 是否加粗
-        titleFont.setFontHeightInPoints((short) 14); // 几号字体
+        titleFont.setFontHeightInPoints((short) 12); // 几号字体
         // cellFont.setFontHeight((short) 380); // 按像素
         titleStyle.setFont(titleFont);
 
@@ -75,19 +75,19 @@ public class POIUtil {
 
         // 创建一个sheet
         SXSSFSheet sheet = workbook.createSheet(sheetName);
-        // 锁定表头
+        // 锁定表头第一行
         sheet.createFreezePane(0, 1, 0, 1);
         int headSize = headMap.size();
         // 创建表头并设置顺序
         Map<String, String> headOrder = new HashMap<>();
         SXSSFRow headRow = sheet.createRow(startRowNo);
         headRow.setHeight((short) 360); // 像素
-        Iterator<Map.Entry<String, String>> iterator = headMap.entrySet().iterator();
+        Iterator<Map.Entry<String, Object>> iterator = headMap.entrySet().iterator();
         int ci = 0;
         while (iterator.hasNext()) {
             SXSSFCell cell = headRow.createCell(ci);
-            Map.Entry<String, String> next = iterator.next();
-            cell.setCellValue(next.getValue());
+            Map.Entry<String, Object> next = iterator.next();
+            cell.setCellValue(String.valueOf(next.getValue()));
             cell.setCellStyle(titleStyle);
             headOrder.put(String.valueOf(ci), next.getKey());
             ci++;
@@ -163,7 +163,7 @@ public class POIUtil {
 
     static Map<String, Object> dealRowData(XSSFRow row, Map<String, Object> headerMap) {
         short lastCellNum = row.getLastCellNum();
-        Map<String, Object> rowData = new HashMap<>();
+        Map<String, Object> rowData = new LinkedHashMap<>();
         for (short j = 0; j < lastCellNum; j++) {
             XSSFCell cell = row.getCell(j);
             String cellValueStr = getCellValueStr(cell);
@@ -214,6 +214,12 @@ public class POIUtil {
                 return cell.getStringCellValue();
         }
 
+    }
+
+    public static Map<String, Object> getOldHeadMap(Map<String, Object> map) {
+        Map<String, Object> head = new LinkedHashMap<>();
+        map.forEach((k, v) -> head.put(String.valueOf(v), v));
+        return head;
     }
 
 }
