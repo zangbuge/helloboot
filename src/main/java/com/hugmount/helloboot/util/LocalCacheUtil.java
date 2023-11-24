@@ -15,9 +15,10 @@ public class LocalCacheUtil {
 
     static {
         /**
-         * 设置缓存时间
+         * 不通业务缓存可使用单独的实例cache
+         * 设置缓存时间1小时, 允许延迟的情况, 修改后可不清理缓存
          */
-        cache = CacheBuilder.newBuilder().expireAfterAccess(7, TimeUnit.DAYS).maximumSize(Long.MAX_VALUE / 3).build();
+        cache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).maximumSize(Long.MAX_VALUE / 2).build();
     }
 
     public static void put(String key, Object val) {
@@ -30,6 +31,10 @@ public class LocalCacheUtil {
 
     public static void delete(String key) {
         cache.invalidate(key);
+    }
+
+    public static void deleteAll() {
+        cache.invalidateAll();
     }
 
 }
