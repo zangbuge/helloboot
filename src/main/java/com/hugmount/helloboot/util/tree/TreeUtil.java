@@ -21,7 +21,18 @@ public class TreeUtil {
     }
 
     @SneakyThrows
-    public static synchronized <T> List<T> tree(List<T> list, String id, String pid, String children) {
+    public static synchronized <T> void treeToList(T t, String children, List<T> list) {
+        Field field = getField(t.getClass(), children);
+        List<T> curList = (List<T>) field.get(t);
+        ReflectionUtils.setField(field, t, null);
+        list.add(t);
+        if (!ObjectUtils.isEmpty(curList)) {
+            curList.forEach(it -> treeToList(it, children, list));
+        }
+    }
+
+    @SneakyThrows
+    public static synchronized <T> List<T> listToTree(List<T> list, String id, String pid, String children) {
         if (ObjectUtils.isEmpty(list)) {
             return list;
         }
@@ -64,11 +75,11 @@ public class TreeUtil {
     }
 
     @SneakyThrows
-    public static Object getVal(Field field, Object obj) {
+    static Object getVal(Field field, Object obj) {
         return field.get(obj);
     }
 
-    public static Field getField(Class<?> clazz, String fieldName) {
+    static Field getField(Class<?> clazz, String fieldName) {
         Field[] allFields = getAllFields(clazz);
         for (Field field : allFields) {
             if (fieldName.equals(field.getName())) {
@@ -86,7 +97,7 @@ public class TreeUtil {
      * @param clazz
      * @return
      */
-    public static Field[] getAllFields(Class<?> clazz) {
+    static Field[] getAllFields(Class<?> clazz) {
         List<Field> fieldList = new ArrayList<>();
         while (clazz != null) {
             fieldList.addAll(new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())));
@@ -112,7 +123,7 @@ public class TreeUtil {
         return rootList;
     }
 
-    private static <T extends TreeNode> void addChildren(T node, List<T> list) {
+    static <T extends TreeNode> void addChildren(T node, List<T> list) {
         list.stream().forEach(it -> {
             if (node.getId().equals(it.getPid())) {
                 List<T> children = node.getChildren();

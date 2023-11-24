@@ -54,9 +54,12 @@ public class TreeUtilTest {
         List<Demo> demos = TreeUtil.toTree(list);
         System.out.println(JSONUtil.toJsonStr(demos));
 
-        List<Demo> tree = TreeUtil.tree(demoList, "id", "pid", "children");
+        List<Demo> tree = TreeUtil.listToTree(demoList, "id", "pid", "children");
         System.out.println("优化: " + JSONUtil.toJsonStr(tree));
 
+        List<Demo> list5 = new ArrayList<>();
+        TreeUtil.treeToList(tree.get(1), "children", list5);
+        System.out.println("treeToList: " + JSONUtil.toJsonStr(list5));
     }
 
     @Data
