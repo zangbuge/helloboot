@@ -135,3 +135,21 @@ CREATE TABLE `t_test` (
 INSERT INTO `t_test` VALUES ('1', 'lhm', '2忘42342', '2020-11-28 17:08:16');
 INSERT INTO `t_test` VALUES ('2', '小鱼人', '7777777', null);
 INSERT INTO `t_test` VALUES ('3', 'hello', '888888', null);
+
+-- dict_config
+CREATE TABLE `dict_config` (
+  `id` varchar(32) CHARACTER SET utf8 NOT NULL COMMENT '主键id',
+  `pid` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT '父级id',
+  `group_code` varchar(128) CHARACTER SET utf8 DEFAULT NULL COMMENT '分组编码',
+  `group_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT '分组名称',
+  `dict_key` varchar(100) CHARACTER SET utf8 NOT NULL COMMENT '字典key',
+  `dict_val` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT '字典值',
+  `dict_sort` int(11) DEFAULT NULL COMMENT '排序',
+  `status` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT '状态',
+  `remark` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT '备注',
+  `deleted` varchar(8) CHARACTER SET utf8 DEFAULT NULL COMMENT '是否删除',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  UNIQUE KEY `dict_config_id_IDX` (`id`) USING BTREE,
+  KEY `dict_config_dict_key_IDX` (`dict_key`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
