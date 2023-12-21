@@ -12,6 +12,9 @@
 jmap -dump:format=b,file=./dumptest.hprof pid
 # 成功返回: Heap dump file created
 ```
+使用eclipse memory analyzer(内存分析器工具)的dump分析工具打开.hprof文件
+1. 在"Reports"板块点击"Leak Suspects" (内存泄漏嫌疑人)
+2. 然后选中怀疑的板块点击"See stacktrace" 即可查看对应的 "Thread Stack" (线程堆栈)
 
 4. OOM一般有以下两种情况
 4.1 年老代堆空间被占满
