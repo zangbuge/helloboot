@@ -28,6 +28,7 @@ public class MatController {
             user.setName("lhm");
             map.put(String.valueOf(i), user);
             i++;
+            log.info("已装载数量: {}", i);
         } while (i < 999999999);
         log.info("成功");
         return Result.createBySuccess("成功");
