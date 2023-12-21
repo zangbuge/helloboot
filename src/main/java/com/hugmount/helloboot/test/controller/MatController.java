@@ -6,9 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 环境: 设置jvm运行参数, 模拟内存溢出情况：-Xms128m -Xmx256m -XX:MaxPermSize=256m
@@ -41,7 +39,8 @@ public class MatController {
      * @return
      */
     @GetMapping("getAllStack")
-    public Result<String> getAllStack() {
+    public Result<Object> getAllStack() {
+        Map<String, List<String>> map = new HashMap<>();
         Set<Map.Entry<Thread, StackTraceElement[]>> entries = Thread.getAllStackTraces().entrySet();
         for (Map.Entry<Thread, StackTraceElement[]> stackTrace : entries) {
             Thread thread = stackTrace.getKey();
@@ -50,11 +49,14 @@ public class MatController {
                 continue;
             }
             log.info("线程: {}", thread.getName());
+            List<String> list = new ArrayList<>();
             for (StackTraceElement element : value) {
                 log.info(element.toString());
+                list.add(element.toString());
             }
+            map.put(thread.getName(), list);
         }
-        return Result.createBySuccess("成功");
+        return Result.createBySuccess("成功", map);
     }
 
 }
