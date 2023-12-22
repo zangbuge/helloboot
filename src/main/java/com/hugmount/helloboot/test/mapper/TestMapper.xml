@@ -6,7 +6,8 @@
         select id id
         , creat_time creatTime
         FROM t_test
-        <if test="id == 2">
+        <!-- 注意: id为Long类型,id != '' 表示 id != 0, mybatis会把''处理为0 -->
+        <if test="id != null and id != '' ">
             WHERE
             id = #{id}
         </if>
