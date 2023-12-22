@@ -663,9 +663,13 @@ PRIMARY KEY id;
 
 
 ## 搭建zk集群
-关闭防火墙
+关闭防火墙, 重启后会打开
 systemctl stop firewalld.service
 systemctl status firewalld.service
+
+永久关闭 禁用防火墙服务
+systemctl disable firewalld
+
 创建目录
 mkdir -p /home/zookeeper_data/{data,conf}
 sudo chmod -R 777 /home/zookeeper_data
