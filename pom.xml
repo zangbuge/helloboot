@@ -448,6 +448,9 @@
                 <configuration>
                     <!-- 某些输入文件使用了未经检查或不安全的操作 配置详细位置提示-->
                     <!--                    <compilerArgument>-Xlint:unchecked</compilerArgument>-->
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
