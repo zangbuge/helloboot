@@ -37,6 +37,10 @@ alter user 'root'@'localhost' identified by '123456' password expire never;
 alter user 'root'@'localhost' identified with mysql_native_password by '123456' ;
 flush privileges;
 
+查看设置用户授权访问ip, %为任何ip都可访问
+select user, host from mysql.user;
+
+重启服务生效
 
 mysql8 my.ini 配置文件在根目录下 
 [mysql]
