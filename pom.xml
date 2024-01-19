@@ -252,7 +252,7 @@
         </dependency>
         <!-- httpclient end -->
 
-        <!-- 三方工具 -->
+        <!-- 三方工具 文档: https://www.hutool.cn/docs/#/extra/二维码工具-QrCodeUtil-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
