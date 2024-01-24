@@ -5,6 +5,8 @@ name varchar(20) not null ,
 create_time timestamp not null default CURRENT_TIMESTAMP COMMENT '创建时间',
 update_time timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT '更新时间');
 
+-- mysql 多字段使用 in 条件
+select * from test s where (s.from_type , s.params) in (('zfb', '00'), ('smy', '333'));
 
 mysql绿色版安装
 官方下载地址: https://downloads.mysql.com/archives/community/
