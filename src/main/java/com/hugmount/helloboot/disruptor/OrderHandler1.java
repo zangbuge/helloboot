@@ -27,7 +27,7 @@ public class OrderHandler1 implements EventHandler<Order>, WorkHandler<Order> {
      */
     @Override
     public void onEvent(Order order, long sequence, boolean endOfBatch) {
-        System.out.println("EventHandler消费消息: " + order.getId());
+        System.out.println("EventHandler消费消息: " + order.getId() + " consumerId" + consumerId);
     }
 
     /**
@@ -37,6 +37,6 @@ public class OrderHandler1 implements EventHandler<Order>, WorkHandler<Order> {
      */
     @Override
     public void onEvent(Order order) {
-        System.out.println("WorkHandler消费消息: " + order.getId());
+        System.out.println("WorkHandler消费消息: " + order.getId() + " consumerId" + consumerId);
     }
 }
