@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Disruptor 是一个并发组件,能够在无锁(实际使用CAS)的情况下实现Queue并发安全操作,数组实现,环形队列
- * 作用与 ArrayBlockingQueue 相似,但功能,性能更优
+ * 作用与 ArrayBlockingQueue 相似,但功能,性能更优. 官方对比数据: https://lmax-exchange.github.io/disruptor/disruptor.html#_throughput_performance_testing
  * 等待策略:
  * BusySpinWaitStrategy: 自旋等待, 低延迟但同时对CPU资源的占用也多
  * BlockingWaitStrategy:  使用锁和条件变量, CPU资源的占用少，延迟大
