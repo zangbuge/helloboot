@@ -10,6 +10,9 @@ import java.util.concurrent.Executors;
 /**
  * Disruptor 是一个并发组件,能够在无锁(实际使用CAS)的情况下实现Queue并发安全操作,数组实现,环形队列
  * 作用与 ArrayBlockingQueue 相似,但功能,性能更优. 官方对比数据: https://lmax-exchange.github.io/disruptor/disruptor.html#_throughput_performance_testing
+ * 线程安全性:
+ * Disruptor使用序列号(Sequence)来标识RingBuffer中的位置，消费者通过跟踪这个序列号来获取要消费的数据
+ * 消费者只需要关注自己的序列号，不会干扰其他消费者，从而实现了线程安全
  * 等待策略:
  * BusySpinWaitStrategy: 自旋等待, 低延迟但同时对CPU资源的占用也多
  * BlockingWaitStrategy:  使用锁和条件变量, CPU资源的占用少，延迟大
@@ -19,6 +22,8 @@ import java.util.concurrent.Executors;
  * 消费方式:
  * handleEventsWith: 返回的EventHandlerGroup, Group中的每个消费者都会对m进行消费，各个消费者之间不存在竞争
  * handleEventsWithWorkerPool: 返回的EventHandlerGroup, Group的消费者对于同一条消息m不重复消费
+ * springboot中使用disruptor:
+ * 定义一个MQManager配置类, 启动disruptor, 注入 RingBuffer bean. 注入 Producer Service, 发送消息
  *
  * @author lhm
  * @date 2024/1/24
