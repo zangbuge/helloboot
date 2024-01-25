@@ -24,6 +24,21 @@ import java.util.concurrent.Executors;
  * handleEventsWithWorkerPool: 返回的EventHandlerGroup, Group的消费者对于同一条消息m不重复消费
  * springboot中使用disruptor:
  * 定义一个MQManager配置类, 启动disruptor, 注入 RingBuffer bean. 注入 Producer Service, 发送消息
+ * 环形队列原理: 环形缓冲区的核心精华在于对读写指针移动进行取模求余运算
+ * 数组首位相连,使用Sequence对ringBufferSize取模求余,计算出当前的位置
+ * 定义了两个指针, 一个写指针，一个读指针
+ * 读指针指向环形缓冲区可读数据的第一个数据地址
+ * 写指针指向环形环形缓冲区可写数据的第一个数据地址
+ * 写操作时，需要先进行判断环形缓冲区是否已写满，若已写满，直接覆盖数据；或做相应的处理
+ * 读操作时，需要进行判断环形缓冲区是否为空，若为空则无法读取数据
+ * read_index = (read_index + 1) % ringBufferSize
+ * write_index = (write_index + 1) % ringBufferSize
+ * read_index: 当前读的位置
+ * write_index: 当前写的位置
+ * ringBufferSize: 缓冲区大小
+ * 当 read_index = write_index 时, 说明环形缓冲区为空
+ * 当（(write_index + 1）% ringBufferSize) = read_index，说明环形缓冲区已满
+ * 若有多个任务需要读写环形缓冲区时，必须添加互斥保护机制，确保每个任务均正确访问环形缓冲区
  *
  * @author lhm
  * @date 2024/1/24
@@ -32,8 +47,7 @@ public class DisruptorTest {
 
     // 单生产者单消费者
     public static void main(String[] args) throws InterruptedException {
-        long start = System.currentTimeMillis();
-        // 不要太大,否则会造成oom
+        // 必须是 2 的 n 次方, 不要太大,否则会造成oom
         int bufferSize = 1024 * 1024;
         // 构造缓冲区与事件生成, Disruptor交给线程池来处理，共计 p1,c1,c2,c3四个线程
         Disruptor<Order> disruptor = new Disruptor<>(new OrderFactory(), bufferSize, Executors.defaultThreadFactory(), ProducerType.SINGLE, new YieldingWaitStrategy());
