@@ -5,11 +5,17 @@ import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.concurrent.Executors;
 
 /**
  * Disruptor 是一个并发组件,能够在无锁(实际使用CAS)的情况下实现Queue并发安全操作,数组实现,环形队列
  * 作用与 ArrayBlockingQueue 相似,但功能,性能更优. 官方对比数据: https://lmax-exchange.github.io/disruptor/disruptor.html#_throughput_performance_testing
+ * 性能:
+ * 数组: 避免垃圾回收, jvm GC最基础的收集算法就是标记-清除算法, 遍历所有 GC ROOTS 可达的对象标记为存活
+ * 无锁: 使用自增Sequence
+ * 快速的元素位置定位策略: 环状队列结构
  * 线程安全性:
  * Disruptor使用序列号(Sequence)来标识RingBuffer中的位置，消费者通过跟踪这个序列号来获取要消费的数据
  * 消费者只需要关注自己的序列号，不会干扰其他消费者，从而实现了线程安全
@@ -47,6 +53,20 @@ public class DisruptorTest {
 
     // 单生产者单消费者
     public static void main(String[] args) throws InterruptedException {
+        // 500万tps, Sequence为自增的序号, 可使用的时间,单位年
+        System.out.println(Long.MAX_VALUE);
+        BigDecimal multiply = BigDecimal.valueOf(60)
+                .multiply(BigDecimal.valueOf(60))
+                .multiply(BigDecimal.valueOf(24))
+                .multiply(BigDecimal.valueOf(365))
+                // tps500万
+                .multiply(BigDecimal.valueOf(5000000))
+                //
+                ;
+        System.out.println(multiply);
+        BigDecimal years = BigDecimal.valueOf(Long.MAX_VALUE).divide(multiply, 0, RoundingMode.DOWN);
+        System.out.println("Sequence可使用年限: " + years.toString());
+
         // 必须是 2 的 n 次方, 不要太大,否则会造成oom
         int bufferSize = 1024 * 1024;
         // 构造缓冲区与事件生成, Disruptor交给线程池来处理，共计 p1,c1,c2,c3四个线程
