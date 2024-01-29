@@ -21,6 +21,7 @@ public class ListStream {
         list.add(new Student(3, "测试", "女", 18));
         list.add(new Student(4, "运维", "男", 36));
         list.add(new Student(5, "运营", "男", 40));
+        list.add(new Student(6, "开发", "男", 28));
 
         List<Student> sorted = list.stream().sorted(Comparator.comparing(Student::getAge)).collect(Collectors.toList());
         System.out.println("自定义升序排序 " + JSON.toJSONString(sorted));
@@ -56,6 +57,10 @@ public class ListStream {
         Map<String, List<Student>> collect2 = list.stream().collect(Collectors.groupingBy(Student::getSex));
         System.out.println("分组");
         System.out.println(JSON.toJSONString(collect2));
+
+        Map<String, Map<String, List<Student>>> collect5 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.groupingBy(Student::getName)));
+        System.out.println("多字段分组");
+        System.out.println(JSON.toJSONString(collect5));
 
         Map<String, Set<String>> collect3 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.mapping(Student::getName, Collectors.toSet())));
         System.out.println("分组后结果取对象中的一列转成set: " + JSON.toJSONString(collect3));
