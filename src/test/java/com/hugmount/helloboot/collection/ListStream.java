@@ -62,6 +62,11 @@ public class ListStream {
         System.out.println("多字段分组");
         System.out.println(JSON.toJSONString(collect5));
 
+        // stream.collect.groupingBy(分组字段，Collectors.reduce(bigdecimal.ZERO, 求和字段，Bigdecimal::add))
+        Map<String, Integer> collect6 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.summingInt(Student::getAge)));
+        System.out.println("分组求和");
+        System.out.println(JSON.toJSONString(collect6));
+
         Map<String, Set<String>> collect3 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.mapping(Student::getName, Collectors.toSet())));
         System.out.println("分组后结果取对象中的一列转成set: " + JSON.toJSONString(collect3));
 
