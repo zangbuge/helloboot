@@ -29,6 +29,7 @@ SHOW ENGINE INNODB STATUS;
 在LATEST DETECTED DEADLOCK部分，可以找到最近被检测到的死锁信息
 
 ```$xslt
+-- 添加字段不会锁定整个表，但修改或删除现有字段会对整个表加锁。显式地对表加读锁或写锁，以控制其他事务对表的访问
 -- 锁定表
 LOCK TABLES table_name WRITE;
 
