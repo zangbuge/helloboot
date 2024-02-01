@@ -5,6 +5,7 @@ import com.hugmount.helloboot.test.pojo.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,12 +17,12 @@ import java.util.stream.Collectors;
 public class ListStream {
     public static void main(String[] args) {
         List<Student> list = new ArrayList<>();
-        list.add(new Student(1, "产品", "女", 31));
-        list.add(new Student(2, "开发", "男", 27));
-        list.add(new Student(3, "测试", "女", 18));
-        list.add(new Student(4, "运维", "男", 36));
-        list.add(new Student(5, "运营", "男", 40));
-        list.add(new Student(6, "开发", "男", 28));
+        list.add(new Student(1, "产品", "女", 31, BigDecimal.valueOf(1)));
+        list.add(new Student(2, "开发", "男", 27, BigDecimal.valueOf(1)));
+        list.add(new Student(3, "测试", "女", 18, BigDecimal.valueOf(1)));
+        list.add(new Student(4, "运维", "男", 36, BigDecimal.valueOf(1)));
+        list.add(new Student(5, "运营", "男", 40, BigDecimal.valueOf(1)));
+        list.add(new Student(6, "开发", "男", 28, BigDecimal.valueOf(1)));
 
         List<Student> sorted = list.stream().sorted(Comparator.comparing(Student::getAge)).collect(Collectors.toList());
         System.out.println("自定义升序排序 " + JSON.toJSONString(sorted));
@@ -67,6 +68,17 @@ public class ListStream {
         System.out.println("分组求和");
         System.out.println(JSON.toJSONString(collect6));
 
+        Map<String, Map<String, Object>> collect7 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.collectingAndThen(Collectors.toList(), m -> {
+            BigDecimal reduce = m.stream().map(Student::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+            int sum = m.stream().mapToInt(Student::getId).sum();
+            Map<String, Object> resMap = new HashMap<>();
+            resMap.put("amountSum", reduce);
+            resMap.put("idSum", sum);
+            return resMap;
+        })));
+        System.out.println("分组后多列分别聚合操作");
+        System.out.println(JSON.toJSONString(collect7));
+
         Map<String, Set<String>> collect3 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.mapping(Student::getName, Collectors.toSet())));
         System.out.println("分组后结果取对象中的一列转成set: " + JSON.toJSONString(collect3));
 
@@ -92,6 +104,7 @@ public class ListStream {
         String name;
         String sex;
         Integer age;
+        BigDecimal amount;
     }
 
 }
