@@ -47,6 +47,9 @@ UNLOCK TABLES;
 SHOW OPEN TABLES WHERE In_use > 0;
 结果中包含In_use的值大于0，这表示相应的表被锁住了,可以使用 UNLOCK TABLES; 释放锁
 
+-- 查看正在进行中的事务
+SELECT * FROM information_schema.INNODB_TRX;
+
 mysql绿色版安装
 官方下载地址: https://downloads.mysql.com/archives/community/
 安装包下载完之后，
