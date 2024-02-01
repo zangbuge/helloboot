@@ -8,6 +8,44 @@ update_time timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMES
 -- mysql 多字段使用 in 条件
 select * from test s where (s.from_type , s.params) in (('zfb', '00'), ('smy', '333'));
 
+-- 查看当前的锁表情况
+SHOW FULL PROCESSLIST;
+Id：线程的唯一标识符
+User：连接数据库的用户名
+Host：连接数据库的主机名
+db：当前连接的数据库
+Command：线程正在执行的命令
+Time：线程已经执行的时间
+State：线程的当前状态
+Info：线程正在执行的查询语句
+通过观察State列，我们可以找出正在等待锁资源或者正在锁定其他事务的线程。其中，Waiting for table metadata lock表示线程正在等待表的元数据锁，Waiting for table level lock表示线程正在等待表级别的锁，Waiting for lock表示线程正在等待其他锁。
+
+-- 杀死造成死锁的进程
+KILL <thread_id>;
+
+-- 要查看被阻塞的事务,包括当前的锁表情况
+SHOW ENGINE INNODB STATUS;
+在TRANSACTIONS部分，可以找到当前执行的事务列表。显示每个事务的ID、等待的锁资源、事务的状态以及每个事务正在执行的SQL语句
+在LATEST DETECTED DEADLOCK部分，可以找到最近被检测到的死锁信息
+
+```$xslt
+-- 锁定表
+LOCK TABLES table_name WRITE;
+
+-- 执行需要操作该表的SQL语句
+...
+
+-- 提交或者回滚事务
+COMMIT; -- 或 ROLLBACK;
+
+-- 解除表锁
+UNLOCK TABLES;
+```
+
+-- 用于查看当前打开的表，以及锁定的表
+SHOW OPEN TABLES WHERE In_use > 0;
+结果中包含In_use的值大于0，这表示相应的表被锁住了,可以使用 UNLOCK TABLES; 释放锁
+
 mysql绿色版安装
 官方下载地址: https://downloads.mysql.com/archives/community/
 安装包下载完之后，
