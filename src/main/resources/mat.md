@@ -9,7 +9,7 @@
 ```
 3. jmap命令获取实时jvm堆快照,内存映像工具
 ```$xslt
-jmap -dump:format=b,file=./dumptest.hprof pid
+jmap -dump:format=b,file=./heap_dump_temp.hprof pid
 # 成功返回: Heap dump file created
 ```
 使用eclipse memory analyzer(内存分析器工具)的dump分析工具打开.hprof文件
@@ -84,6 +84,7 @@ jstack -F pid  #强制输出线程堆栈 (进程挂起而没有任何响应，�
 查看进程下哪些线程占用了高的cpu 
 top
 top c  --可以显示具体那个应用
+或使用 ps -ef|grep pid 看具体应用服务
 查看某个进程pid下占用最高的线程pid (docker容器内不支持,可执行命令htop 进到htop页面按shift+p按照CPU使用率排序)
 top -Hp pid 
 将十进制线程pid转换为十六进制
