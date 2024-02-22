@@ -112,3 +112,20 @@ df -h
 
 查看内存使用情况
 free -h
+
+### 二. GCViewer 
+GC日志工具 github下载 gcviewer-1.36.jar 官方版本: https://github.com/chewiebug/GCViewer/releases
+可打开GC日志文件 view 设置
+Full GC Lines： （full gc）
+Inc GC Lines：（增量GC）
+GC Times Line： （gc 时间）
+GC Times Rectangles： （gc时间区域）
+Total Heap：(总堆大小)
+Red line that shows heap size
+Tenured Generation：（老年代）
+Young Generation：（年轻代）
+Used Heap：（堆使用量）
+Initial mark level：（cms或g1垃圾回收算法初始标记事件）
+Concurrent collections：（cms或g1垃圾回收并发收集周期）
+
+
