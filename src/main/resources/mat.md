@@ -4,8 +4,11 @@
 获取dump文件必须是一出现内存异常就获取实时的dump文件，这样获取的文件信息才比较准确，
 如果过了一段时间在导出dump文件，就会因gc的缘故，导致信息不准确
 ```$xslt
- -XX:+HeapDumpOnOutOfMemoryError    #开启堆快照
- -XX:HeapDumpPath=D:\dump           #保存文件到哪个目录
+ -XX:+HeapDumpOnOutOfMemoryError    #开启堆快照,当JVM发生OOM时，自动生成DUMP文件
+ -XX:HeapDumpPath=D:\dump           #保存文件目录,不指定文件名默认在项目根目录下生成格式为: java_<pid>_<date>_<time>_heapDump.hprof
+ #还可再增加触发生成dump文件的条件
+ -XX:+HeapDumpBeforeFullGC		#当JVM 执行 FullGC前
+ -XX:+HeapDumpAfterFullGC		#当JVM 执行 FullGC后
 ```
 3. jmap命令获取实时jvm堆快照,内存映像工具
 ```$xslt
@@ -13,8 +16,11 @@ jmap -dump:format=b,file=./heap_dump_temp.hprof pid
 # 成功返回: Heap dump file created
 ```
 使用eclipse memory analyzer(内存分析器工具)的dump分析工具打开.hprof文件
-1. 在"Reports"板块点击"Leak Suspects" (内存泄漏嫌疑人)
-2. 然后选中怀疑的板块点击"See stacktrace" 即可查看对应的 "Thread Stack" (线程堆栈)
+3.1 在"Reports"板块点击"Leak Suspects" (内存泄漏嫌疑人)
+    然后选中怀疑的板块点击"See stacktrace" 即可查看对应的 "Thread Stack" (线程堆栈)
+3.2 主面板"Actions" > biggest objects 查看大对象清单, expensive objects 查看昂贵对象清单
+    shallow heap: 对象自身占用内存大小
+    retained heap: 对象自身占用内存大小 + 引用其他对象占用内存大小
 
 4. OOM一般有以下两种情况
 4.1 年老代堆空间被占满
