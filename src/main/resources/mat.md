@@ -136,7 +136,7 @@ Concurrent collections：（cms或g1垃圾回收并发收集周期）
 -XX:+PrintGCTimeStamps    ＃打印CG发生的时间
 -XX:+PrintGCCause         #打印触发GC原因信息
 -XX:+PrintGCApplicationStoppedTime #打印应用由于GC而产生的停顿时间
--Xloggc:gc/jvm_gc.log                  #日志输出位置
+-Xloggc:gc/jvm_gc.log                  #日志输出位置,目录需提前创建
 -XX:+UseGCLogFileRotation           #开启日志文件分割
 -XX:NumberOfGCLogFiles=30           #最大30个
 -XX:GCLogFileSize=500M              #每个文件最大500M
@@ -145,7 +145,7 @@ Concurrent collections：（cms或g1垃圾回收并发收集周期）
 
 3.3 jvm参数
 ```$xslt
--Xms1024m -Xmx1024m -Xmn256m -Xss256k -verbose:gc -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCCause -XX:+PrintGCApplicationStoppedTime -Xloggc:gc/jvm_gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=30 -XX:GCLogFileSize=500M 
+-Xms1024m -Xmx1024m -Xmn256m -Xss256k -verbose:gc -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCCause -XX:+PrintGCApplicationStoppedTime -Xloggc:jvm_gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=30 -XX:GCLogFileSize=500M 
 ```
 
 3.4 操作系统 与 JVM的内存分配
