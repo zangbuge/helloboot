@@ -113,8 +113,8 @@ df -h
 查看内存使用情况
 free -h
 
-### 二. GCViewer 
-GC日志工具 github下载 gcviewer-1.36.jar 官方版本: https://github.com/chewiebug/GCViewer/releases
+### 三. GCViewer 
+3.1 GC日志工具 github下载 gcviewer-1.36.jar 官方版本: https://github.com/chewiebug/GCViewer/releases
 可打开GC日志文件 view 设置
 Full GC Lines： （full gc）
 Inc GC Lines：（增量GC）
@@ -128,4 +128,32 @@ Used Heap：（堆使用量）
 Initial mark level：（cms或g1垃圾回收算法初始标记事件）
 Concurrent collections：（cms或g1垃圾回收并发收集周期）
 
+3.2 输出 GC 日志详情
+-verbose:gc   #打印每次gc信息
+-XX:+UseG1GC  #使用G1回收器
+-XX:MaxGCPauseMillis=200　＃每次GC内存回收花费时间不超过设定值单位毫秒，默认情况下，VM没有暂停时间目标值。GC的暂停时间主要取决于堆中实时数据的数量与实时数据量
+-XX:+PrintGCDetails  #打印GC日志详情
+-XX:+PrintGCTimeStamps    ＃打印CG发生的时间
+-XX:+PrintGCCause         #打印触发GC原因信息
+-XX:+PrintGCApplicationStoppedTime #打印应用由于GC而产生的停顿时间
+-Xloggc:gc/jvm_gc.log                  #日志输出位置
+-XX:+UseGCLogFileRotation           #开启日志文件分割
+-XX:NumberOfGCLogFiles=30           #最大30个
+-XX:GCLogFileSize=500M              #每个文件最大500M
+-Duser.timezone=Asia/Shanghai
+-Dfile.encoding=UTF-8
 
+3.3 jvm参数
+```$xslt
+-Xms1024m -Xmx1024m -Xmn256m -Xss256k -verbose:gc -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCCause -XX:+PrintGCApplicationStoppedTime -Xloggc:gc/jvm_gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=30 -XX:GCLogFileSize=500M 
+```
+
+3.4 操作系统 与 JVM的内存分配
+JVM的垃圾回收,只是一个逻辑上的回收,回收的只是JVM申请的那一块逻辑堆区域,将数据标记为空闲之类的操作,不是调用free将内存归还给操作系统
+其实只是先向操作系统申请了一大块内存,然后自己在这块已申请的内存区域中进行“自动内存管理”. 
+JAVA 中的对象在创建前,会先从这块申请的一大块内存中划分出一部分来给这个对象使用,在 GC 时也只是这个对象所处的内存区域数据清空,标记为空闲而已.
+JVM 还是会归还内存给操作系统的，只是因为这个代价比较大，所以不会轻易进行。而且不同垃圾回收器 的内存分配算法不同，归还内存的代价也不同
+问: 那是不是只要我把 Xms 和 Xmx 配置成一样的大小，这个 JAVA 进程一启动就会占用这个大小的内存呢?
+答: 不会的，哪怕你 Xms6G，启动也只会占用实际写入的内存，大概率达不到 6G，
+可以简单的认为操作系统的内存分配是“惰性”的，分配并不会发生实际的占用，有数据写入时才会发生内存占用，影响 Res
+启动就分配个最大内存，避免它运行中扩容影响服务；所以一般 JAVA 程序还会将 Xms和Xmx配置为相等的大小，避免这个扩容的操作
