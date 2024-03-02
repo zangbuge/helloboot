@@ -1,3 +1,4 @@
+### 一 sql
 -- mysql 5.7+ 设置默认更新时间
 create table test(
 id integer not null auto_increment primary key,
@@ -8,8 +9,10 @@ update_time timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMES
 -- mysql 多字段使用 in 条件
 select * from test s where (s.from_type , s.params) in (('zfb', '00'), ('smy', '333'));
 
--- 查看当前的锁表情况
+### 二 mysql死锁
+2.1 查看当前的锁表情况
 SHOW FULL PROCESSLIST;
+
 Id：线程的唯一标识符
 User：连接数据库的用户名
 Host：连接数据库的主机名
@@ -20,14 +23,19 @@ State：线程的当前状态
 Info：线程正在执行的查询语句
 通过观察State列，我们可以找出正在等待锁资源或者正在锁定其他事务的线程。其中，Waiting for table metadata lock表示线程正在等待表的元数据锁，Waiting for table level lock表示线程正在等待表级别的锁，Waiting for lock表示线程正在等待其他锁。
 
--- 杀死造成死锁的进程
+2.2 杀死造成死锁的进程
 KILL <thread_id>;
 
--- 要查看被阻塞的事务,包括当前的锁表情况
+2.3 查看死锁日志,要查看被阻塞的事务,包括当前的锁表情况
 SHOW ENGINE INNODB STATUS;
+出现以下3个步骤,开启事物,锁住,等待的死循环
+*** (1) TRANSACTION: (这里可以看到相关sql)
+*** (1) HOLDS THE LOCK(S):
+*** (1) WAITING FOR THIS LOCK TO BE GRANTED:
 在TRANSACTIONS部分，可以找到当前执行的事务列表。显示每个事务的ID、等待的锁资源、事务的状态以及每个事务正在执行的SQL语句
 在LATEST DETECTED DEADLOCK部分，可以找到最近被检测到的死锁信息
 
+2.4 手动加锁
 ```$xslt
 -- 添加字段不会锁定整个表，但修改或删除现有字段会对整个表加锁。显式地对表加读锁或写锁，以控制其他事务对表的访问
 -- 锁定表
@@ -43,11 +51,11 @@ COMMIT; -- 或 ROLLBACK;
 UNLOCK TABLES;
 ```
 
--- 用于查看当前打开的表，以及锁定的表
+2.5 用于查看当前打开的表，以及锁定的表
 SHOW OPEN TABLES WHERE In_use > 0;
-结果中包含In_use的值大于0，这表示相应的表被锁住了,可以使用 UNLOCK TABLES; 释放锁
+结果中包含In_use的值大于0，这表示相应的表被锁住了
 
--- 查看正在进行中的事务
+2.6 查看正在进行中的事务
 SELECT * FROM information_schema.INNODB_TRX;
 
 mysql绿色版安装
@@ -72,31 +80,33 @@ mysql -h 127.0.0.1 -u root -p123456;   --##测试远程登录
 
 指定服务名称安装mysql8 管理员权限运行, 设置忽略大小写必须在初始化时设置
 输入命令：sc delete mysql 删除该mysql
-mysqld --initialize --console --lower-case-table-names=1   -- 生产临时密码
-mysqld --install mysql8
-net start mysql8
-登录: mysql -uroot -p -P3308 -- 指定端口登录的P大写
+./mysqld --initialize --console --lower-case-table-names=1   -- 生产临时密码
+./mysqld --install mysql8  -- 安装
+net start mysql8  -- 启动
+./mysql -uroot -p -P3308 -- 登录 指定端口登录的P大写
 修改密码8.0以后:
 alter user 'root'@'localhost' identified by '123456' password expire never;
-alter user 'root'@'localhost' identified with mysql_native_password by '123456' ;
+alter user 'root'@'localhost' identified with mysql_native_password by '123456';
 flush privileges;
 
-查看设置用户授权访问ip, %为任何ip都可访问
+查看设置用户授权访问ip, %为任何ip都可访问, 重启服务生效
 select user, host from mysql.user;
 
-重启服务生效
 
 mysql8 my.ini 配置文件在根目录下 
+```aidl
 [mysql]
 default-character-set=utf8
 [mysqld]
 port=3308
-basedir=D:\mysql-8\
-datadir=D:\mysql-8\data
-max_connections=500 
+basedir=D:/work/tool/database/mysql8data
+datadir=D:/work/tool/database/mysql8data/data
+max_connections=500
 character-set-server=utf8
 default-time_zone='+8:00'
 default-storage-engine=INNODB
 bind-address=0.0.0.0
 sql-mode="STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION"
 secure_file_priv=
+```
+
