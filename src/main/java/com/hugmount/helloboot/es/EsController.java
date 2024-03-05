@@ -16,6 +16,8 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.common.unit.TimeValue;
@@ -138,6 +140,11 @@ public class EsController {
         SearchHit[] hits = response.getHits().getHits();
         ArrayList<SearchHit> searchHits = new ArrayList<>(Arrays.asList(hits));
         List<UserInfo> collect = searchHits.stream().map(it -> JSON.parseObject(it.getSourceAsString(), UserInfo.class)).collect(Collectors.toList());
+        // es 统计
+        CountRequest countRequest = new CountRequest("lhm");
+        countRequest.query(boolQuery);
+        CountResponse countResponse = highLevelClient.count(countRequest, RequestOptions.DEFAULT);
+        log.info("es count : {}", countResponse.getCount());
         return Result.createBySuccess("成功", collect);
 
     }
