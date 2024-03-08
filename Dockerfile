@@ -26,7 +26,7 @@ ENTRYPOINT ["nohup", "java", "-jar", "helloboot-0.0.1-SNAPSHOT.jar", " &"]
 # COPY settings.xml /usr/share/maven/conf/settings.xml 使用自定义配置maven仓库位置
 # RUN mvn dependency:go-offline 结合docker的cache机制,避免maven的依赖每次都要重新下载,且在pom.xml配置缓存插件
 
-# JVM参数设置
+# JVM参数设置 JDK8和之前的版本,Spring Boot的JVM默认堆大小取决于JDK版本, JVM的初始堆大小为物理内存的 1/64，最大堆大小为1/4
 # -Xms1024m (堆初始大小)
 # -Xmx1024m (堆最大大小) 此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存
 # -Xmn256m (新生代大小)  Sun官方推荐配置为整个堆的3/8, 整个JVM内存大小 = 年轻代大小 + 年老代大小 + 持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。此值对系统性能影响较大
