@@ -35,10 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -145,8 +142,53 @@ public class EsController {
         countRequest.query(boolQuery);
         CountResponse countResponse = highLevelClient.count(countRequest, RequestOptions.DEFAULT);
         log.info("es count : {}", countResponse.getCount());
+
+        BoolQueryBuilder boolQueryBuilder = buildQuery();
+        CountRequest cntQuery = new CountRequest("lhm");
+        cntQuery.query(boolQueryBuilder);
+        CountResponse cntRes = highLevelClient.count(cntQuery, RequestOptions.DEFAULT);
+        int count = (int) cntRes.getCount();
+        System.out.println("总页数: " + count);
+        List<SearchHit> searchHits1 = searchEsPage(count, 2);
+        System.out.println("es分页查询: " + JSONUtil.toJsonStr(searchHits1));
+
         return Result.createBySuccess("成功", collect);
 
+    }
+
+    List<SearchHit> searchEsPage(int cnt, int pageSize) throws IOException {
+        long pages = cnt / pageSize;
+        long rem = cnt % pageSize;
+        final long pageSum = rem == 0 ? pages : pages + 1;
+        List<SearchHit> esDatalist = new ArrayList<>();
+        // search_after 分页, objects标记
+        Object[] objects = new Object[]{};
+        for (int i = 0; i < pageSum; i++) {
+            BoolQueryBuilder boolQueryBuilder = buildQuery();
+            SearchSourceBuilder pageBuilder = new SearchSourceBuilder();
+            pageBuilder.size(pageSize);
+            // 必须指定排序
+            pageBuilder.sort("date", SortOrder.ASC);
+            pageBuilder.query(boolQueryBuilder);
+            if (objects.length > 0) {
+                pageBuilder.searchAfter(objects);
+            }
+            SearchRequest searchRequest = new SearchRequest("lhm");
+            searchRequest.source(pageBuilder);
+            SearchResponse pageResponse = highLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+            SearchHit[] hitsArr = pageResponse.getHits().getHits();
+            Collections.addAll(esDatalist, hitsArr);
+            // 取最后一个
+            objects = hitsArr[hitsArr.length - 1].getSortValues();
+        }
+        return esDatalist;
+    }
+
+
+    BoolQueryBuilder buildQuery() {
+        BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+        boolQuery.must(QueryBuilders.termQuery("name", "李会明"));
+        return boolQuery;
     }
 
     @SneakyThrows
