@@ -148,9 +148,10 @@ public class EsController {
         cntQuery.query(boolQueryBuilder);
         CountResponse cntRes = highLevelClient.count(cntQuery, RequestOptions.DEFAULT);
         int count = (int) cntRes.getCount();
-        System.out.println("总页数: " + count);
+        System.out.println("总条数: " + count);
         List<SearchHit> searchHits1 = searchEsPage(count, 2);
-        System.out.println("es分页查询: " + JSONUtil.toJsonStr(searchHits1));
+        List<Map> collect1 = searchHits1.stream().map(it -> JSONUtil.toBean(it.getSourceAsString(), Map.class)).collect(Collectors.toList());
+        System.out.println("es分页查询: " + JSONUtil.toJsonStr(collect1));
 
         return Result.createBySuccess("成功", collect);
 
@@ -159,16 +160,16 @@ public class EsController {
     List<SearchHit> searchEsPage(int cnt, int pageSize) throws IOException {
         long pages = cnt / pageSize;
         long rem = cnt % pageSize;
-        final long pageSum = rem == 0 ? pages : pages + 1;
+        pages = rem == 0 ? pages : pages + 1;
         List<SearchHit> esDatalist = new ArrayList<>();
         // search_after 分页, objects标记
         Object[] objects = new Object[]{};
-        for (int i = 0; i < pageSum; i++) {
+        for (int i = 0; i < pages; i++) {
             BoolQueryBuilder boolQueryBuilder = buildQuery();
             SearchSourceBuilder pageBuilder = new SearchSourceBuilder();
             pageBuilder.size(pageSize);
             // 必须指定排序
-            pageBuilder.sort("date", SortOrder.ASC);
+            pageBuilder.sort("_id", SortOrder.ASC);
             pageBuilder.query(boolQueryBuilder);
             if (objects.length > 0) {
                 pageBuilder.searchAfter(objects);
@@ -177,6 +178,7 @@ public class EsController {
             searchRequest.source(pageBuilder);
             SearchResponse pageResponse = highLevelClient.search(searchRequest, RequestOptions.DEFAULT);
             SearchHit[] hitsArr = pageResponse.getHits().getHits();
+            log.info("当前页i: {}, size: {}", i, hitsArr.length);
             Collections.addAll(esDatalist, hitsArr);
             // 取最后一个
             objects = hitsArr[hitsArr.length - 1].getSortValues();
@@ -187,7 +189,7 @@ public class EsController {
 
     BoolQueryBuilder buildQuery() {
         BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
-        boolQuery.must(QueryBuilders.termQuery("name", "李会明"));
+        boolQuery.must(QueryBuilders.termQuery("name.keyword", "李会明"));
         return boolQuery;
     }
 
