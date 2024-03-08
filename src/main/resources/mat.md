@@ -16,11 +16,33 @@ jmap -dump:format=b,file=./heap_dump_temp.hprof pid
 # 成功返回: Heap dump file created
 ```
 使用eclipse memory analyzer(内存分析器工具)的dump分析工具打开.hprof文件
+    Histogram：直方图:列出每个类的实例数量
+    Dominator Tree：支配树:列出最大的对象和它们保持存活的对象。
+    Top Consumers：内存高占比消费对象：打印消耗最多的对象，并按类和包分组。
+    Duplicate Classes：重复类：检测由多个类装载装载的类。
+    Leak Suspects：泄漏疑点:包括泄漏疑点和系统概述
 3.1 在"Reports"板块点击"Leak Suspects" (内存泄漏嫌疑人)
     然后选中怀疑的板块点击"See stacktrace" 即可查看对应的 "Thread Stack" (线程堆栈)
 3.2 主面板"Actions" > biggest objects 查看大对象清单, expensive objects 查看昂贵对象清单
     shallow heap: 对象自身占用内存大小
     retained heap: 对象自身占用内存大小 + 引用其他对象占用内存大小
+3.3 Java 应用内存占用大,导出的dump 堆内存很少
+    内存泄漏是导致 Java 应用程序内存占用过大的重要原因之一。它指的是应用程序中的对象占用了内存，但却无法被垃圾回收器回收，
+    从而导致内存占用不断增加。最常见的内存泄漏场景是对象的引用意外地被保留了下来。
+    例如，当我们使用一个全局的集合来存储对象时，如果我们忘记从集合中删除对象的引用，那么这些对象将一直占用内存。
+```aidl
+public class MemoryLeakExample {
+    private static List<String> list = new ArrayList<>();
+    public static void main(String[] args) {
+        for (int i = 0; i < 1000000; i++) {
+            String data = "Data" + i;
+            list.add(data); // 添加对象到集合中
+        }
+    }
+}
+```
+
+3.4 mat工具无法打开太大的dump文件, 修改根目录下的.ini文件. 修改最大内存, 默认 1024M
 
 4. OOM一般有以下两种情况
 4.1 年老代堆空间被占满
@@ -80,7 +102,12 @@ jps -v 输出JVM启动时显示指定的JVM参数
     FGC：老年代回收次数
     FGCT：老年代回收耗时
     GCT：GC总耗时
- 
+
+Java虚拟机中，内存分为三个代：新生代(New)、老生代(Old)、永久代(Perm)
+新生代New：新建的对象都存放这里
+老生代Old：存放从新生代New中迁移过来的生命周期较久的对象。新生代New和老生代Old共同组成了堆内存
+永久代Perm：是非堆内存的组成部分。主要存放加载的Class类级对象如class本身，method，field等
+
 4. jstack 用于生成java虚拟机当前时刻的线程快照
 生成线程快照的主要目的是定位线程出现长时间停顿的原因，
 如线程间死锁,死循环,CPU使用过高,请求外部资源导致的长时间等待等问题
