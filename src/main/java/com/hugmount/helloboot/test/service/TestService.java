@@ -23,4 +23,6 @@ public interface TestService extends IService<Test> {
 
     List<TTest> getTTestList(TTest tTest);
 
+    void updateData(TTest tTest);
+
 }

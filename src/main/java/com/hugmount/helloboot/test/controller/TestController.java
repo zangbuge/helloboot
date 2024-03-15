@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.hugmount.helloboot.annotation.RateLimit;
 import com.hugmount.helloboot.core.Result;
 import com.hugmount.helloboot.test.ChannelConfig;
+import com.hugmount.helloboot.test.pojo.TTest;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
 import com.hugmount.helloboot.util.ImageUtil;
@@ -74,6 +75,19 @@ public class TestController {
         testService.insertTest();
         log.info("批量执行耗时ms: {}", batch);
         log.info("plusBatch耗时ms: {}", plusBatch);
+        return "success";
+    }
+
+    /**
+     * 覆盖更新
+     *
+     * @param tTest
+     * @return
+     */
+    @PostMapping("/updateData")
+    @ResponseBody
+    public String updateData(TTest tTest) {
+        testService.updateData(tTest);
         return "success";
     }
 

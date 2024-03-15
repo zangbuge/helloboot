@@ -121,4 +121,14 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements Te
         }
         return list;
     }
+
+    /**
+     * 更新不忽略空, 覆盖更新
+     *
+     * @param tTest
+     */
+    @Override
+    public void updateData(TTest tTest) {
+        tTestMapper.updateById(tTest);
+    }
 }

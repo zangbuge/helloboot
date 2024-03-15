@@ -1,9 +1,6 @@
 package com.hugmount.helloboot.test.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +9,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lhm
@@ -28,7 +25,10 @@ public class TTest implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("username")
+    /**
+     * FieldStrategy.ALWAYS 不忽略空, 覆盖更新
+     */
+    @TableField(value = "username", updateStrategy = FieldStrategy.ALWAYS)
     private String username;
 
     @TableField("password")
