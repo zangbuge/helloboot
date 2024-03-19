@@ -43,6 +43,7 @@ docker rm 删除容器
 docker rmi 删除镜像 
 docker rmi jenkins/jenkins:2.340  删除镜像根据 repository:tag
 docker search 在Docker Hub中查找镜像 
+docker load -i dm8_20230808_rev197096_x86_rh6_64_single.tar docker导入离线安装包
 -d: 后台运行容器，并返回容器ID； 
 -name=”nginx-lb”: 为容器指定一个名称； 
 
