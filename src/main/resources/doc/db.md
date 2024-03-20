@@ -10,21 +10,38 @@ update_time timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMES
 select * from test s where (s.from_type , s.params) in (('zfb', '00'), ('smy', '333'));
 
 ### 二 mysql死锁
-2.1 查看当前的锁表情况
+2.1 查看所有正在运行线程
 SHOW FULL PROCESSLIST;
 
 Id：线程的唯一标识符
 User：连接数据库的用户名
 Host：连接数据库的主机名
 db：当前连接的数据库
-Command：线程正在执行的命令
+Command：线程正在执行的命令类型
 Time：线程已经执行的时间
 State：线程的当前状态
-Info：线程正在执行的查询语句
-通过观察State列，我们可以找出正在等待锁资源或者正在锁定其他事务的线程。其中，Waiting for table metadata lock表示线程正在等待表的元数据锁，Waiting for table level lock表示线程正在等待表级别的锁，Waiting for lock表示线程正在等待其他锁。
+Info：线程正在执行的sql语句
 
-2.2 杀死造成死锁的进程
-KILL <thread_id>;
+观察State列,我们可以找出正在等待锁资源或者正在锁定其他事务的线程。
+Waiting for table metadata lock 表示线程正在等待表的元数据锁
+Waiting for table level lock 表示线程正在等待表级别的锁
+Waiting for lock 表示线程正在等待其他锁
+Waiting for table flush 线程正在执行FLUSH TABLES并等待所有线程关闭它们的表，
+或者线程收到通知，表明表的基础结构已更改，需要重新打开表以获取新结构。但是，要重新打开该表，它必须等到所有其他线程都关闭了该表
+
+观察Command列
+Sleep 线程正在等待客户端向它发送一条新语句,空闲状态
+Query 线程正在执行查询语句
+Kill 该线程正在杀死另一个线程
+
+总条数即为客户端创建的连接数,也可以执行以下命令查看
+show status like 'Threads%';
+
+2.2 查看正在进行中的事务
+SELECT * FROM information_schema.INNODB_TRX;
+trx_state   事务状态, 包括 RUNNING（运行中）、LOCK WAIT（等待锁）、ROLLING BACK（回滚中）、COMMITTING（提交中）等
+trx_started 事务等待开始时间
+trx_query   事务执行的SQL语句
 
 2.3 查看死锁日志,要查看被阻塞的事务,包括当前的锁表情况
 SHOW ENGINE INNODB STATUS;
@@ -35,28 +52,16 @@ SHOW ENGINE INNODB STATUS;
 在TRANSACTIONS部分，可以找到当前执行的事务列表。显示每个事务的ID、等待的锁资源、事务的状态以及每个事务正在执行的SQL语句
 在LATEST DETECTED DEADLOCK部分，可以找到最近被检测到的死锁信息
 
-2.4 手动加锁
-```$xslt
--- 添加字段不会锁定整个表，但修改或删除现有字段会对整个表加锁。显式地对表加读锁或写锁，以控制其他事务对表的访问
--- 锁定表
-LOCK TABLES table_name WRITE;
-
--- 执行需要操作该表的SQL语句
-...
-
--- 提交或者回滚事务
-COMMIT; -- 或 ROLLBACK;
-
--- 解除表锁
-UNLOCK TABLES;
-```
+2.4 手动模式堵塞
+select count(1), sleep(3000) from test_user;
 
 2.5 用于查看当前打开的表，以及锁定的表
 SHOW OPEN TABLES WHERE In_use > 0;
-结果中包含In_use的值大于0，这表示相应的表被锁住了
+In_use 表示有多少线程在使用这张表, 结果中包含In_use的值大于0
+Name_locked 表名是否被锁定，0代表正常
 
-2.6 查看正在进行中的事务
-SELECT * FROM information_schema.INNODB_TRX;
+2.6 杀死造成死锁的进程
+KILL <thread_id>;
 
 mysql绿色版安装
 官方下载地址: https://downloads.mysql.com/archives/community/
