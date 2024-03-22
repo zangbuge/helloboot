@@ -45,6 +45,12 @@ import java.util.concurrent.Executors;
  * 当 read_index = write_index 时, 说明环形缓冲区为空
  * 当（(write_index + 1）% ringBufferSize) = read_index，说明环形缓冲区已满
  * 若有多个任务需要读写环形缓冲区时，必须添加互斥保护机制，确保每个任务均正确访问环形缓冲区
+ * <p>
+ * 消费数据丢失问题解决方案
+ * 1. 增加消费者数量: 增加消费者线程的数量，可以并行处理更多的数据，提高消费速度
+ * 2. 增加ring环形数组的大小: 从而保证一个环可以存放足够多的数据，但这个可能会导致OOM, 结合业务评估
+ * 3. 剩余容量监控与告警： 通过Prometheus 对 remainingCapacity剩余容量 进行实时监控
+ * 4. 动态扩容 对 Disruptor 框架进行合理封装, 可学习hashmap扩容
  *
  * @author lhm
  * @date 2024/1/24
@@ -74,6 +80,7 @@ public class DisruptorTest {
         disruptor.handleEventsWith(new OrderHandler1("consumer1"));
         disruptor.start();
         RingBuffer<Order> ringBuffer = disruptor.getRingBuffer();
+        // 生产使用注入到 spring bean
         Producer producer = new Producer(ringBuffer);
         //单生产者，生产3条数据
         for (int l = 0; l < 3; l++) {
