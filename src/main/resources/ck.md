@@ -21,7 +21,8 @@ conf下添加配置metrika.xml
             <shard>
                 <!-- 分片负载权重 -->
                 <weight>1</weight>
-                <!-- 分布式表写入数据是否只写入到一个副本，配合复制表引擎使用，默认false -->
+                <!-- 表示副本间是否为内部复制，必须配合复制表引擎使用(建表时指定引擎),​利用zookeeper​​进行数据同步. 
+                    默认false 表示insert时向该分片的所有副本中写入数据,失败即丢失(副本间数据一致性不强). -->
                 <internal_replication>true</internal_replication>
                 <!-- 分片副本信息，这里指定的用户名密码只能是明文 -->
                 <replica>
@@ -140,6 +141,20 @@ CREATE TABLE test_db.test_user_all AS test_db.test_user ENGINE = Distributed(ck_
 -- 创建分布式表,只用执行一次,目前有问题
 CREATE TABLE test_db.test_user_all ON CLUSTER ck_cluster AS test_db.test_user ENGINE = Distributed(ck_cluster, test_db, test_user, rand());
 
+-- 创建复制表, 使用 ReplicatedMergeTree 引擎
+在任意节点创建表/新增数据，另一个节点将会通过​​zookeeper​​进行数据同步
+create table test_db.t_goods on ck_cluster t_goods_localhost(
+    id String,
+    prince Float64,
+    create_time DateTime
+) engine = ReplicatedMergeTree('/clickhouse/tables/{layer}-{shard}/t_goods', '{replica}')
+partition by toYYYYMM(create_time)
+order by id;
+说明
+/clickhouse/tables/{layer}-{shard}/t_goods 表示路径, {layer}参数会从<macros>标签中取
+{replica}​​宏定义，会引用配置文件中<replica>下面的host
+
+
 登录clickhouse 端口使用9000
 clickhouse-client -h 192.168.67.6 --port 19000 -u 'ck_user' --password 'root,.123'
 
@@ -159,3 +174,5 @@ select * from test_user_all;
 -- 生成uuid
 select generateUUIDv4();
 select rand32();
+
+可安装zk-web可视化界面,查看zookeeper信息
