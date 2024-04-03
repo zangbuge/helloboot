@@ -1,18 +1,59 @@
-部署ck 3分片2副本, 共6个ck服务, 3个zk节点
-节点
-192.168.10.128
-192.168.10.130
-192.168.10.132
+部署ck 3分片3副本, 共6个ck服务, 3个zk节点
+节点 vim /etc/hosts 
+192.168.38.128 node1
+192.168.38.130 node2
+192.168.38.132 node3
 
-config.xml文件需要修改,添加如下信息,删除原始的remote_servers,zookeeper标签
-<!-- 外部依赖配置文件 -->
+ClickHouse官方文档: https://clickhouse.com/docs/zh/getting-started/install
+### 运行ClickHouse 使用dbevear登录,默认用户名密码: default/空
+运行临时容器
+docker run -d -p 8123:8123 -p 9000:9000 --name clickhouse yandex/clickhouse-server:21.3.20
+
+创建目录
+mkdir -p /home/clickhouse/main/{conf,data,log}
+chmod 777 /home/clickhouse
+
+拷贝配置文件
+docker cp 0b88ed38fa4f:/etc/clickhouse-server/users.xml /home/clickhouse/main/conf/users.xml
+docker cp 0b88ed38fa4f:/etc/clickhouse-server/config.xml /home/clickhouse/main/conf/config.xml
+
+vi users.xml  设置密码
+<users>
+   <!-- 添加账号,账号名: ck_user, 密码 root,.123 -->
+   <ck_user> 
+       <!--密码-->
+       <!--
+       <password>root,.123</password>
+       -->
+       <!--加密密码-->
+       <password_sha256_hex>a14c4c9d228e0cc32814050fea0f1df49dad0e1857615f5c7900bcb8d33b55a1</password_sha256_hex>
+       <!--用户可以从中连接到ClickHouse服务器的网络列表-->
+       <networks>
+           <ip>::/0</ip>
+       </networks>
+       <!--可以配读写,只读,写等 不一一列举,自行查阅-->
+       <profile>default</profile>
+       <!--限制用户使用资源,自行查阅-->
+       <quota>default</quota>
+       <!--(超级权限)用户可以创建其他用户，并赋予其他用户权限 ,0关闭,1开启-->
+       <access_management>1</access_management>
+   </ck_user>
+</users> 
+
+vi config.xml 修改监听host
+<listen_host>0.0.0.0</listen_host>
+
+单机配置结束, 集群配置文件需要再修改
+
+config.xml 添加如下信息,删除原始的 remote_servers, zookeeper 标签
+<!-- 外部依赖配置文件, 这里的路径是相对容器内的不要改 -->
 <include_from>/etc/clickhouse-server/metrika.xml</include_from>
 <!-- 集群相关的配置，可以用外部依赖文件来配置 -->
 <remote_servers incl="clickhouse_remote_servers" optional="true" />
 <zookeeper incl="zookeeper-servers" optional="true" />
 <timezone>Asia/Shanghai</timezone>
 
-conf下添加配置metrika.xml
+conf 下添加配置 metrika.xml
 <yandex>
     <clickhouse_remote_servers>
         <!-- 自定义的集群名称 -->
@@ -26,14 +67,14 @@ conf下添加配置metrika.xml
                 <internal_replication>true</internal_replication>
                 <!-- 分片副本信息，这里指定的用户名密码只能是明文 -->
                 <replica>
-                    <host>192.168.67.6</host>
+                    <host>node1</host>
                     <port>9000</port>
                     <user>ck_user</user>
                     <!--不能使用加密密码-->
                     <password>root,.123</password>
                 </replica>
                 <replica>
-                    <host>192.168.67.128</host>
+                    <host>node2</host>
                     <port>19000</port>
                     <user>ck_user</user>
                     <password>root,.123</password>
@@ -43,13 +84,13 @@ conf下添加配置metrika.xml
                 <weight>1</weight>
                 <internal_replication>true</internal_replication>
                 <replica>
-                    <host>192.168.67.128</host>
+                    <host>node2</host>
                     <port>9000</port>
                     <user>ck_user</user>
                     <password>root,.123</password>
                 </replica>
                 <replica>
-                    <host>192.168.67.3</host>
+                    <host>node3</host>
                     <port>19000</port>
                     <user>ck_user</user>
                     <password>root,.123</password>
@@ -59,13 +100,13 @@ conf下添加配置metrika.xml
                 <weight>1</weight>
                 <internal_replication>true</internal_replication>
                 <replica>
-                    <host>192.168.67.3</host>
+                    <host>node3</host>
                     <port>9000</port>
                     <user>ck_user</user>
                     <password>root,.123</password>
                 </replica>
                 <replica>
-                    <host>192.168.67.6</host>
+                    <host>node1</host>
                     <port>19000</port>
                     <user>ck_user</user>
                     <password>root,.123</password>
@@ -76,15 +117,15 @@ conf下添加配置metrika.xml
     <!-- ReplicatedMergeTree引擎依赖zk,有数据写入或者修改时,借助zk的分布式协同能力,实现多个副本之间的同步 -->
     <zookeeper-servers>
         <node index="1">
-            <host>192.168.67.6</host>
+            <host>node1</host>
             <port>2181</port>
         </node>
         <node index="2">
-            <host>192.168.67.128</host>
+            <host>node2</host>
             <port>2181</port>
         </node>
         <node index="3">
-            <host>192.168.67.3</host>
+            <host>node3</host>
             <port>2181</port>
         </node>
     </zookeeper-servers>
@@ -111,13 +152,41 @@ conf下添加配置metrika.xml
     </clickhouse_compression>
 </yandex>
 
+修改配置后创建从库目录
+cp -r main sub
+拷贝到其他节点
+chmod 777 /home/clickhouse
+scp -r /home/clickhouse root@192.168.67.128:/home/
+
 每个节点分别运行
-docker run -d --rm --name=ck -p 8123:8123 -p 9000:9000 -p 9009:9009 \
+
+运行主库
+docker run -d  --name=ck -p 8123:8123 -p 9000:9000 -p 9009:9009 \
 --ulimit nofile=262144:262144 \
---volume /home/clickhouse/data:/var/lib/clickhouse:rw \
---volume /home/clickhouse/conf:/etc/clickhouse-server:rw \
---volume /home/clickhouse/log:/var/log/clickhouse-server:rw \
+--volume /home/clickhouse/main/data:/var/lib/clickhouse:rw \
+--volume /home/clickhouse/main/conf:/etc/clickhouse-server:rw \
+--volume /home/clickhouse/main/log:/var/log/clickhouse-server:rw \
 yandex/clickhouse-server:21.3.20
+
+运行从库
+docker run -d --rm --name=ck_sub -p 18123:8123 -p 19000:9000 -p 19009:9009 \
+--ulimit nofile=262144:262144 \
+--volume /home/clickhouse/sub/data:/var/lib/clickhouse:rw \
+--volume /home/clickhouse/sub/conf:/etc/clickhouse-server:rw \
+--volume /home/clickhouse/sub/log:/var/log/clickhouse-server:rw \
+yandex/clickhouse-server:21.3.20
+
+dbeaver驱动 ru.yandex.clickhouse-jdbc 0.2.6
+
+建表, 必须指定引擎类型，否则就会报Expected one of: storage definition, ENGINE, AS错误。
+CREATE TABLE test1
+(
+    id int,
+    name varchar(100),
+    birthday date
+)
+ENGINE = MergeTree
+PRIMARY KEY id;
 
 集群验证
 SELECT * FROM system.clusters;
