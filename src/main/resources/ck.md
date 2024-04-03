@@ -176,7 +176,9 @@ docker run -d --rm --name=ck_sub -p 18123:8123 -p 19000:9000 -p 19009:9009 \
 --volume /home/clickhouse/sub/log:/var/log/clickhouse-server:rw \
 yandex/clickhouse-server:21.3.20
 
-dbeaver驱动 ru.yandex.clickhouse-jdbc 0.2.6
+dbeaver驱动 ru.yandex.clickhouse-jdbc 0.2.6 
+如无法下载驱动,窗口–>首选项–>驱动–>maven–>添加–>添加maven的url 
+URL: http://maven.aliyun.com/nexus/content/groups/public/
 
 建表, 必须指定引擎类型，否则就会报Expected one of: storage definition, ENGINE, AS错误。
 CREATE TABLE test1
