@@ -6,6 +6,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
 /**
@@ -48,6 +49,12 @@ public class TestLoaclDate {
         ZonedDateTime zonedDateTime = localDateTime2.atZone(ZoneId.systemDefault());
         Date date2 = Date.from(zonedDateTime.toInstant());
         System.out.println("LocalDateTime：" + date2);
+
+        LocalDate monday = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        System.out.println("当前周星期一" + monday);
+
+        LocalDate firstDayOfMonth = now.withDayOfMonth(1);
+        System.out.println("当前月1号: " + firstDayOfMonth);
 
     }
 }
