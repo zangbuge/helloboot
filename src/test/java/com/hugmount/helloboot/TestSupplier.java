@@ -2,8 +2,11 @@ package com.hugmount.helloboot;
 
 import cn.hutool.core.lang.func.Consumer3;
 import cn.hutool.core.lang.func.Supplier2;
+import cn.hutool.json.JSONUtil;
+import com.hugmount.helloboot.test.pojo.TTest;
 import com.hugmount.helloboot.test.pojo.User;
 import com.hugmount.helloboot.util.POIUtil;
+import io.lettuce.core.output.KeyValueStreamingChannel;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
@@ -27,6 +30,11 @@ public class TestSupplier {
 
         // 无返回值
         Consumer3<SXSSFWorkbook, HttpServletResponse, String> downloadExcel = POIUtil::downloadExcel;
+
+        TTest tTest = new TTest();
+        KeyValueStreamingChannel<TTest, String> setUsername = TTest::setUsername;
+        setUsername.onKeyValue(tTest, "lhm");
+        System.out.println("KeyValueStreamingChannel: " + JSONUtil.toJsonStr(tTest));
 
         // 多个入参有返回值
         Supplier2<SXSSFWorkbook, LinkedHashMap<String, Object>, List<Map<String, Object>>> exportExcel = POIUtil::exportExcel;
@@ -53,7 +61,7 @@ public class TestSupplier {
         String s = Optional.ofNullable(user).map(User::getUsername).orElse("1");
         System.out.println("获取值 " + s);
         // 为空直接阻断
-        Optional.ofNullable(user).map(User::getUsername).orElseThrow(RuntimeException::new);
+//        Optional.ofNullable(user).map(User::getUsername).orElseThrow(RuntimeException::new);
 
 
     }
