@@ -59,6 +59,13 @@ public class ListStream {
         System.out.println("分组");
         System.out.println(JSON.toJSONString(collect2));
 
+        collect2.forEach((category, itemsInCategory) -> {
+            List<Student> sortedItems = itemsInCategory.stream()
+                    .sorted(Comparator.comparingInt(Student::getAge))
+                    .collect(Collectors.toList());
+            System.out.println("分组后排序" + category + ": " + sortedItems);
+        });
+
         Map<String, Map<String, List<Student>>> collect5 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.groupingBy(Student::getName)));
         System.out.println("多字段分组");
         System.out.println(JSON.toJSONString(collect5));
