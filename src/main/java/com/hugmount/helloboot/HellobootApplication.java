@@ -13,7 +13,8 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
  * @Date: 2019/3/13
  */
 
-// @MapperScan("com.hugmount.helloboot.*.mapper") 和 @Mapper 二选一即可
+// @MapperScan("com.hugmount.helloboot.*.mapper") 和 @Mapper 二选一即可.
+// 扫描包路径不要太大包含Service层,否则可能在service层报错Invalid bound statement (not found)
 // exclude = 将排除不加载这些类, 避免默认加载这些未使用的类而导致报错的问题
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class
         , HibernateJpaAutoConfiguration.class
