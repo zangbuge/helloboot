@@ -161,7 +161,7 @@ scp -r /home/clickhouse root@192.168.67.128:/home/
 每个节点分别运行
 
 运行主库
-docker run -d  --name=ck -p 8123:8123 -p 9000:9000 -p 9009:9009 \
+docker run -d --rm --name=ck -p 8123:8123 -p 9000:9000 -p 9009:9009 \
 --ulimit nofile=262144:262144 \
 --volume /home/clickhouse/main/data:/var/lib/clickhouse:rw \
 --volume /home/clickhouse/main/conf:/etc/clickhouse-server:rw \
@@ -176,7 +176,12 @@ docker run -d --rm --name=ck_sub -p 18123:8123 -p 19000:9000 -p 19009:9009 \
 --volume /home/clickhouse/sub/log:/var/log/clickhouse-server:rw \
 yandex/clickhouse-server:21.3.20
 
-dbeaver驱动 ru.yandex.clickhouse-jdbc 0.2.6 
+DBeaver驱动, 选择 "添加工件",填写以下三个信息即可,注意版本
+<dependency>
+    <groupId>ru.yandex.clickhouse</groupId>
+    <artifactId>clickhouse-jdbc</artifactId>
+    <version>0.2.4</version>
+</dependency>
 如无法下载驱动,窗口–>首选项–>驱动–>maven–>添加–>添加maven的url 
 URL: http://maven.aliyun.com/nexus/content/groups/public/
 

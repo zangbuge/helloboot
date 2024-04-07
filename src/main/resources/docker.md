@@ -601,9 +601,9 @@ mkdir -p /home/zookeeper_data/{data,conf}
 sudo chmod -R 777 /home/zookeeper_data
 搭建zookeeper集群3台,另外两台一样zk02, zk03, 仅修改 ZOO_MY_ID=1
 
-docker run -d --name zk01 --privileged=true --network host --rm \
+docker run -d --name zk01 --privileged=true --network host \
 -e ZOO_MY_ID=1 \
--e "ZOO_SERVERS=server.1=192.168.67.6:2888:3888 server.2=192.168.67.128:2888:3888 server.3=192.168.67.3:2888:3888" \
+-e "ZOO_SERVERS=server.1=192.168.38.128:2888:3888 server.2=192.168.38.130:2888:3888 server.3=192.168.38.132:2888:3888" \
 -p 2181:2181 -p 2888:2888 -p 3888:3888 \
 -v /home/zookeeper_data/data:/data \
 docker.io/zookeeper:3.4.12
