@@ -1,5 +1,6 @@
 package com.hugmount.helloboot;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateUtils;
@@ -55,6 +56,11 @@ public class TestLoaclDate {
 
         LocalDate firstDayOfMonth = now.withDayOfMonth(1);
         System.out.println("当前月1号: " + firstDayOfMonth);
+
+        DateTime dateTime = DateUtil.beginOfQuarter(new Date());
+        System.out.println("hutool获取某季度的开始时间: " + dateTime);
+        // DateUtil.betweenDay()
+
 
     }
 }
