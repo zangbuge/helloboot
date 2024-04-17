@@ -26,8 +26,12 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.BucketOrder;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -202,11 +206,21 @@ public class EsController {
         boolQueryBuilder.must(QueryBuilders.termQuery("addr.keyword", "xy"));
         TermsAggregationBuilder termsAggregationBuilder = AggregationBuilders.terms("group_userId").field("userId.keyword")
                 .subAggregation(AggregationBuilders.count("count_id").field("id.keyword"));
+        // 根据统计的文档数 倒序
+        termsAggregationBuilder.order(BucketOrder.count(false));
         searchSourceBuilder.query(boolQueryBuilder);
         searchSourceBuilder.aggregation(termsAggregationBuilder);
         request.source(searchSourceBuilder);
+        log.info("es脚本: {}", request.source().toString());
         SearchResponse search1 = highLevelClient.search(request, RequestOptions.DEFAULT);
         Aggregations aggregations1 = search1.getAggregations();
+        Map<String, Aggregation> asMap = aggregations1.getAsMap();
+        Aggregation group_userId = asMap.get("group_userId");
+        ParsedStringTerms parsedStringTerms = (ParsedStringTerms) group_userId;
+        List<? extends Terms.Bucket> buckets = parsedStringTerms.getBuckets();
+        for (Terms.Bucket it : buckets) {
+            log.info(it.getKeyAsString());
+        }
         log.info(JSONUtil.toJsonStr(aggregations1));
         // String json {"code":"0","msg":"","data":{"asMap":{"group_userId":{"name":"group_userId","buckets":[{"aggregations":{"asMap":{"count_id":{"name":"count_id","value":2,"type":"value_count","valueAsString":"2.0","fragment":true}},"fragment":true},"keyAsString":"12341","docCount":2,"docCountError":0,"key":"12341","keyAsNumber":12341,"fragment":true},{"aggregations":{"asMap":{"count_id":{"name":"count_id","value":1,"type":"value_count","valueAsString":"1.0","fragment":true}},"fragment":true},"keyAsString":"123412","docCount":1,"docCountError":0,"key":"123412","keyAsNumber":123412,"fragment":true}],"type":"sterms","sumOfOtherDocCounts":0,"docCountError":0,"fragment":true}},"fragment":true}}
         return Result.createBySuccess("", aggregations1);
