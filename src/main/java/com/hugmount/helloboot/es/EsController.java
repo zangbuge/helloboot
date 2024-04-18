@@ -34,6 +34,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.collapse.CollapseBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -130,6 +131,9 @@ public class EsController {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.from(0);
         searchSourceBuilder.size(3);
+        // 根据字段去重
+        CollapseBuilder collapseBuilder = new CollapseBuilder("name.keyword");
+        searchSourceBuilder.collapse(collapseBuilder);
         searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
         // 排序只能用数字类型
         searchSourceBuilder.sort("date", SortOrder.ASC);
