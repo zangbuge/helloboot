@@ -1,7 +1,9 @@
 package com.hugmount.helloboot;
 
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONUtil;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -9,6 +11,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
+import java.util.List;
 
 /**
  * mysql使用LocalDate  要求数据库驱动版本最低为 5.1.37
@@ -61,6 +64,9 @@ public class TestLoaclDate {
         System.out.println("hutool获取某季度的开始时间: " + dateTime);
         // DateUtil.betweenDay()
 
+        Date lastWeek = DateUtils.addWeeks(curDate, -1);
+        List<DateTime> dateTimes = DateUtil.rangeToList(lastWeek, new Date(), DateField.DAY_OF_WEEK);
+        System.out.println(JSONUtil.toJsonStr("一周内的日期天" + dateTimes));
 
     }
 }
