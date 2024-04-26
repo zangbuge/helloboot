@@ -148,7 +148,9 @@ public class EsStatServiceImpl {
      */
     SearchSourceBuilder searchPageBuilder(EsStatDTO labelStatDTO, String orderFieldName) {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.size(labelStatDTO.getPageSize());
+        if (Objects.nonNull(labelStatDTO.getPageSize())) {
+            searchSourceBuilder.size(labelStatDTO.getPageSize());
+        }
         searchSourceBuilder.trackTotalHits(true);
         searchSourceBuilder.sort(orderFieldName, SortOrder.ASC);
         if (labelStatDTO.getObjects() != null && labelStatDTO.getObjects().length > 0) {

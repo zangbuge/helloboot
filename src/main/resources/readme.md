@@ -55,3 +55,10 @@ github地址: https://github.com/YunaiV/ruoyi-vue-pro
  * @date ${DATE}
  */
  
+ #### 六. idea 运行项目报错 
+ ```aidl
+Error:Kotlin: Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 1.5.1, expected version is 1.1.16
+```
+解决方案:
+1. 重新编译项目, Build->Rebuild Project. 仅解决当次, 还会发生
+2. settings -> plugins 找到 kotlin 插件, 把 kotlin 插件 disable. 禁止使用kotlin插件, 彻底解决
