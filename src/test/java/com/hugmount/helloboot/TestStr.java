@@ -3,6 +3,7 @@ package com.hugmount.helloboot;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.IdUtil;
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.hugmount.helloboot.util.DesensitizeUtil;
 import com.hugmount.helloboot.util.StrUtil;
@@ -37,6 +38,17 @@ public class TestStr {
         System.out.println(DesensitizeUtil.desensitizeName("上官承诺"));
         System.out.println(DesensitizeUtil.desensitizePhone("15897998616"));
         System.out.println(DesensitizeUtil.desensitizeCredentialNo("420622199402136789"));
+    }
+
+    @Test
+    public void testCaseFormat() {
+        // 驼峰转下划线
+        String ans = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, "helloWorld");
+        System.out.println(ans); //hello_world
+
+        // 下划线转驼峰
+        String ans2 = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, "hello_world");
+        System.out.println(ans2); //helloWorld
     }
 
     @Test
