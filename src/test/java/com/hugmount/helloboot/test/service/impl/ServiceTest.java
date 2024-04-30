@@ -3,6 +3,8 @@ package com.hugmount.helloboot.test.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.hugmount.helloboot.AbstractMockTest;
 import com.hugmount.helloboot.test.mapper.TTestMapper;
 import com.hugmount.helloboot.test.pojo.TTest;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -23,7 +25,7 @@ import java.util.List;
  * @date: 2023/9/23
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ServiceTest {
+public class ServiceTest extends AbstractMockTest {
 
     @InjectMocks
     TestServiceImpl testService;
@@ -42,13 +44,14 @@ public class ServiceTest {
     public void tes1() {
         TTest t = new TTest();
         t.setUsername("lhm");
-//        Mockito.when(tTestMapper.selectList(Wrappers.<TTest>lambdaQuery().eq(TTest::getId, 1L))).thenReturn(Arrays.asList(t));
-        Mockito.when(tTestMapper.selectList(Mockito.any())).thenReturn(Arrays.asList(t));
+        Mockito.when(tTestMapper.selectList(mpWrap(Wrappers.<TTest>lambdaQuery().eq(TTest::getId, 1L)))).thenReturn(Arrays.asList(t));
+        // 粗略mock可不用mpWrap
+        // Mockito.when(tTestMapper.selectList(Mockito.any())).thenReturn(Arrays.asList(t));
         List<TTest> testList = testService.getTTestList(t);
-        System.out.println("非mock逻辑" + JSONUtil.toJsonStr(testList));
+        System.out.println("非mock条件逻辑" + JSONUtil.toJsonStr(testList));
         t.setId(1L);
         List<TTest> list = testService.getTTestList(t);
-        System.out.println("mock结果" + JSONUtil.toJsonStr(list));
+        System.out.println("mock条件结果" + JSONUtil.toJsonStr(list));
     }
 
 }
