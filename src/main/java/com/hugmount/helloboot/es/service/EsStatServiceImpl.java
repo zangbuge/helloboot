@@ -77,8 +77,9 @@ public class EsStatServiceImpl {
             TermsAggregationBuilder aggregationBuilder = travelQueryAggregationBuilder(labelStatDTO, "userId.keyword");
             searchSourceBuilder.aggregation(aggregationBuilder);
         }
-        CollapseBuilder collapseBuilder = new CollapseBuilder("userId.keyword");
-        searchSourceBuilder.collapse(collapseBuilder);
+        // 去重, 但 "collapse" 不能和 "searchAfter" 结合使用
+//        CollapseBuilder collapseBuilder = new CollapseBuilder("userId.keyword");
+//        searchSourceBuilder.collapse(collapseBuilder);
         SearchRequest searchRequest = new SearchRequest(ES_TEST_INDEX);
         searchRequest.source(searchSourceBuilder);
         SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
@@ -114,11 +115,10 @@ public class EsStatServiceImpl {
         }
 
         // 记录
-        if (response.getHits().getTotalHits().value == 0) {
+        SearchHit[] hits = response.getHits().getHits();
+        if (hits.length == 0) {
             return null;
         }
-
-        SearchHit[] hits = response.getHits().getHits();
         Object[] objects = hits[hits.length - 1].getSortValues();
         int len = hits.length;
         for (int i = 0; i < len; i++) {
@@ -153,6 +153,13 @@ public class EsStatServiceImpl {
         }
         searchSourceBuilder.trackTotalHits(true);
         searchSourceBuilder.sort(orderFieldName, SortOrder.ASC);
+        // searchAfter 支持实时深度分页.
+        // scroll 支持快照深度分页(初始化+遍历), 可设置缓存时间, 可理解为数据库的游标,
+        // 指定游标缓存时间 request.scroll(TimeValue.timeValueMinutes(2L));
+        // 查source的首页信息 myClient.search(request, RequestOptions.DEFAULT);
+        // String scrollId = response.getScrollId();
+        // 循环-创建 SearchSrollRequest SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+        // SearchResponse scrollResp = myClient.scroll(scrollRequest, RequestOptions.DEFAULT);
         if (labelStatDTO.getObjects() != null && labelStatDTO.getObjects().length > 0) {
             searchSourceBuilder.searchAfter(labelStatDTO.getObjects());
         }
