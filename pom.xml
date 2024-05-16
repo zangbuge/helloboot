@@ -110,6 +110,11 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.4.7</version>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>4.2.0</version>
+        </dependency>
 
         <!-- 热启动必要配置: IDEA自动编译开启,
             勾选 File -> Settings -> Compiler-Build -> Project automatically,

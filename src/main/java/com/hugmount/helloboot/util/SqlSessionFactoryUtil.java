@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.util;
 
+import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -39,6 +40,12 @@ public class SqlSessionFactoryUtil {
     public <T> void batch(SqlSessionFactory sqlSessionFactory, List<T> list, LambdaFun<T, Integer> action) {
         SqlSession sqlSession = null;
         try {
+            // 获取当前数据源标识
+            String peek = DynamicDataSourceContextHolder.peek();
+            if (peek != null) {
+                // 切换到该数据源
+                DynamicDataSourceContextHolder.push(peek);
+            }
             String implClass = action.getSerializedLambda().getImplClass();
             String clazzPath = implClass.replace("/", ".");
             Class<?> aClass = Class.forName(clazzPath);
