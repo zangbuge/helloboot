@@ -5,7 +5,7 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -18,29 +18,24 @@ import java.util.List;
  * @date: 2023/3/15
  */
 
-@Service
+@Component
 public class SqlSessionFactoryUtil {
 
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
 
-
-    public <T> void batch(List<T> list, LambdaFun<T, Integer> action) {
-        batch(sqlSessionFactory, list, action);
-    }
-
     /**
      * 批量耗时仅为单条插入耗时的1/3
      *
-     * @param sqlSessionFactory
      * @param list
      * @param action
      * @param <T>
+     * @param <R>
      */
-    public <T> void batch(SqlSessionFactory sqlSessionFactory, List<T> list, LambdaFun<T, Integer> action) {
+    public <T, R> void batch(List<T> list, LambdaFun<T, R> action) {
         SqlSession sqlSession = null;
         try {
-            // 获取当前数据源标识
+            // 多数据源时获取当前数据源标识
             String peek = DynamicDataSourceContextHolder.peek();
             if (peek != null) {
                 // 切换到该数据源
