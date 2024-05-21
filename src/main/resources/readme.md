@@ -62,3 +62,9 @@ Error:Kotlin: Module was compiled with an incompatible version of Kotlin. The bi
 解决方案:
 1. 重新编译项目, Build->Rebuild Project. 仅解决当次, 还会发生
 2. settings -> plugins 找到 kotlin 插件, 把 kotlin 插件 disable. 禁止使用kotlin插件, 彻底解决
+
+
+##### 七. notepad
+shift + alt + a 鼠标选择起止位置 多行同步插入删除
+alt + 鼠标选择多行 多行同步编辑
+ctl + j 合并多行为一行
