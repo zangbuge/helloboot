@@ -520,7 +520,7 @@ repository/repositories:maven-releases>Hosted>选择Allow redeploy
 
 4. 配置maven配置文件settings.xml
 <server> 
-  <!-- id随意定义 -->
+  <!-- id自定义和pom.xml配置的id一致 -->
   <id>maven-releases</id>
   <username>admin</username>
   <password>123456</password>
