@@ -408,9 +408,10 @@ redis-server /etc/redis/conf/redis.conf
 docker exec -it redis bash 【进入容器】
 redis-cli 【连接,默认本地】
 auth 123456 【登录】
-select 1 【不执行,默认选择数据库0】
+select 1 【不执行,默认选择数据库0, 集群不能选择, 只能是0】
 set hello world
 get hello
+ttl hello 查有效期
 #默认安装目录/usr/local/bin, --raw 支持中文
 redis-cli -h www.fxitalk.com -p 6379 -a 123456 --raw 
 
