@@ -19,13 +19,12 @@ vim test_app.service
 ```aidl
 [Unit]
 Description=test_app
-Documentation=lhm
 
 [Service]
 Type=simple
 EnvironmentFile=/usr/local/etc/my_app.env
 WorkingDirectory=/opt/test_app
-ExecStart=/bin/sh /opt/test_app/start.sh
+ExecStart=/bin/sh ${WorkingDirectory}/start.sh
 Restart=always
 RestartSec=5
 
