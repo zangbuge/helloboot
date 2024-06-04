@@ -63,6 +63,12 @@ Name_locked 表名是否被锁定，0代表正常
 2.6 杀死造成死锁的进程
 KILL <thread_id>;
 
+2.7 查看mysql连接数
+show status like 'Threads%'; -- Threads_connected值等于 SHOW PROCESSLIST; 的总数. 
+SHOW PROCESSLIST;
+-- 如果发现Threads_created值过大的话，表明MySQL服务器一直在创建线程, 可以适当增加配置文件中的thread_cache_size值
+SHOW VARIABLES LIKE 'max_connections'; -- 最大连接数 默认151
+
 mysql绿色版安装
 官方下载地址: https://downloads.mysql.com/archives/community/
 安装包下载完之后，
