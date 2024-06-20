@@ -10,6 +10,7 @@ import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
 import com.hugmount.helloboot.util.ImageUtil;
 import com.hugmount.helloboot.util.POIUtil;
+import com.hugmount.helloboot.util.PrintUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -179,5 +180,19 @@ public class TestController {
         return "success";
     }
 
-
+    @ResponseBody
+    @RequestMapping("/testPrintUtil")
+    public Result<String> testPrintUtil() {
+        String s = PrintUtil.addUseTimeLog("测试日志打印", () -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return UUID.randomUUID().toString();
+        });
+        log.info("testPrintUtil: {}", s);
+        return Result.createBySuccess(s);
+    }
+    
 }
