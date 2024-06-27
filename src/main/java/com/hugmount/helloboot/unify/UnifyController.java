@@ -28,7 +28,7 @@ public class UnifyController {
         log.info("123");
         // todo 校验签名
         RouteEnum routeEnum = RouteEnum.valueOf(param.getRoute());
-        AbstractHandler handler = (AbstractHandler) SpringUtil.getBean(routeEnum.getHandlerClass());
+        AbstractHandler handler = SpringUtil.getBean(routeEnum.getHandlerClass());
         Class actualType = ClassUtil.getSupperClassActualType(handler.getClass(), 1);
         String json = JSON.toJSONString(param.getParam());
         Object obj = JSONObject.parseObject(json, actualType);

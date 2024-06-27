@@ -15,12 +15,12 @@ public enum RouteEnum {
     TEST(TestHandler.class, "测试处理类");
 
     @Getter
-    private Class handlerClass;
+    private Class<? extends AbstractHandler> handlerClass;
 
     @Getter
     private String handlerName;
 
-    RouteEnum(Class handlerClass, String handlerName) {
+    RouteEnum(Class<? extends AbstractHandler> handlerClass, String handlerName) {
         this.handlerClass = handlerClass;
         this.handlerName = handlerName;
     }
