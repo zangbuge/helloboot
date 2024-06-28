@@ -25,7 +25,7 @@ import java.util.List;
  * @date: 2023/9/23
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ServiceTest extends AbstractMockTest {
+public class MybatisPlusTest extends AbstractMockTest {
 
     @InjectMocks
     TestServiceImpl testService;
@@ -40,6 +40,11 @@ public class ServiceTest extends AbstractMockTest {
         TableInfoHelper.initTableInfo(new MapperBuilderAssistant(new MybatisConfiguration(), ""), TTest.class);
     }
 
+    /**
+     * 若要mock mybatis-plus的ServiceImpl自带的 list(queryWrapper)方法
+     * list实际调用的是mapper的selectList方式，所以mock时用
+     * Mockito.when(mapper.selectList(any())).thenReturn(list)
+     */
     @Test
     public void tes1() {
         TTest t = new TTest();

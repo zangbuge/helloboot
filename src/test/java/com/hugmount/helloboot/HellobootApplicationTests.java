@@ -63,8 +63,7 @@ public class HellobootApplicationTests {
     @Test
     public void contextLoads() {
         Map<String, com.hugmount.helloboot.test.pojo.Test> map = applicationContext.getBeansOfType(com.hugmount.helloboot.test.pojo.Test.class);
-        System.out.println(map);
-        System.out.println("测试完成");
+        System.out.println("测试查库数据: " + map);
         List<com.hugmount.helloboot.test.pojo.Test> list = new ArrayList<>();
         com.hugmount.helloboot.test.pojo.Test test = new com.hugmount.helloboot.test.pojo.Test();
         test.setPhone("1589799");
