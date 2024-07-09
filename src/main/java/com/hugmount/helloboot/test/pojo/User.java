@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Data
 @XmlRootElement(name = "xml")
-public class User {
+public class User implements Cloneable {
 
     private String username;
 
@@ -19,4 +19,8 @@ public class User {
 
     private String remark;
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

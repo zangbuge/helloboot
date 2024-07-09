@@ -173,7 +173,8 @@ show databases; 查看数据库
 use databases; 进入数据库
 show tables; 查看当前所在数据库下面的所有表
 select * from test; #必须加分号;
-describe test1; # 查看表格的字段信息
+desc test1; # 查看表格的字段信息
+show create table test1; # 查询指定表的建表语句ddl 
 
 mysql严格模式
 MySQL自身对数据进行严格的校验(格式、长度、类型等)，比如一个整型字段我们写入一个字符串类型的数据，
