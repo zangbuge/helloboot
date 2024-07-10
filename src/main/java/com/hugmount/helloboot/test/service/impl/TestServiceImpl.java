@@ -11,6 +11,7 @@ import com.hugmount.helloboot.test.pojo.TTest;
 import com.hugmount.helloboot.test.pojo.Test;
 import com.hugmount.helloboot.test.service.TestService;
 import com.hugmount.helloboot.util.SqlSessionFactoryUtil;
+import com.hugmount.helloboot.util.StrUtil;
 import com.hugmount.helloboot.util.ThreadUtil;
 import com.hugmount.helloboot.util.TransactionManagerUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -131,4 +132,12 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements Te
     public void updateData(TTest tTest) {
         tTestMapper.updateById(tTest);
     }
+
+    public String testStrUtil(String url) {
+        String key = StrUtil.getUrlParam(url, "name");
+        System.out.println("getUrlParam name: " + key);
+        String baseUrl = StrUtil.getUrlAddr(url);
+        return baseUrl;
+    }
+
 }

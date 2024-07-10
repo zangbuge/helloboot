@@ -24,4 +24,10 @@ public class StrUtil {
         }
         return null;
     }
+
+    public static String getUrlAddr(String url) {
+        String[] split = url.split("\\?");
+        return split[0];
+    }
+
 }

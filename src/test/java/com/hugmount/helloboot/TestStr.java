@@ -53,7 +53,7 @@ public class TestStr {
 
     @Test
     public void testGetUrlParam() {
-        String url = "www.baidu.com/test?name=lhm&phone=123";
+        String url = "http://www.baidu.com/test?name=lhm&phone=123";
         System.out.println(StrUtil.getUrlParam(url, "phone"));
 
         String build = UrlBuilder.of("http://127.0.1:8080/helloboot/")
@@ -61,6 +61,9 @@ public class TestStr {
                 .addQuery("username", "lhm")
                 .build();
         System.out.println(build);
+
+        String baseUrl = StrUtil.getUrlAddr(url);
+        System.out.println(baseUrl);
     }
 
 
