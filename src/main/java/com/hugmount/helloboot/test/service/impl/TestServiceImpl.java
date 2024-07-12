@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -138,6 +139,12 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements Te
         System.out.println("getUrlParam name: " + key);
         String baseUrl = StrUtil.getUrlAddr(url);
         return baseUrl;
+    }
+
+    public String testArgumentMatcher(String name, Map<String, Object> map) {
+        log.info("testArgumentMatcher name: {}", name);
+        log.info("testArgumentMatcher map: {}", JSONUtil.toJsonStr(map));
+        return name;
     }
 
 }
