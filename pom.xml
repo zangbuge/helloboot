@@ -226,22 +226,11 @@
             <version>5.5.3</version>
         </dependency>
 
-        <!--websocket start-->
+        <!--websocket -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>3.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>jquery.cookie</artifactId>
-            <version>1.4.1</version>
-        </dependency>
-        <!--websocket end-->
 
         <dependency>
             <groupId>org.apache.shiro</groupId>
