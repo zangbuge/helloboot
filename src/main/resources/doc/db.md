@@ -9,6 +9,10 @@ update_time timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMES
 -- mysql 多字段使用 in 条件
 select * from test s where (s.from_type , s.params) in (('zfb', '00'), ('smy', '333'));
 
+-- mysql where 条件避免verchar=数字; 如 where status = 0; 字母也会被匹配出来
+当比较一个 VARCHAR 类型的字段和一个整数时，MySQL 会将该字段尝试转换为整数，然后再与整数进行比较。
+而在这个转换过程中，如果字段的值无法转换为整数，则会被转换为 0 
+
 ### 二 mysql死锁
 2.1 查看所有正在运行线程
 SHOW FULL PROCESSLIST;
