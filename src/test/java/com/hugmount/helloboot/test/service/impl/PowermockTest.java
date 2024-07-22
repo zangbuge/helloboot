@@ -11,6 +11,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashMap;
 
@@ -20,7 +22,7 @@ import java.util.HashMap;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(StrUtil.class)
+@PrepareForTest({StrUtil.class, TestServiceImpl.class})
 @PowerMockIgnore({"javax.management.*", "javax.script.*", "javax.net.ssl.*", "javax.crypto.*"})
 // 忽略jdk兼容问题报错, http证书问题, sm4加密问题
 public class PowermockTest {
@@ -60,6 +62,22 @@ public class PowermockTest {
         objectObjectHashMap.put("age", "18");
         String res = spy.testArgumentMatcher("hello", objectObjectHashMap);
         Assert.assertEquals("mock map success", res);
+    }
+
+    @SneakyThrows
+    @Test
+    public void testPrV() {
+        // @PrepareForTest中添加目标测试类
+        TestServiceImpl spy = PowerMockito.spy(testService);
+        PowerMockito.doReturn("mock result").when(spy, "testPrV", "zh");
+
+        // 调用私有方法 方式一
+        Object obj = Whitebox.invokeMethod(spy, "testPrV", "lhm");
+        System.out.println(obj);
+
+        // 调用私有方法 方式二
+        Object res = ReflectionTestUtils.invokeMethod(spy, "testPrV", "zh");
+        System.out.println("符合mock条件: " + res);
     }
 
 }

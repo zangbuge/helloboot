@@ -147,4 +147,8 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements Te
         return name;
     }
 
+    private String testPrV(String name) {
+        return "hello" + name;
+    }
+
 }
