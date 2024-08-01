@@ -9,6 +9,7 @@ import com.hugmount.helloboot.test.mapper.TTestMapper;
 import com.hugmount.helloboot.test.mapper.TestMapper;
 import com.hugmount.helloboot.test.pojo.TTest;
 import com.hugmount.helloboot.test.pojo.Test;
+import com.hugmount.helloboot.test.service.DemoService;
 import com.hugmount.helloboot.test.service.TestService;
 import com.hugmount.helloboot.util.SqlSessionFactoryUtil;
 import com.hugmount.helloboot.util.StrUtil;
@@ -45,6 +46,9 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements Te
 
     @Autowired
     private TTestMapper tTestMapper;
+
+    @Autowired
+    private DemoService demoService;
 
     @Override
     public List<Test> getTestList(Test test) {
@@ -151,4 +155,11 @@ public class TestServiceImpl extends ServiceImpl<TestMapper, Test> implements Te
         return "hello" + name;
     }
 
+
+    public String testDemoSpy(String name) {
+        String hi = demoService.hi(name);
+        String read = demoService.read(hi);
+        return read;
+    }
+    
 }

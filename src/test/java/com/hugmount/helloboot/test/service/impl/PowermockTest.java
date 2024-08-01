@@ -1,12 +1,16 @@
 package com.hugmount.helloboot.test.service.impl;
 
+import com.hugmount.helloboot.test.service.DemoService;
 import com.hugmount.helloboot.util.StrUtil;
 import lombok.SneakyThrows;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -17,18 +21,32 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.HashMap;
 
 /**
+ * PowerMockito使用junit4
+ *
  * @author lhm
  * @date 2024/7/10
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({StrUtil.class, TestServiceImpl.class})
+@PrepareForTest({TestServiceImpl.class, DemoService.class, StrUtil.class})
 @PowerMockIgnore({"javax.management.*", "javax.script.*", "javax.net.ssl.*", "javax.crypto.*"})
 // 忽略jdk兼容问题报错, http证书问题, sm4加密问题
 public class PowermockTest {
 
+    /**
+     * @Spy 必须在声明时创建实例
+     */
+    @Spy
+    private DemoService demoService = new DemoService();
+
     @InjectMocks
     private TestServiceImpl testService;
+
+    @Before
+    public void init() {
+        // 开启mock注解, 否则 @Spy, @Mock 等注解无效
+        MockitoAnnotations.initMocks(this);
+    }
 
     /**
      * 静态方法 spy
@@ -78,6 +96,16 @@ public class PowermockTest {
         // 调用私有方法 方式二
         Object res = ReflectionTestUtils.invokeMethod(spy, "testPrV", "zh");
         System.out.println("符合mock条件: " + res);
+    }
+
+    @SneakyThrows
+    @Test
+    public void testSpy() {
+        PowerMockito.doReturn("lhm(mock hi)").when(demoService).hi("lhm");
+        String lhm = testService.testDemoSpy("lhm");
+        System.out.println(lhm);
+        String test = testService.testDemoSpy("test");
+        System.out.println(test);
     }
 
 }
