@@ -46,7 +46,7 @@ github地址: https://github.com/YunaiV/ruoyi-vue-pro
 #### 四. idea破解后重装,双击无法打开, 解决办法
 1. 快捷键 windos + R, 然后输入 regedit 回车调出注册表 依次点击菜单 计算机\HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains，然后右键删除 
 2. 清理用户下的 C:\Users\lhm\.IntelliJIdea 文件夹
-3. 清理用户下的 C:\Users\lhm\AppData\Roaming\JetBrains 文件夹
+3. 清理用户下的 C:\Users\lhm\AppData\Roaming\JetBrains 文件夹  如果没有AppData文件夹, 查看>显示隐藏文件
 
 #### 五. idea设置作者
 设置找到 Editor >> File and Code Templates >> Includes >> File Header 
