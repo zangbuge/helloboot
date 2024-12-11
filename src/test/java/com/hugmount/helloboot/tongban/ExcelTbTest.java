@@ -1,4 +1,4 @@
-package com.hugmount.helloboot;
+package com.hugmount.helloboot.tongban;
 
 import com.hugmount.helloboot.util.POIUtil;
 import lombok.SneakyThrows;
@@ -27,6 +27,7 @@ public class ExcelTbTest {
         list.add("研发协调人");
         list.add("测试协调人");
         list.add("运维协调人");
+        list.add("UI协调人");
 
         FileInputStream fileInputStream = new FileInputStream("D:\\项目清单/商机交付小组导出1211.xlsx");
         FileOutputStream fileOutputStream = new FileOutputStream("D:\\项目清单/商机交付小组清单.xlsx");
