@@ -3,7 +3,6 @@ package com.hugmount.helloboot.tongban;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.Week;
 import com.hugmount.helloboot.util.POIUtil;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateUtils;
@@ -28,14 +27,18 @@ public class DateTest {
     @SneakyThrows
     public static void main(String[] args) {
         System.out.println(UUID.randomUUID().toString().replace("-", ""));
-        List<DateTime> dateTimes = DateUtil.rangeToList(DateUtils.parseDate("2024-11-20", "yyyy-MM-dd"), DateUtils.parseDate("2025-01-01", "yyyy-MM-dd"), DateField.DAY_OF_YEAR);
+        List<DateTime> dateTimes = DateUtil.rangeToList(DateUtils.parseDate("2024-10-08", "yyyy-MM-dd"), DateUtils.parseDate("2026-01-01", "yyyy-MM-dd"), DateField.DAY_OF_YEAR);
         List<Map<String, Object>> collect = dateTimes.stream().map(it -> {
             Map<String, Object> map = new LinkedHashMap<>();
             String format = DateUtil.format(it, "yyyy/MM/dd");
             map.put("日期", format);
             try {
-                int format1 = DateUtil.dayOfWeek(DateUtils.parseDate(format, "yyyy/MM/dd"));
-                map.put("周几", format1 - 1);
+                int dayOfWeek = DateUtil.dayOfWeek(DateUtils.parseDate(format, "yyyy/MM/dd")) - 1;
+                map.put("周几", dayOfWeek);
+                map.put("类型", "工作日");
+                if (dayOfWeek == 0 || dayOfWeek == 6) {
+                    map.put("类型", "休息日");
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -46,6 +49,7 @@ public class DateTest {
         Map<String, Object> header = new LinkedHashMap<>();
         header.put("日期", "日期");
         header.put("周几", "周几");
+        header.put("类型", "类型");
         SXSSFWorkbook sheets = POIUtil.exportExcel(header, collect);
         FileOutputStream fileOutputStream = new FileOutputStream("D:\\temp/工作日历.xlsx");
         sheets.write(fileOutputStream);
