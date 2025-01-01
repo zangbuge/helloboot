@@ -105,8 +105,7 @@ public class POIUtil {
             SXSSFRow dataRow = sheet.createRow(i + 1 + startRowNo);
             for (int j = 0; j < headSize; j++) {
                 String dataKey = headOrder.get(String.valueOf(j));
-                Object value = map.get(dataKey);
-                String obj = Optional.ofNullable(value).orElse(null).toString();
+                String obj = (String) map.get(dataKey);
                 SXSSFCell cell = dataRow.createCell(j);
                 cell.setCellValue(obj);
                 cell.setCellStyle(cellStyle);
