@@ -10,9 +10,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -35,12 +32,19 @@ public class POIUtil {
     private POIUtil() {
     }
 
-    private static String formatStr = "yyyy-MM-dd HH:mm:ss";
+    private static String DATE_FORMAT_STR = "yyyy-MM-dd HH:mm:ss";
 
-    private static String defaultSheetName = "Sheet1";
+    private static String DEFAULT_SHEET_NAME = "Sheet1";
 
+    /**
+     * 导出excel
+     *
+     * @param headMap
+     * @param dataList
+     * @return
+     */
     public static SXSSFWorkbook exportExcel(Map<String, Object> headMap, List<Map<String, Object>> dataList) {
-        return exportExcel(null, headMap, dataList, defaultSheetName, 0);
+        return exportExcel(null, headMap, dataList, DEFAULT_SHEET_NAME, 0);
     }
 
     public static SXSSFWorkbook exportExcel(SXSSFWorkbook workbook, Map<String, Object> headMap, List<Map<String, Object>> dataList
@@ -52,14 +56,14 @@ public class POIUtil {
         // 打开压缩功能 防止占用过多磁盘
         workbook.setCompressTempFiles(true);
 
-        // 设置表头样式
+        // 表头样式
+        Font titleFont = workbook.createFont(); // 字体
+        titleFont.setFontHeightInPoints((short) 12); // 按几号字体
+        // cellFont.setFontHeight((short) 380); // 按像素
+        titleFont.setBold(true); // 是否加粗
         CellStyle titleStyle = workbook.createCellStyle();
         titleStyle.setAlignment(HorizontalAlignment.CENTER); // 水平居中
         titleStyle.setVerticalAlignment(VerticalAlignment.CENTER); // 垂直居中
-        Font titleFont = workbook.createFont(); // 字体
-        titleFont.setBold(true); // 是否加粗
-        titleFont.setFontHeightInPoints((short) 12); // 几号字体
-        // cellFont.setFontHeight((short) 380); // 按像素
         titleStyle.setFont(titleFont);
 
         // 内容样式
@@ -75,13 +79,14 @@ public class POIUtil {
 
         // 创建一个sheet
         SXSSFSheet sheet = workbook.createSheet(sheetName);
-        // 锁定表头第一行
-        sheet.createFreezePane(0, 1, 0, 1);
+        // 锁定表头
+        // 参数1: 要冻结的列数
+        // 参数2: 要冻结的行数
+        sheet.createFreezePane(0, 1);
         int headSize = headMap.size();
         // 创建表头并设置顺序
         Map<String, String> headOrder = new HashMap<>();
         SXSSFRow headRow = sheet.createRow(startRowNo);
-        headRow.setHeight((short) 360); // 像素
         Iterator<Map.Entry<String, Object>> iterator = headMap.entrySet().iterator();
         int ci = 0;
         while (iterator.hasNext()) {
@@ -101,7 +106,7 @@ public class POIUtil {
             for (int j = 0; j < headSize; j++) {
                 String dataKey = headOrder.get(String.valueOf(j));
                 Object value = map.get(dataKey);
-                String obj = Optional.ofNullable(value).orElse("").toString();
+                String obj = Optional.ofNullable(value).orElse(null).toString();
                 SXSSFCell cell = dataRow.createCell(j);
                 cell.setCellValue(obj);
                 cell.setCellStyle(cellStyle);
@@ -130,8 +135,16 @@ public class POIUtil {
         workbook.dispose();
     }
 
+    /**
+     * 解析excel
+     *
+     * @param inputStream
+     * @return
+     */
     public static List<Map<String, Object>> importExcel(InputStream inputStream) {
-        return importExcel(inputStream, 0, false);
+        List<Map<String, Object>> list = importExcel(inputStream, 0, true);
+        list.remove(0);
+        return list;
     }
 
     @SneakyThrows(Exception.class)
@@ -140,7 +153,9 @@ public class POIUtil {
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(wb);
         XSSFWorkbook xssfWorkbook = sxssfWorkbook.getXSSFWorkbook();
         XSSFSheet sheetAt = xssfWorkbook.getSheetAt(0);
-        Assert.notNull(sheetAt, "该文件中没有excel数据");
+        if (sheetAt == null) {
+            return null;
+        }
         Map<String, Object> headerMap = new HashMap<>();
         List<Map<String, Object>> rowList = new ArrayList<>();
         // 获取的lastRowNum比实际行数少一行,表头
@@ -164,16 +179,17 @@ public class POIUtil {
     static Map<String, Object> dealRowData(XSSFRow row, Map<String, Object> headerMap) {
         short lastCellNum = row.getLastCellNum();
         Map<String, Object> rowData = new LinkedHashMap<>();
+        boolean useHead = headerMap != null && headerMap.size() > 0;
         for (short j = 0; j < lastCellNum; j++) {
             XSSFCell cell = row.getCell(j);
             String cellValueStr = getCellValueStr(cell);
             // 使用表头为key
             String key = null;
-            if (!ObjectUtils.isEmpty(headerMap)) {
-                key = headerMap.getOrDefault(String.valueOf(j), "").toString();
+            if (useHead) {
+                key = (String) headerMap.get(String.valueOf(j));
             }
-            // 使用列序号为key，或表头为key的第一行数据
-            if (StringUtils.isEmpty(key)) {
+            // 使用列序号为key
+            if (key == null || key.trim().length() == 0) {
                 key = String.valueOf(j);
             }
             rowData.put(key, cellValueStr);
@@ -194,7 +210,7 @@ public class POIUtil {
                 // 读取日期
                 if (DateUtil.isCellDateFormatted(cell)) {
                     Date dateCellValue = cell.getDateCellValue();
-                    DateFormat dateFormat = new SimpleDateFormat(formatStr);
+                    DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_STR);
                     return dateFormat.format(dateCellValue);
                 }
                 // 读取数字
