@@ -25,6 +25,17 @@ public class ThreadUtil {
         CompletableFuture.runAsync(runnable);
     }
 
+    public static void main(String[] args) {
+        // 创建一个固定大小的线程池
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
+        // 创建一个Runnable任务
+        Runnable task = () -> System.out.println("Task executed at: " + System.nanoTime());
+        // 延迟1秒后执行任务，然后每3秒执行一次
+        executorService.scheduleAtFixedRate(task, 1, 3, TimeUnit.SECONDS);
+        // 如果需要在一定时间后关闭线程池，可以执行以下代码
+        // executorService.shutdown();
+    }
+
 }
 
 /**
