@@ -75,6 +75,10 @@ public class ListStream {
         System.out.println("分组求和");
         System.out.println(JSON.toJSONString(collect6));
 
+        Map<String, Long> collect8 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.counting()));
+        System.out.println("分组统计");
+        System.out.println(JSON.toJSONString(collect8));
+
         Map<String, Map<String, Object>> collect7 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.collectingAndThen(Collectors.toList(), m -> {
             BigDecimal reduce = m.stream().map(Student::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
             int sum = m.stream().mapToInt(Student::getId).sum();
