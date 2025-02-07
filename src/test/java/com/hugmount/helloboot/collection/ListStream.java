@@ -75,6 +75,10 @@ public class ListStream {
         System.out.println("分组求和");
         System.out.println(JSON.toJSONString(collect6));
 
+        BigDecimal reduce1 = list.stream().map(it -> new BigDecimal(it.getAge())).reduce(BigDecimal.ZERO, BigDecimal::add);
+        System.out.println("求和");
+        System.out.println(reduce1);
+
         Map<String, Long> collect8 = list.stream().collect(Collectors.groupingBy(Student::getSex, Collectors.counting()));
         System.out.println("分组统计");
         System.out.println(JSON.toJSONString(collect8));
