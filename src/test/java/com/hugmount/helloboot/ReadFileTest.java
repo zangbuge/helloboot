@@ -1,9 +1,10 @@
 package com.hugmount.helloboot;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import org.junit.Test;
+
+import java.io.*;
 import java.nio.channels.FileChannel;
+import java.util.Scanner;
 
 /**
  * @author: lhm
@@ -49,4 +50,45 @@ public class ReadFileTest {
         return;
     }
 
+
+    /**
+     * 读取文本文件 方式一
+     */
+    @Test
+    public void ReadTxtTest1() {
+        File file = new File("/test20250213.txt"); // 替换为实际的文件路径和文件名
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // 处理每行数据
+                System.out.println(line);
+            }
+            reader.close();
+            fileInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 读取文本文件 方式二
+     */
+    @Test
+    public void ReadTxtTest2() {
+        File file = new File("/test20250213.txt");
+        try {
+            Scanner scanner = new Scanner(new FileInputStream(file));
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                // 处理每行数据
+                System.out.println(line);
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
