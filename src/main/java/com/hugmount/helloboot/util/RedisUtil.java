@@ -19,6 +19,13 @@ public class RedisUtil {
     private static JedisPool jedisPool;
 
     static {
+        /**
+         * 集群模式 Set<HostAndPort> nodes = new HashSet<>();
+         *         nodes.add(new HostAndPort("host", 6379));
+         *         // 重载的方法可设置密码
+         *         JedisCluster jedisCluster = new JedisCluster(nodes);
+         *         jedisCluster.set("key", "val");
+         */
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(128); // 设置连接池最大连接数
         poolConfig.setMaxIdle(16);   // 设置连接池中的最大空闲连接
@@ -57,7 +64,7 @@ public class RedisUtil {
      * @param v
      * @param ex 单位秒
      */
-    public static void set(String k, String v, long ex) {
+    private static void set(String k, String v, long ex) {
         SetParams setParams = new SetParams();
         setParams.ex(ex);
         Jedis jedis = jedisPool.getResource();
@@ -66,10 +73,7 @@ public class RedisUtil {
 
     public static void set(String k, String v, long expire, TimeUnit timeUnit) {
         long ex = timeUnit.toSeconds(expire);
-        SetParams setParams = new SetParams();
-        setParams.ex(ex);
-        Jedis jedis = jedisPool.getResource();
-        jedis.set(k, v, setParams);
+        set(k, v, ex);
     }
 
     public static String get(String k) {
