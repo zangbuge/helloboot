@@ -444,6 +444,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>5.2.0</version>
+        </dependency>
 
     </dependencies>
 
