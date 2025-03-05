@@ -32,7 +32,9 @@ public class RedisUtil {
         poolConfig.setMinIdle(4);    // 设置连接池中的最小空闲连接
         poolConfig.setTestOnBorrow(true); // 从池中取出连接时，是否进行有效性检查
         poolConfig.setTestOnReturn(true); // 在归还连接时检查有效性
-        jedisPool = new JedisPool(poolConfig, REDIS_HOST, REDIS_PORT, 30000, REDIS_PASSWORD);
+        poolConfig.setMinEvictableIdleTimeMillis(10000); // 最大空闲时间
+        poolConfig.setMaxWaitMillis(5000); // 最大等待时间
+        jedisPool = new JedisPool(poolConfig, REDIS_HOST, REDIS_PORT, 10000, REDIS_PASSWORD);
     }
 
     public Jedis getJedis() {
@@ -55,6 +57,7 @@ public class RedisUtil {
     public static void set(String k, String v) {
         Jedis jedis = jedisPool.getResource();
         jedis.set(k, v);
+        returnResource(jedisPool, jedis);
     }
 
     /**
@@ -69,6 +72,7 @@ public class RedisUtil {
         setParams.ex(ex);
         Jedis jedis = jedisPool.getResource();
         jedis.set(k, v, setParams);
+        returnResource(jedisPool, jedis);
     }
 
     public static void set(String k, String v, long expire, TimeUnit timeUnit) {
@@ -78,12 +82,21 @@ public class RedisUtil {
 
     public static String get(String k) {
         Jedis jedis = jedisPool.getResource();
-        return jedis.get(k);
+        String res = jedis.get(k);
+        returnResource(jedisPool, jedis);
+        return res;
     }
 
     public static void del(String k) {
         Jedis jedis = jedisPool.getResource();
         jedis.del(k);
+        returnResource(jedisPool, jedis);
+    }
+
+    public static void returnResource(JedisPool pool, Jedis jedis) {
+        if (jedis != null) {
+            pool.returnResource(jedis);
+        }
     }
 
 }
