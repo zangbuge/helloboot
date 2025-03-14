@@ -135,6 +135,7 @@ jstack -F pid  #强制输出线程堆栈 (进程挂起而没有任何响应，�
 
 查看进程下哪些线程占用了高的cpu 
 top
+Shift + M  可以按照内存使用量进行排序
 top c  --可以显示具体那个应用
 或使用 ps -ef|grep pid 看具体应用服务
 查看某个进程pid下占用最高的线程pid (docker容器内不支持,可执行命令htop 进到htop页面按shift+p按照CPU使用率排序)

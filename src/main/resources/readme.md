@@ -68,3 +68,7 @@ Error:Kotlin: Module was compiled with an incompatible version of Kotlin. The bi
 shift + alt + a 鼠标选择起止位置 多行同步插入删除
 alt + 鼠标选择多行 多行同步编辑
 ctl + j 合并多行为一行
+
+
+##### 八. debug打断点后,调试进入不到线程方法中
+在断点上右键> 弹出面板设置> 选择"Thread"> 若想之后断点都保存该设置,点击 Make Default 再Done

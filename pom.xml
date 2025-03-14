@@ -444,6 +444,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>5.2.0</version>
+        </dependency>
 
     </dependencies>
 
@@ -642,7 +647,6 @@
                 <!-- 打包时转移文件位置 这里会直接把${prop.name}对应文件夹下的内容打包到jar文件的classpath下 -->
                 <directory>src/main/resources/conf/${prop.name}/</directory>
                 <targetPath>${project.build.directory}/classes</targetPath>
-                <!-- filtering 作用是打通maven和spring两者的连接,让井水犯河水,即让Spring的范围内能取到maven的参数 -->
                 <filtering>true</filtering>
             </resource>
 

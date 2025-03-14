@@ -15,10 +15,9 @@ public class LocalCacheUtil {
 
     static {
         /**
-         * 不通业务缓存可使用单独的实例cache
-         * 设置缓存时间1小时, 允许延迟的情况, 修改后可不清理缓存
+         * 设置缓存时间1小时,允许延迟的情况下可修改后不清理缓存
          */
-        cache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.HOURS).maximumSize(Long.MAX_VALUE / 2).build();
+        cache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.HOURS).maximumSize(Long.MAX_VALUE / 2).build();
     }
 
     public static void put(String key, Object val) {
