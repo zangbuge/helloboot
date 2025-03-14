@@ -14,8 +14,7 @@ yum方式安装
 yum install -y yum-utils device-mapper-persistent-data lvm2   #安装docker所需的依赖软件包
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo  #使用阿里云镜像
 yum makecache fast			#生成缓存将软件包信息提前在本地缓存一份，用来提高搜索安装软件的速度
-rpm --import https://mirrors.aliyun.com/docker-ce/linux/centos/gpg   #增加docker资源库
-yum -y install docker-ce 使用yum安装社区版本
+yum -y install docker-ce 使用yum安装社区版本 或制定版本 docker-ce-19.03.1
 systemctl enable docker  让docker加入开机启动
 systemctl restart docker 启动docker
 yum -y remove docker-ce  卸载docker
@@ -77,8 +76,17 @@ registry    注册中心, 镜像仓库,类似maven仓库
 docker run --rm --name myNginx -p 8880:80 nginx  #本地没有镜像则去远程仓库下载该镜像
 很可能无法正常拉取镜像，所以就需要我们为docker设置国内阿里云的镜像加速器
 需要修改配置文件后,docker必须重启 vi /etc/docker/daemon.json
-{ 
-"registry-mirrors": ["https://alzgoonw.mirror.aliyuncs.com"] 
+{
+    "registry-mirrors": [
+        "https://docker.211678.top",
+        "https://docker.1panel.live",
+        "https://hub.rat.dev",
+        "https://docker.m.daocloud.io",
+        "https://do.nark.eu.org",
+        "https://dockerpull.com",
+        "https://dockerproxy.cn",
+        "https://docker.awsl9527.cn"
+    ]
 }
 
 启动后可以通过主机8880端口访问nginx了
@@ -246,7 +254,7 @@ docker exec -it helloboot sh
 
 
 #### 安装mongo
-docker run --name mymongo -d -p 27017:27017 -v /data/configdb:/data/configdb -v /data/mongo:/data/db mongo
+docker run --name mymongo -d -p 27017:27017 -v /data/configdb:/data/configdb -v /data/mongo:/data/db mongo:5.0.6
 docker exec -it mymongo mongo admin  #进入mongo命令
 db.createUser({ user:'admin',pwd:'123456',roles:[ { role:'root', db: 'admin'}]})  #创建用户
 
