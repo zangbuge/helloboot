@@ -43,6 +43,9 @@ github地址: https://github.com/YunaiV/ruoyi-vue-pro
 原因: 高并发访问时有部分链接会选择ipv6的请求方式进行,应用程序不完全支持ipv6,指定jvm参数使用ipv4即可
 -Djava.net.preferIPv4Stack=true
 
+报错: 运行最简单的main方法,"hello word" 报错 at com.intellij.uiDesigner.snapShooter.SnapShooter.main(SnapShooter.java:56)
+解决: 在idea右上角运行下拉框,设置> Edit Configurations> 取消勾选 enable capturing from snapshots idea
+
 #### 四. idea破解后重装,双击无法打开, 解决办法
 1. 快捷键 windos + R, 然后输入 regedit 回车调出注册表 依次点击菜单 计算机\HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains，然后右键删除 
 2. 清理用户下的 C:\Users\lhm\.IntelliJIdea 文件夹
