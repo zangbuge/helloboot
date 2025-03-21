@@ -295,6 +295,7 @@
             <version>3.6.4</version>
         </dependency>
         <dependency>
+            <!-- springboot2.1有冲突,使用2.06 -->
             <groupId>org.mongodb.morphia</groupId>
             <artifactId>morphia</artifactId>
             <version>1.3.2</version>
