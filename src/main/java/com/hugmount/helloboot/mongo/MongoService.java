@@ -1,6 +1,6 @@
 package com.hugmount.helloboot.mongo;
 
-import com.alibaba.fastjson.JSON;
+import cn.hutool.json.JSONUtil;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
@@ -10,16 +10,14 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: Li Huiming
@@ -54,7 +52,10 @@ public class MongoService {
         String username = this.username;
         String password = this.password;
         String database = this.database;
+        return getDatastore(host, port, username, password, database);
+    }
 
+    public Datastore getDatastore(String host, int port, String username, String password, String database) {
         String[] split = host.split(",");
         List<ServerAddress> addressList = new LinkedList<>();
         for (String ip : split) {
@@ -64,11 +65,11 @@ public class MongoService {
         MongoCredential credential = MongoCredential.createCredential(username, database, password.toCharArray());
 
         MongoClientOptions.Builder builder = MongoClientOptions.builder();
-        builder.connectTimeout(9000);
+        builder.connectTimeout(6000);
         builder.maxWaitTime(6000); // 线程阻塞等待最长时间
         builder.connectionsPerHost(8); // 最大连接数
         builder.minConnectionsPerHost(2); // 每个主机的最小连接数
-        builder.maxConnectionIdleTime(1000 * 60 * 30); // 池连接的最大空闲时间
+        builder.maxConnectionIdleTime(1000 * 60 * 5); // 池连接的最大空闲时间
         MongoClientOptions options = builder.build();
         MongoClient mongoClient = new MongoClient(addressList, credential, options);
 
@@ -111,43 +112,39 @@ public class MongoService {
 
 
     public static void main(String[] args) {
-        List<ServerAddress> addressList = new LinkedList<>();
-        ServerAddress serverAddress = new ServerAddress("localhost", 27017);
-        addressList.add(serverAddress);
-        MongoCredential credential = MongoCredential.createCredential("admin", "admin", "123456".toCharArray());
-
-        MongoClientOptions.Builder builder = MongoClientOptions.builder();
-        builder.connectTimeout(9000);
-        builder.maxWaitTime(6000); // 线程阻塞等待最长时间
-        builder.connectionsPerHost(8); // 最大连接数
-        builder.minConnectionsPerHost(2); // 每个主机的最小连接数
-        builder.maxConnectionIdleTime(1000 * 60 * 30); // 池连接的最大空闲时间
-        MongoClientOptions options = builder.build();
-        MongoClient mongoClient = new MongoClient(addressList, credential, options);
-
-        Morphia morphia = new Morphia();
-        Datastore datastore = morphia.createDatastore(mongoClient, "admin");
+        String host = "192.168.38.130";
+        int port = 27017;
+        String username = "admin";
+        String password = "123456";
+        String database = "admin";
+        MongoService mongoService = new MongoService();
+        Datastore datastore = mongoService.getDatastore(host, port, username, password, database);
         // 为实体类创建索引
         datastore.ensureIndexes();
 
+        User user = new User();
+        user.setId("add123");
+        user.setName("lhmtest");
+        user.setAddr("保存 或根据id全更新");
+        Map<String, Object> map = new HashMap<>();
+        map.put("tel", "1589");
+        user.setChild(map);
+        datastore.save(user);
+
         List<User> find = datastore.find(User.class).asList();
-        System.out.println(JSON.toJSONString(find));
+        System.out.println("所有数据" + JSONUtil.toJsonStr(find));
 
         Query<User> query = datastore.createQuery(User.class);
-        query.filter("child.tel", "123");
-        List<User> userList = query.asList();
-        System.out.println(JSON.toJSONString(userList));
+        query.filter("child.tel", "1589");
 
         // 修改addr 条件query
         UpdateOperations<User> updateOperations = datastore.createUpdateOperations(User.class);
-        updateOperations.set("addr", "宋庄");
-        datastore.update(query, updateOperations);
+        updateOperations.set("addr", "修改addr");
+        UpdateResults update = datastore.update(query, updateOperations);
+        System.out.println("修改成功" + JSONUtil.toJsonStr(update));
 
-        User user = new User();
-        user.setId("add123");
-        user.setName("test");
-        user.setAddr("保存 或根据id全更新");
-        datastore.save(user);
+        List<User> userList = query.asList();
+        System.out.println("条件查询结果: " + JSONUtil.toJsonStr(userList));
 
 //        datastore.delete(query);
 
