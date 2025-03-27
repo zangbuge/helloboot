@@ -253,6 +253,17 @@ docker logs --since 30m CONTAINER_ID #查看最近30分钟的日志
 docker exec -it helloboot sh
 
 
+### centos7.9安装 Node.js v16
+官网下载 (选择16版本，更新版本需要升级glib，比较麻烦)
+地址一 https://nodejs.org/dist/v20.15.1/
+地址二 https://nodejs.org/download/release/v16.14.1/node-v16.14.1-linux-x64.tar.xz
+tar -xvf node-v16.14.1-linux-x64.tar.xz
+-- 软连接方式部署bin文件(卸载直接删除文件/usr/bin/node)
+ln -s /home/node/node-v16.14.1-linux-x64/bin/node /usr/bin/node
+ln -s /home/node/node-v16.14.1-linux-x64/bin/npm /usr/bin/npm
+-- 验证安装成功
+node -v
+npm -v
 #### 安装mongo
 docker run --name mymongo -d -p 27017:27017 -v /data/configdb:/data/configdb -v /data/mongo:/data/db mongo:5.0.6
 docker exec -it mymongo mongo admin  #进入mongo命令
