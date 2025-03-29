@@ -257,6 +257,7 @@ docker exec -it helloboot sh
 官网下载 (选择16版本，更新版本需要升级glib，比较麻烦)
 地址一 https://nodejs.org/dist/v20.15.1/
 地址二 https://nodejs.org/download/release/v16.14.1/node-v16.14.1-linux-x64.tar.xz
+直接下载 curl -O https://nodejs.org/download/release/v16.14.1/node-v16.14.1-linux-x64.tar.xz
 tar -xvf node-v16.14.1-linux-x64.tar.xz
 -- 软连接方式部署bin文件(卸载直接删除文件/usr/bin/node)
 ln -s /home/node/node-v16.14.1-linux-x64/bin/node /usr/bin/node
