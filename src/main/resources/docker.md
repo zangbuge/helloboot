@@ -252,10 +252,9 @@ docker logs --since 30m CONTAINER_ID #查看最近30分钟的日志
 # 进入到应用容器内 容器尚未bash安装  使用bash进入会出现错误: starting container process caused: exec: "bash": executable file not found in $PATH: unknown
 docker exec -it helloboot sh
 
-
-#### centos7.9安装 Node.js v16 对应 pnpm8
+#### centos7.9安装 Node.js v16 对应 pnpm8; pnpm9需要node v23,建议Rocky linux上安装
 官网下载 (选择16版本，更新版本需要升级glib，比较麻烦)
-地址一 https://nodejs.org/dist/v20.15.1/
+地址一 https://nodejs.org/download/release/v23.1.0/node-v23.1.0-linux-x64.tar.xz
 地址二 https://nodejs.org/download/release/v16.14.1/node-v16.14.1-linux-x64.tar.xz
 直接下载 curl -O https://nodejs.org/download/release/v16.14.1/node-v16.14.1-linux-x64.tar.xz
 tar -xvf node-v16.14.1-linux-x64.tar.xz
@@ -265,6 +264,12 @@ ln -s /home/node/node-v16.14.1-linux-x64/bin/npm /usr/bin/npm
 -- 验证安装成功
 node -v
 npm -v
+npm安装完成后,可以使用npm安装指定版本的pnpm, 会出现寻求资金支持的提示(1 package is looking for funding)可全局配置跳过
+npm config set fund false --location=global
+npm install -g pnpm@9
+再软连接方式安装才可使用
+ln -s /home/node/node-v20.15.0-linux-x64/bin/pnpm /usr/bin/pnpm
+pnpm --version
 
 #### nvm方式安装Node.js
 下载 install.sh 安装脚本 https://github.com/nvm-sh/nvm/tree/v0.40.1
