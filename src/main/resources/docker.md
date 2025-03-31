@@ -27,6 +27,15 @@ docker version
 用户加入docker组
 sudo usermod -aG docker lhmuser #不用使用sudo
 
+docker-compose安装 二进制文件方式(推荐)
+### 下载最新版本（替换为实际版本号，如v2.20.0）
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+### 添加执行权限
+sudo chmod +x /usr/local/bin/docker-compose
+### 验证安装
+docker-compose --version
+
+
 常用命令
 docker info   查看信息
 docker images 查看docker的本地镜像
