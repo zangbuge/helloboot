@@ -553,7 +553,8 @@ docker push www.fxitalk.com:9980/fxitalkservice/fxitalkservice:0.01
 ### 安装 flowable-ui  https://blog.csdn.net/agonie201218/article/details/122451371
 docker run -d --name myflowableui -p 28080:8080 flowable/flowable-ui:6.7.2
 默认账号:admin 密码：test  选择建模器应用程序绘制流程图
-
+登录地址: http://192.168.20.131:28080/flowable-ui
+选择"建模器应用程序"搭建BPMN流程配置
 
 ### Docker搭建maven私服
 0. 准备
