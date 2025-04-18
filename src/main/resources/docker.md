@@ -755,5 +755,11 @@ grep '关键字' project_back_ssm_verification.log | wc -l
 chrom属性>目标中添加参数
 D:\work\tool\Chrome_v87\Chrome\Application\chrome.exe --test-type --ignore-certificate-errors
 
-# ES
+### ES
 docker run -d --name es74 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:7.4.2
+
+### minio
+docker run -d -p 9000:9000 -p 9090:9090 --name minio -v /home/minio/data:/data -e "MINIO_ROOT_USER=lhm" -e "MINIO_ROOT_PASSWORD=123456789" minio/minio server /data --console-address ":9090"
+9000端口 控制台页面使用
+9090端口 开发时上传下载使用的端口
+访问: http://192.168.38.128:9090/
