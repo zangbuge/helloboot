@@ -760,6 +760,6 @@ docker run -d --name es74 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-no
 
 ### minio
 docker run -d -p 9000:9000 -p 9090:9090 --name minio -v /home/minio/data:/data -e "MINIO_ROOT_USER=lhm" -e "MINIO_ROOT_PASSWORD=123456789" minio/minio server /data --console-address ":9090"
-9000端口 控制台页面使用
-9090端口 开发时上传下载使用的端口
+9090端口 控制台页面使用
+9000端口 开发时上传下载使用的端口
 访问: http://192.168.38.128:9090/
