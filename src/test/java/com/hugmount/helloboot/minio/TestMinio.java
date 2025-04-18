@@ -22,7 +22,8 @@ public class TestMinio {
             MakeBucketArgs make = MakeBucketArgs.builder().bucket(bucketName).build();
             minioClient.makeBucket(make);
         }
-        String fileName = "wx.png";
+        // 多级目录可在文件名中用/分隔,而不是bucket
+        String fileName = "1/wx.png";
         FileInputStream inputStream = new FileInputStream("D:/wx.png");
         PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                 .object(fileName) // 文件名
