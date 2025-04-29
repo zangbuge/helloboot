@@ -155,7 +155,8 @@ jstack pid > jstack_info.txt
 
 
 查看磁盘使用情况
-df -h
+df -h  # / 路径是系统盘大小; /data 数据盘大小
+du -sh * | sort -hr #查看当前目录各文件大小,降序
 
 查看内存使用情况
 free -h
