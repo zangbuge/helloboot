@@ -80,5 +80,5 @@ ctl + j 合并多行为一行
 https://github.com/jeecgboot/JeecgBoot
 
 ##### 十. chrome浏览器 
-https://github.com/Bush2021/chrome_installer/releases/tag/132.0.6834.111
+https://github.com/Bush2021/chrome_installer/releases/tag/132.0.6834.111 下载exe文件直接解压,再解压里面的.7z文件,免安装
 
