@@ -56,6 +56,7 @@ public class UserController {
 
 //    @RequiresRoles("xxxx") 这里配置的是哪些角色可以使用
 //    @RequiresPermissions("xxxxxxx")这里配置的是哪些权限可以使用
+    // spring-security 使用见authdemo项目
     @ResponseBody
     @GetMapping("/testHello")
     public String testHello() {

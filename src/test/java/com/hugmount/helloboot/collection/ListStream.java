@@ -1,5 +1,6 @@
 package com.hugmount.helloboot.collection;
 
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.hugmount.helloboot.test.pojo.User;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,17 @@ public class ListStream {
 
         List<Student> reversed = list.stream().sorted(Comparator.comparing(Student::getAge).reversed()).collect(Collectors.toList());
         System.out.println("自定义倒序排序 " + JSON.toJSONString(reversed));
+
+        List<Map<String, Object>> collect9 = list.stream().map(it -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("name", it.getName());
+            map.put("age", it.getAge().toString());
+            return map;
+        }).collect(Collectors.toList());
+        // 需要指明v的类型
+        List<Map<String, Object>> age = collect9.stream().sorted(Comparator.comparing((Map<String, Object> v) -> Integer.parseInt(v.get("age").toString()))
+                .reversed()).collect(Collectors.toList());
+        System.out.println("list-map倒序排序 " + JSONUtil.toJsonStr(age));
 
         List<Student> list1 = list.stream().filter(s -> s.sex.equals("男")).collect(Collectors.toList());
         System.out.println("过滤性别男");
