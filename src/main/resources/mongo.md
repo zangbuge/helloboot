@@ -117,6 +117,9 @@ db.users.dropIndex("name_1")
 8. 常见问题
 查询性能慢？
 为常用查询字段创建索引：db.collection.createIndex({ field: 1 })。
+// 创建合适的索引
+db.users.createIndex({ email: 1 });  // 等值查询字段
+db.orders.createIndex({ userId: 1, createdAt: -1 });  // 多字段复合索引
 
 如何备份数据？
 使用 mongodump 导出数据
@@ -124,6 +127,27 @@ mongodump --db mydb --out /backup
 
 连接远程数据库？
 mongo "mongodb://username:password@host:port/dbname"
+
+归档冷数据
+将历史数据移至独立集合或归档数据库：
+db.orders.aggregate([
+  { $match: { createdAt: { $lt: ISODate("2023-01-01") } } },
+  { $out: "orders_archive" }  // 将旧数据迁移到新集合
+]);
+
+// 监控慢查询
+db.setProfilingLevel(1, { slowms: 50 });  // 记录超过50ms的查询
+db.system.profile.find().sort({ ts: -1 }).limit(10);
+
+// 查看集合状态
+db.users.stats();  // 关注size, count, storageSize等
+
+阈值参考
+单集合文档数	> 5000万条	分片/归档
+单文档大小	> 100KB	拆分文档或使用GridFS
+索引占用内存	> 服务器RAM的60%	优化索引/扩容内存
+查询延迟	> 100ms（无索引）	添加索引/重构查询
+写入吞吐量	> 10,000次/秒（单节点）	分片/批量插入
 
 9. 官方文档
 https://www.mongodb.com/zh-cn/docs/manual/
