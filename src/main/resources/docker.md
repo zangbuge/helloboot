@@ -84,6 +84,7 @@ registry    注册中心, 镜像仓库,类似maven仓库
 快速启动容器 -p 表示映射主机8880端口到docker的80端口
 docker run --rm --name myNginx -p 8880:80 nginx  #本地没有镜像则去远程仓库下载该镜像
 很可能无法正常拉取镜像，所以就需要我们为docker设置国内阿里云的镜像加速器
+Docker 容器的日志默认不会自动清理，可能导致磁盘空间耗尽,全局配置
 需要修改配置文件后,docker必须重启 vi /etc/docker/daemon.json
 {
     "registry-mirrors": [
@@ -95,7 +96,12 @@ docker run --rm --name myNginx -p 8880:80 nginx  #本地没有镜像则去远程
         "https://dockerpull.com",
         "https://dockerproxy.cn",
         "https://docker.awsl9527.cn"
-    ]
+    ],
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "3"
+    }
 }
 
 启动后可以通过主机8880端口访问nginx了
