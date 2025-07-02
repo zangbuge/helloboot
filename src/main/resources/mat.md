@@ -161,6 +161,13 @@ du -sh * | sort -hr #查看当前目录各文件大小,降序
 查看内存使用情况
 free -h
 
+查看机器硬件核心线程数
+lscpu
+CPU(s): 16              #逻辑核心总数
+Thread(s) per core: 2   #每个核心的线程数
+Core(s) per socket: 1   #每个物理CPU的核心数
+Socket(s): 8            #物理CPU颗数
+
 ### 三. GCViewer 
 3.1 GC日志工具 github下载 gcviewer-1.36.jar 官方版本: https://github.com/chewiebug/GCViewer/releases
 可打开GC日志文件 view 设置
