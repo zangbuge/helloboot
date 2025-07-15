@@ -286,6 +286,9 @@ npm install -g pnpm@9
 ln -s /home/node/node-v20.15.0-linux-x64/bin/pnpm /usr/bin/pnpm
 pnpm --version
 
+window版配置环境变量path即可
+https://nodejs.org/download/release/latest-v16.x/node-v16.20.2-win-x64.zip
+
 #### nvm方式安装Node.js
 下载 install.sh 安装脚本 https://github.com/nvm-sh/nvm/tree/v0.40.1
 sh install.sh
